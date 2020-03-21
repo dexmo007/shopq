@@ -2,20 +2,26 @@
   <div id="home_container">
     <label id="search">
       <font-awesome-icon icon="search" />
-      <input type="text" placeholder=""/>
+      <PlaceAutoComplete @place_changed="onPlaceSelected" />
     </label>
-    <NearbySuggestions/>
+    <NearbySuggestions />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import NearbySuggestions from '@/components/NearbySuggestions.vue'
+import NearbySuggestions from "@/components/NearbySuggestions.vue";
+import PlaceAutoComplete from "@/components/PlaceAutoComplete.vue";
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
+    PlaceAutoComplete,
     NearbySuggestions
+  },
+  methods: {
+    onPlaceSelected(place) {
+      this.$router.push(`/markt/${place.id}`);
+    }
   }
-}
+};
 </script>
