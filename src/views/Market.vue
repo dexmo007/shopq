@@ -1,6 +1,13 @@
 <template>
   <div class="market">
-    <h1>Laden #{{id}}</h1>
+    <h1>
+      <div
+        id="isOpenDot"
+        :class="{'open': placeDetails.opening_hours.isOpen()}"
+        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"
+      />
+      {{placeDetails.name}}</h1>
+    <h2>{{placeDetails.vicinity}}</h2>
     <div
       id="primary-interaction"
       v-if="!inQ"
@@ -20,8 +27,9 @@
     </div>
 
     <div class="info">
-
-      {{!placeDetails ? 'Loading...' : placeDetails}}
+      <pre>
+        {{!placeDetails ? 'Loading...' : placeDetails}}
+      </pre>
     </div>
 
     <div class="card">
@@ -79,6 +87,17 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
+#isOpenDot{
+  width: 0.95em;
+  height: 0.95em;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: #dd363a;
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+}
+#isOpenDot.open{
+  background-color: #64c7a6;
+}
 #joinQ-btn {
   background-color: #64c7a6;
   width: 100%;

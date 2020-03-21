@@ -10,7 +10,8 @@
         class="suggestion"
         :style="{backgroundColor: market.color}"
       >
-        {{market}}
+        <span class="suggestion-name">{{market.name}}</span>
+        <span class="suggestion-addr">{{market.vicinity}}</span>
       </router-link>
     </div>
   </div>
@@ -68,13 +69,15 @@ export default {
   margin: 0 auto;
 }
 .suggestion {
-  width: 90px;
-  height: 90px;
+  width: 190px;
+  height: 190px;
   border: 1px solid rgba(33, 33, 33, 0.4);
   border-radius: 4px;
   margin: 14px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
   align-items: center;
   font-size: 1.2em;
   cursor: pointer;
