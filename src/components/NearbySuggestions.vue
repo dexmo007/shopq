@@ -5,7 +5,7 @@
       <router-link
         v-for="market in suggestions"
         :key="market.id"
-        :to="'markt/' + market.id"
+        :to="'markt/' + market.place_id"
         tag="div"
         class="suggestion"
         :style="{backgroundColor: market.color}"
@@ -30,38 +30,31 @@ export default {
   data() {
     return {
       suggestions: null
-      // suggestions: [
-      //   {name: "REWE", color: "rgb(255, 121, 121)", id:1},
-      //   {name: "EDEKA", color: "rgb(255, 221, 128)", id:2},
-      // ]
     };
   },
-  computed: {
-    google: gmapApi
-  },
-  watch: {
-    google(google) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const service = new google.maps.places.PlacesService(
-          document.createElement("div")
-        );
-        service.nearbySearch(
-          {
-            location: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            },
-            // radius: 5000,
-            type: "supermarket",
-            rankBy: google.maps.places.RankBy.DISTANCE
+  mounted() {
+    navigator.geolocation.getCurrentPosition(async position => {
+      await this.$gmapApiPromiseLazy();
+      const google = gmapApi();
+      const service = new google.maps.places.PlacesService(
+        document.createElement("div")
+      );
+      service.nearbySearch(
+        {
+          location: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
           },
-          nearbyPlaces => {
-            this.suggestions = nearbyPlaces;
-            console.log(nearbyPlaces);
-          }
-        );
-      });
-    }
+          // radius: 5000,
+          type: "supermarket",
+          rankBy: google.maps.places.RankBy.DISTANCE
+        },
+        nearbyPlaces => {
+          this.suggestions = nearbyPlaces;
+          console.log(nearbyPlaces);
+        }
+      );
+    });
   }
 };
 </script>
