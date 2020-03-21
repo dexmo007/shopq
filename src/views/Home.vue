@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     onPlaceSelected(place) {
-      this.$router.push(`/markt/${place.id}`);
+      this.$router.push(`/markt/${place.place_id}`);
     }
   }
 };
