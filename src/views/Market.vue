@@ -2,6 +2,7 @@
   <div class="market">
     <h1>
       <div
+        v-if="placeDetails.opening_hours"
         id="isOpenDot"
         :class="{'open': placeDetails.opening_hours.isOpen()}"
         :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"
@@ -88,8 +89,8 @@ export default {
 </script>
 <style type="text/css" scoped>
 #isOpenDot{
-  width: 0.95em;
-  height: 0.95em;
+  width: 0.85em;
+  height: 0.85em;
   display: inline-block;
   border-radius: 50%;
   background-color: #dd363a;

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">shopQ</router-link>
+      <router-link to="/" tag="span" id="home-link">shop<span style="color: #64c7a6;">Q</span></router-link>
     </div>
     <router-view/>
   </div>
@@ -15,6 +15,13 @@
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+#nav{
+  margin: 14px;
+}
+#home-link{
+  font-size: 3em;
+  font-weight: bolder;
 }
   button{
     display: block;
