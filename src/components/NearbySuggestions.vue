@@ -71,10 +71,12 @@ export default {
 #wrapper {
   display: flex;
   flex-wrap: wrap;
+  max-width: 480px;
+  margin: 0 auto;
 }
 .suggestion {
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   border: 1px solid rgba(33, 33, 33, 0.4);
   border-radius: 4px;
   margin: 14px;
@@ -84,8 +86,9 @@ export default {
   font-size: 1.2em;
   cursor: pointer;
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 .suggestion:hover {
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
 </style>
