@@ -54,8 +54,9 @@ export default {
   font-size: 1.2em;
   cursor: pointer;
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 .suggestion:hover{
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
 </style>
