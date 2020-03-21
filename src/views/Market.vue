@@ -53,14 +53,14 @@
   #joinQ-btn{
     background-color: #64c7a6;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
     margin: 0 auto;
   }
   #quitQ-btn{
     background-color: transparent;
     color: #dd363a;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
     margin: 0 auto;
   }
 </style>
