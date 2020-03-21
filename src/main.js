@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import { firestorePlugin } from 'vuefire';
 import App from './App.vue';
 import router from './router';
+import './firebase';
 
 /** START FONTAWESOME **/
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -19,6 +21,8 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places',
   },
 });
+
+Vue.use(firestorePlugin);
 
 Vue.config.productionTip = false;
 

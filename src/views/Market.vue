@@ -32,6 +32,9 @@
 </template>
 <script>
 import { gmapApi } from "vue2-google-maps";
+import firebase from "firebase/app";
+
+const db = firebase.firestore();
 
 export default {
   name: "market",
@@ -50,7 +53,8 @@ export default {
   data() {
     return {
       placeDetails: null,
-      inQ: false
+      inQ: false,
+      queue: null
     };
   },
   methods: {
@@ -61,7 +65,8 @@ export default {
       this.inQ = false;
     }
   },
-  async created() {
+  async mounted() {
+    this.$bind("queue", db.collection("queues").doc(this.id));
     await this.$gmapApiPromiseLazy();
     const google = this.google;
     const service = new google.maps.places.PlacesService(
