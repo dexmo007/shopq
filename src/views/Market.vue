@@ -3,7 +3,7 @@
     Loading...
   </div>
   <div
-    class="market"
+    id="market"
     v-else
   >
     <h1>
@@ -21,6 +21,7 @@
       v-if="!inQ"
     >
       <button
+        class="success"
         id="joinQ-btn"
         @click="joinQ()"
       >virtuell anstellen</button>
@@ -92,15 +93,17 @@ export default {
     }
   },
   watch: {
-    positionInQ(newVal) {
+    positionInQ(newVal, oldVal) {
       let name = this.placeDetails.name;
-      if (newVal === 0 && this.inQ) {
+      if (oldVal !== -1 && newVal === 0) {
         if (Notification.permission === "granted") {
-          navigator.serviceWorker.getRegistration().then(reg => {
-            console.log(reg);
+          new Notification("Sie sind dran! 🎉", {body: "Willkommen bei " + name + "."});
+        }
+      }
 
-            reg.showNotification("Willkommen bei " + name + ". Sie sind dran!");
-          });
+      if (oldVal !== 2 && newVal === 1) {
+        if (Notification.permission === "granted") {
+          new Notification("Gleich ist es geschafft!", {body: "Sie sind der nächste, der in den Laden darf 📯"});
         }
       }
     }
