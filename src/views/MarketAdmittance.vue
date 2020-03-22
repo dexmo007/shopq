@@ -31,6 +31,11 @@
         <div>
           <span>{{peopleInQueue}} Personen in der Warteschlange</span>
         </div>
+        <div>
+          <button @click="addAnonToQueue">
+            Person zu Warteschlange hinzufügen
+          </button>
+        </div>
       </section>
       <section>
         <h3>Log</h3>
@@ -175,6 +180,23 @@ export default {
       const leaveEvent = eventsRef.doc();
       batch.set(leaveEvent, this.createEvent("LEAVE"));
       await batch.commit();
+    },
+    async addAnonToQueue() {
+      db.collection("queues")
+        .doc(this.id)
+        .set(
+          {
+            users: firebase.firestore.FieldValue.arrayUnion({
+              uid: db
+                .collection("queues")
+                .doc(this.id)
+                .collection("users")
+                .doc().id,
+              type: "ANON"
+            })
+          },
+          { merge: true }
+        );
     }
   }
 };
