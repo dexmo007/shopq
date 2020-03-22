@@ -29,5 +29,14 @@ export default new Router({
           /* webpackChunkName: "markt-control" */ './views/MarketControl.vue'
         ),
     },
+    {
+      path: '/markt/:id/einlass',
+      name: 'MarketAdmittance',
+      props: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "market-admittance" */ './views/MarketAdmittance.vue'
+        ),
+    },
   ],
 });
