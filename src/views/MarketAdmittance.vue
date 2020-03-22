@@ -23,34 +23,6 @@
       </div>
       <span>Im Laden: {{admittance.count}}</span>
     </section>
-    <section
-      v-if="nextAdmittance"
-      id="next-admittance"
-    >
-      <template v-if="nextAdmittance.ticketCode">
-        <div class="col">
-          <span>QR Code scannen:</span>
-          <!-- <video
-              autoplay
-              ref="qrscan"
-            ></video> -->
-          <QRCodeScanner />
-        </div>
-        <div class="center-row">
-          <button @click="admitNext">Einlassen</button>
-          <button @click="dismissNextAdmittance">Nicht erschienen</button>
-        </div>
-      </template>
-      <template v-else>
-        <div>
-          Ohne Ticket
-        </div>
-        <div>
-          <button @click="admitNext">Einlassen</button>
-          <button @click="dismissNextAdmittance">Nicht erschienen</button>
-        </div>
-      </template>
-    </section>
     <section>
       <h3>Warteschlange</h3>
       <div>
@@ -63,6 +35,31 @@
         >
           Person zu Warteschlange hinzufügen
         </button>
+      </div>
+      <div v-if="nextAdmittance" id="next-admittance">
+        <template v-if="nextAdmittance.ticketCode">
+          <div class="col">
+            <span>QR Code scannen:</span>
+            <!-- <video
+                autoplay
+                ref="qrscan"
+              ></video> -->
+            <QRCodeScanner />
+          </div>
+          <div class="center-row">
+            <button class="success" @click="admitNext">Nächsten Einlassen</button>
+            <button @click="dismissNextAdmittance">Nicht erschienen</button>
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            Ohne Ticketcode
+          </div>
+          <div>
+            <button class="success" @click="admitNext">Nächsten Einlassen</button>
+            <button @click="dismissNextAdmittance">Nicht erschienen</button>
+          </div>
+        </template>
       </div>
     </section>
     <section>

@@ -7,65 +7,64 @@
     v-else
   >
     <h1>
-      <div
-        v-if="placeDetails.opening_hours"
-        id="isOpenDot"
-        :class="{'open': placeDetails.opening_hours.isOpen()}"
-        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"
-      />
-      {{placeDetails.name}}</h1>
+<!--      <div-->
+<!--        v-if="placeDetails.opening_hours"-->
+<!--        id="isOpenDot"-->
+<!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
+<!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
+<!--      />-->
+      {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
     <span>
-      <font-awesome-icon icon="map-marked-alt" /> {{placeDetails.vicinity}}</span>
-    <div v-if="inStore">
-      <div id="you-made-it">
-        <span>Viel Spaß im</span><br>
-        <span id="store">{{placeDetails.name}}! 🛒</span>
-        <count-down :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))" />
-      </div>
-    </div>
-    <div v-else>
-      <div
-        class="primary-interaction"
-        v-if="!inQ"
-      >
-        <button
-          class="success"
-          id="joinQ-btn"
-          @click="joinQ()"
-        >virtuell anstellen</button>
-        <span>{{queue.length}} Personen in der Schlange</span>
-        <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
-      </div>
-      <div
-        class="primary-interaction"
-        v-else
-      >
-        <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
-        <div>
-          <span>Dein Ticket:</span>
-          <QRCode :text="yourTicketCode" />
-          <span>{{yourTicketCode}}</span>
+      <font-awesome-icon icon="map-marked-alt" /> {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}</span>
+
+    <div v-if="stage === 'default'">
+        <div v-if="freeSlots > 0">
+            <h2>Es gibt keine Schlange!</h2>
+            <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
         </div>
-        <button
-          id="quitQ-btn"
-          @click="quitQ()"
-        >Schlange verlassen</button>
-      </div>
+        <div v-else class="primary-interaction">
+            <button
+                    class="success"
+                    id="joinQ-btn"
+                    @click="joinQ()"
+            >virtuell anstellen</button>
+            <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
+            <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
+        </div>
     </div>
 
-    <!-- <div class="shopq-info">
-      {{!shop && !defaultShopParams ? 'Loading...' : shopParams}}
-    </div> -->
+    <div v-if="stage === 'q-finished'" id="you-made-it">
+      <span>Viel Spaß</span><br>
+      <span id="store">beim 🛒!</span>
+      <count-down
+              v-if="shopParams.freeSlots <= 0"
+              @end-timer="inStore = false"
+              :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))" />
+    </div>
+    <div
+    class="primary-interaction"
+    v-if="stage === 'waiting-in-q'"
+    >
+    <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
+    <div id="ticket">
+      <b>Dein Ticket:</b>
+      <QRCode :text="yourTicketCode" />
+      <span>{{yourTicketCode}}</span>
+    </div>
+    <button
+      id="quitQ-btn"
+      @click="quitQ()"
+    >Schlange verlassen</button>
+    </div>
 
-    <!-- <div class="general-info">
+    <div class="shopq-info">
+      {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
+    </div>
 
-      {{!placeDetails ? 'Loading...' : placeDetails.name+'('+placeDetails.vicinity+')'}}
-    </div> -->
 
     <div class="card">
       <h2>Auslastung am Vortag</h2>
       <div style="font-size: 5em">
-        {{freeSlots}}
       </div>
     </div>
   </div>
@@ -89,8 +88,8 @@ export default {
     queueRef() {
       return db.collection("queues").doc(this.id);
     },
-    WaitingTimeStr() {
-      return "12min";
+    WaitingTimeStr () {
+      return null;
     },
     inQ() {
       return this.queue.some(
@@ -120,32 +119,30 @@ export default {
       ).ticketCode;
     },
     freeSlots() {
-      console.log([this.shopParams, this.admittance]);
-
       if (![this.shopParams, this.admittance].every(v => !!v)) {
         return null;
       }
+      console.log(this.shopParams.capacity - this.admittance.count);
       return this.shopParams.capacity - this.admittance.count;
     }
   },
   beforeDestroy() {
-    this.inStore = false;
+    this.stage = 'default';
   },
   watch: {
-    positionInQ(newVal, oldVal) {
+    freeSlots(newVal){
       let name = this.placeDetails.name;
-      if (newVal === 0) {
-        this.inStore = true;
-      }
-      if (oldVal !== -1 && newVal === 0) {
-        if (Notification.permission === "granted") {
+      if(newVal > 0 && this.positionInQ === 0){
+        if (Notification.permission === "granted" && !this.stage === "waiting-in-q") {
           new Notification("Sie sind dran! 🎉", {
             body: "Willkommen bei " + name + "."
           });
         }
+        this.stage = "q-finished";
       }
-
-      if (oldVal !== 2 && newVal === 1) {
+    },
+    positionInQ(newVal, oldVal) {
+      if (oldVal >= 2 && newVal === 1) {
         if (Notification.permission === "granted") {
           new Notification("Gleich ist es geschafft!", {
             body: "Sie sind der nächste, der in den Laden darf 📯"
@@ -160,7 +157,7 @@ export default {
       placeDetails: null,
       queue: [],
       shop: null,
-      inStore: false,
+      stage: 'default',
       defaultShopParams: null,
       admittance: null
     };
@@ -213,12 +210,15 @@ export default {
       });
       // to notify if we are done
       Notification.requestPermission();
+      this.stage = "waiting-in-q";
     },
     async quitQ() {
-      await this.queueRef
+      const snap = await this.queueRef
         .collection("users")
-        .where("uid", "==", firebase.auth().currentUser.uid)
-        .delete();
+        .where("uid", "==", firebase.auth().currentUser.uid).get();
+        //.delete();
+      snap.forEach((doc) => {doc.ref.delete()});
+      this.stage = "default";
     }
   },
   async mounted() {
@@ -240,6 +240,8 @@ export default {
 }
 .primary-interaction {
   margin: 30px 0;
+  display: flex;
+  flex-direction: column;
 }
 #joinQ-btn,
 #quitQ-btn {
@@ -248,6 +250,15 @@ export default {
   margin: 4px auto;
 }
 
+#ticket{
+    border: 1px solid rgba(33,33,33,0.3);
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 15px auto;
+    padding: 18px;
+    border-radius: 4px;
+}
 #quitQ-btn {
   background-color: transparent;
   color: #dd363a;
