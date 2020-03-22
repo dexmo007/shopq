@@ -36,30 +36,26 @@
           Person zu Warteschlange hinzufügen
         </button>
       </div>
-      <div v-if="nextAdmittance" id="next-admittance">
-        <template v-if="nextAdmittance.ticketCode">
-          <div class="col">
-            <span>QR Code scannen:</span>
-            <!-- <video
-                autoplay
-                ref="qrscan"
-              ></video> -->
-            <QRCodeScanner />
-          </div>
-          <div class="center-row">
-            <button class="success" @click="admitNext">Nächsten Einlassen</button>
-            <button @click="dismissNextAdmittance">Nicht erschienen</button>
-          </div>
-        </template>
-        <template v-else>
-          <div>
-            Ohne Ticketcode
-          </div>
-          <div>
-            <button class="success" @click="admitNext">Nächsten Einlassen</button>
-            <button @click="dismissNextAdmittance">Nicht erschienen</button>
-          </div>
-        </template>
+    </section>
+
+    <section v-if="nextAdmittance">
+      <h3>Nächster Kunde</h3>
+      <div id="next-admittance">
+        <div  v-if="nextAdmittance.ticketCode">
+          <span>QR Code scannen:</span>
+          <!-- <video
+              autoplay
+              ref="qrscan"
+            ></video> -->
+          <QRCodeScanner />
+        </div>
+        <div v-else>
+          Ohne Ticketcode
+        </div>
+        <div id="next-admittance-interaction">
+          <button class="success" @click="admitNext">Kunde Einlassen</button>
+          <button @click="dismissNextAdmittance">Nicht erschienen</button>
+        </div>
       </div>
     </section>
     <section>
@@ -296,6 +292,11 @@ section {
   border: 1px solid darkgray;
   border-radius: 3px;
   padding: 1em;
+}
+#next-admittance-interaction{
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
 }
 .col {
   display: flex;
