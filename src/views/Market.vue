@@ -1,6 +1,14 @@
 <template>
   <div class="market">
-    <h1>Laden #{{id}}</h1>
+    <h1>
+      <div
+        v-if="placeDetails.opening_hours"
+        id="isOpenDot"
+        :class="{'open': placeDetails.opening_hours.isOpen()}"
+        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"
+      />
+      {{placeDetails.name}}</h1>
+    <h2>{{placeDetails.vicinity}}</h2>
     <div
       id="primary-interaction"
       v-if="!inQ"
@@ -131,6 +139,17 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
+#isOpenDot {
+  width: 0.85em;
+  height: 0.85em;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: #dd363a;
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+}
+#isOpenDot.open {
+  background-color: #64c7a6;
+}
 #joinQ-btn {
   background-color: #64c7a6;
   width: 100%;
