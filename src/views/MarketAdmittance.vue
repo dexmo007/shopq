@@ -12,13 +12,6 @@
         </button>
 
         <button
-          @click="admitExchange"
-          :disabled="admittance.count === 0"
-        >
-          Tausch
-        </button>
-
-        <button
           @click="handleChange(-1)"
           :disabled="admittance.count === 0"
         >Geht</button>
@@ -172,15 +165,7 @@ export default {
       batch.set(eventRef, this.createEvent(c));
       await batch.commit();
     },
-    async admitExchange() {
-      const batch = db.batch();
-      const eventsRef = db.collection("admittanceEvents");
-      const enterEvent = eventsRef.doc();
-      batch.set(enterEvent, this.createEvent("ENTER"));
-      const leaveEvent = eventsRef.doc();
-      batch.set(leaveEvent, this.createEvent("LEAVE"));
-      await batch.commit();
-    },
+
     async addAnonToQueue() {
       db.collection("queues")
         .doc(this.id)
