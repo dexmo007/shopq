@@ -98,10 +98,12 @@ form label{
   margin: 15px auto;
   text-align: left;
   width: 480px;
+  max-width: 100%;
 }
 form button{
   margin: 15px auto;
   width: 480px;
+  max-width: 100%;
 }
 form input, form textarea{
   margin: 4px 0;
