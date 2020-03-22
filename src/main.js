@@ -7,10 +7,10 @@ import './firebase';
 
 /** START FONTAWESOME **/
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faSearch);
+library.add(faSearch, faMapMarkedAlt);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 /** END FONTAWESOME **/

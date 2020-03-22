@@ -1,5 +1,7 @@
 <template>
   <div>
+    <router-link to="./" tag="h1">REWE</router-link>
+    <router-link to="./einlass">Einlass-Zähler</router-link>
     <h3>Stammdaten</h3>
     <div v-if="form">
       <form @submit.prevent="saveForm">
@@ -7,28 +9,33 @@
             type="text"
             v-model="form.capacity"
           ><span class="default-value">{{defaultShopParams.capacity}}</span></label>
-        <label>Max. Einkaufszeit pro Besucher: <input
+        <label>
+          Max. Einkaufszeit pro Besucher:
+          <input
             type="text"
             v-model="form.maxShoppingTime"
-          ><span class="default-value">{{defaultShopParams.maxShoppingTime}}</span></label>
-        <label>Erwartete Analog-Rate: <input
+          ><span class="default-value">{{defaultShopParams.maxShoppingTime}}</span>
+        </label>
+        <label>
+          Erwartete Analog-Rate:
+          <input
             type="text"
             v-model="form.analogRatio"
-          ><span class="default-value">{{defaultShopParams.analogRatio}}</span></label>
-        <label>Zusatzinfo: <textarea
+          ><span class="default-value">{{defaultShopParams.analogRatio}}</span>
+        </label>
+        <label>Zusatzinfo:
+          <textarea
             v-model="form.additionalInfo"
             name=""
             id=""
             cols="30"
             rows="10"
-          ></textarea></label>
-        <div>
-          <input
-            type="submit"
-            value="Aktualisieren"
-            :disabled="!formChanged"
-          >
-        </div>
+          />
+        </label>
+        <button
+          type="submit"
+          :disabled="!formChanged"
+        >Stammdaten aktualisieren</button>
 
       </form>
     </div>
@@ -85,13 +92,37 @@ form {
   display: flex;
   flex-direction: column;
 }
+form label{
+  display: flex;
+  flex-direction: column;
+  margin: 15px auto;
+  text-align: left;
+  width: 480px;
+}
+form button{
+  margin: 15px auto;
+  width: 480px;
+}
+form input, form textarea{
+  margin: 4px 0;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+form input:focus, form textarea:focus{
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  border-color: #64c7a6;
+}
 form label .default-value {
   color: gray;
   font-style: italic;
   font-size: 0.9em;
 }
 form label .default-value::before {
-  content: "(Standard: ";
+  content: " (Standard: ";
 }
 form label .default-value::after {
   content: ")";
