@@ -17,7 +17,7 @@
     <span>
       <font-awesome-icon icon="map-marked-alt" /> {{placeDetails.vicinity}}</span>
     <div
-      id="primary-interaction"
+      class="primary-interaction"
       v-if="!inQ"
     >
       <button
@@ -27,7 +27,10 @@
       >virtuell anstellen</button>
       <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
     </div>
-    <div v-else>
+    <div
+      class="primary-interaction"
+      v-else
+    >
       <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
       <button
         id="quitQ-btn"
@@ -187,27 +190,18 @@ export default {
 #isOpenDot.open {
   background-color: #64c7a6;
 }
-#primary-interaction {
+.primary-interaction {
   margin: 30px 0;
 }
-#joinQ-btn {
-  background-color: #64c7a6;
-  color: #2c3e50;
+#joinQ-btn, #quitQ-btn{
   width: 100%;
   max-width: 480px;
   margin: 4px auto;
-  border: 1px solid rgba(33, 33, 33, 0.4);
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-#joinQ-btn:hover {
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
-}
+
 #quitQ-btn {
   background-color: transparent;
   color: #dd363a;
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
+  border-color: #dd363a;
 }
 </style>

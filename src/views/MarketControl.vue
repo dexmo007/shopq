@@ -1,7 +1,7 @@
 <template>
   <div>
-    <router-link to="./" tag="h1">REWE</router-link>
-    <router-link to="./einlass">Einlass-Zähler</router-link>
+    <router-link to="./" tag="h1">TEMP</router-link>
+    <router-link to="./einlass" tag="button">Einlass-Zähler</router-link>
     <h3>Stammdaten</h3>
     <div v-if="form">
       <form @submit.prevent="saveForm">

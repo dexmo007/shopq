@@ -1,9 +1,12 @@
 <template>
   <div v-if="admittance">
-    <h3>Einlass</h3>
-    <div>
-      <div class="row-center">
+      <section>
+        <h3>Einlass</h3>
+        <div
+        id="primary-interaction"
+        class="row-center">
         <button
+          class="success"
           :class="{filled: capacityLimitReached}"
           @click="handleChange(1)"
         >
@@ -12,20 +15,20 @@
         </button>
 
         <button
+          class="danger"
           @click="handleChange(-1)"
           :disabled="admittance.count === 0"
         >Geht</button>
-      </div>
-      <div class="row-center">
+        </div>
         <span>Im Laden: {{admittance.count}}</span>
-      </div>
+      </section>
       <section>
         <h3>Warteschlange</h3>
         <div>
           <span>{{peopleInQueue}} Personen in der Warteschlange</span>
         </div>
-        <div>
-          <button @click="addAnonToQueue">
+        <div class="row-center">
+          <button @click="addAnonToQueue" id="addToQ-btn">
             Person zu Warteschlange hinzufügen
           </button>
         </div>
@@ -41,7 +44,6 @@
           </li>
         </ul>
       </section>
-    </div>
   </div>
   <div v-else>
     Loading...
@@ -188,12 +190,33 @@ export default {
 </script>
 
 <style scoped>
+section{
+  margin: 21px auto;
+  max-width: 480px;
+  padding-bottom: 21px;
+}
 .row-center {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
+#primary-interaction {
+  margin: 15px 0;
+}
+#primary-interaction > button{
+  max-width: 180px;
+  max-height: 180px;
+  width: 40vw;
+  height: 25vh;
+  font-size: 2em;
+  font-weight: bold;
+}
 .filled {
-  background-color: darkorange;
+  background-color: rgb(230, 230, 230);
+}
+#addToQ-btn{
+  background-color: #f8ac59;
+  max-width: 480px;
+  margin: 4px auto;
 }
 </style>
