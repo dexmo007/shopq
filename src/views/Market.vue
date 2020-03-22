@@ -1,5 +1,11 @@
 <template>
-  <div class="market">
+  <div v-if="loading">
+    Loading...
+  </div>
+  <div
+    class="market"
+    v-else
+  >
     <h1>
       <div
         v-if="placeDetails.opening_hours"
@@ -20,7 +26,7 @@
       <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
     </div>
     <div v-else>
-      <span>Sie sind der <b>{{positionInQ}}.</b> in der Schlange.</span>
+      <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
       <button
         id="quitQ-btn"
         @click="quitQ()"
@@ -73,11 +79,9 @@ export default {
       if (!this.inQ) {
         return -1;
       }
-      return (
-        this.queue.users
-          .map(({ uid }) => uid)
-          .indexOf(firebase.auth().currentUser.uid) + 1
-      );
+      return this.queue.users
+        .map(({ uid }) => uid)
+        .indexOf(firebase.auth().currentUser.uid);
     },
     shopParams() {
       return {
@@ -87,12 +91,14 @@ export default {
     }
   },
   watch: {
-    positionInQ(newVal){
+    positionInQ(newVal) {
       let name = this.placeDetails.name;
-      if(newVal === 0 && this.inQ()) {
-        if (Notification.permission === 'granted') {
-          navigator.serviceWorker.getRegistration().then(function(reg) {
-            reg.showNotification('Willkommen bei ' + name + '. Sie sind dran!');
+      if (newVal === 0 && this.inQ) {
+        if (Notification.permission === "granted") {
+          navigator.serviceWorker.getRegistration().then(reg => {
+            console.log(reg);
+
+            reg.showNotification("Willkommen bei " + name + ". Sie sind dran!");
           });
         }
       }
@@ -100,6 +106,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       placeDetails: null,
       queue: null,
       shop: null,
@@ -110,6 +117,32 @@ export default {
     defaultShopParams: db.collection("shops").doc("default")
   },
   methods: {
+    async getPlaceDetails() {
+      await this.$gmapApiPromiseLazy();
+      const google = this.google;
+      return new Promise(resolve => {
+        const service = new google.maps.places.PlacesService(
+          document.createElement("div")
+        );
+        service.getDetails(
+          {
+            placeId: this.id
+          },
+          placeDetails => {
+            resolve(placeDetails);
+          }
+        );
+      });
+    },
+    async initialize() {
+      try {
+        this.placeDetails = await this.getPlaceDetails();
+        await this.$bind("shop", db.collection("shops").doc(this.id));
+        await this.$bind("queue", this.queueRef);
+      } finally {
+        this.loading = false;
+      }
+    },
     joinQ() {
       this.queueRef.set(
         {
@@ -134,21 +167,7 @@ export default {
     }
   },
   async mounted() {
-    this.$bind("queue", this.queueRef);
-    this.$bind("shop", db.collection("shops").doc(this.id));
-    await this.$gmapApiPromiseLazy();
-    const google = this.google;
-    const service = new google.maps.places.PlacesService(
-      document.createElement("div")
-    );
-    service.getDetails(
-      {
-        placeId: this.id
-      },
-      placeDetails => {
-        this.placeDetails = placeDetails;
-      }
-    );
+    await this.initialize();
   }
 };
 </script>
