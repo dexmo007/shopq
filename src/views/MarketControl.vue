@@ -1,12 +1,7 @@
 <template>
   <div>
-    <Attendance
-      :id="id"
-      :shop="shop"
-      v-if="shop"
-    />
     <h3>Stammdaten</h3>
-    <div v-if="shop && defaultShopParams && form">
+    <div v-if="form">
       <form @submit.prevent="saveForm">
         <label>Kapazität: <input
             type="text"
@@ -43,13 +38,11 @@
 <script>
 import firebase from "firebase/app";
 import deepEqual from "deepequal";
-import Attendance from "@/components/Attendance.vue";
 
 const db = firebase.firestore();
 
 export default {
   props: ["id"],
-  components: { Attendance },
   data() {
     return {
       shop: null,
@@ -58,12 +51,13 @@ export default {
       saving: false
     };
   },
-  firestore: {
-    defaultShopParams: db.collection("shops").doc("default")
-  },
   async mounted() {
+    this.defaultShopParams = await this.$bind(
+      "shop",
+      db.collection("shops").doc("default")
+    );
     const shop = await this.$bind("shop", this.shopRef);
-    this.form = JSON.parse(JSON.stringify(shop));
+    this.form = JSON.parse(JSON.stringify(shop || {}));
   },
   computed: {
     shopRef() {
