@@ -25,3 +25,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+  #search{
+    border: 1px solid;
+    padding: 4px;
+    border-radius: 2px;
+  }
+</style>

@@ -72,6 +72,7 @@ export default {
   width: 190px;
   height: 190px;
   border: 1px solid rgba(33, 33, 33, 0.4);
+  background-color: rgb(100, 199, 166);
   border-radius: 4px;
   margin: 14px;
   display: flex;
@@ -86,5 +87,11 @@ export default {
 }
 .suggestion:hover {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+}
+.suggestion-name {
+  font-weight: bold;
+}
+.suggestion-addr {
+  font-size: 0.8em;
 }
 </style>

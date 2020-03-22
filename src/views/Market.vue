@@ -86,6 +86,18 @@ export default {
       };
     }
   },
+  watch: {
+    positionInQ(newVal){
+      let name = this.placeDetails.name;
+      if(newVal === 0 && this.inQ()) {
+        if (Notification.permission === 'granted') {
+          navigator.serviceWorker.getRegistration().then(function(reg) {
+            reg.showNotification('Willkommen bei ' + name + '. Sie sind dran!');
+          });
+        }
+      }
+    }
+  },
   data() {
     return {
       placeDetails: null,
@@ -107,6 +119,8 @@ export default {
         },
         { merge: true }
       );
+      // to notify if we are done
+      Notification.requestPermission();
     },
     quitQ() {
       this.queueRef.set(

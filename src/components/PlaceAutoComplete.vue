@@ -1,5 +1,6 @@
 <template>
   <AutoComplete
+    id="search-input"
     v-bind="$attrs"
     v-on="$listeners"
     :types="['establishment']"
@@ -71,3 +72,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+#search-input{
+ border: none;
+}
+</style>

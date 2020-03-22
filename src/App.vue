@@ -41,11 +41,13 @@ export default {
   margin-top: 60px;
 }
 #nav {
-  margin: 14px;
+  margin: 30px 0;
 }
 #home-link {
   font-size: 3em;
   font-weight: bolder;
+  cursor: pointer;
+  border-bottom: 16px;
 }
 button {
   display: block;
