@@ -20,52 +20,53 @@
       <div id="you-made-it">
         <span>Viel Spaß im</span><br>
         <span id="store">{{placeDetails.name}}! 🛒</span>
-        <count-down :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))"/>
+        <count-down :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))" />
       </div>
     </div>
     <div v-else>
       <div
-              class="primary-interaction"
-              v-if="!inQ"
+        class="primary-interaction"
+        v-if="!inQ"
       >
         <button
-                class="success"
-                id="joinQ-btn"
-                @click="joinQ()"
+          class="success"
+          id="joinQ-btn"
+          @click="joinQ()"
         >virtuell anstellen</button>
         <span>{{queue.length}} Personen in der Schlange</span>
-      <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
+        <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
       </div>
       <div
-              class="primary-interaction"
-              v-else
+        class="primary-interaction"
+        v-else
       >
         <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
-      <div>
-        <span>Dein Ticket:</span>
-        <QRCode :text="yourTicketCode" />
-        <span>{{yourTicketCode}}</span>
-      </div>
+        <div>
+          <span>Dein Ticket:</span>
+          <QRCode :text="yourTicketCode" />
+          <span>{{yourTicketCode}}</span>
+        </div>
         <button
-                id="quitQ-btn"
-                @click="quitQ()"
+          id="quitQ-btn"
+          @click="quitQ()"
         >Schlange verlassen</button>
       </div>
     </div>
 
-
-    <div class="shopq-info">
+    <!-- <div class="shopq-info">
       {{!shop && !defaultShopParams ? 'Loading...' : shopParams}}
-    </div>
+    </div> -->
 
-    <div class="general-info">
+    <!-- <div class="general-info">
 
       {{!placeDetails ? 'Loading...' : placeDetails.name+'('+placeDetails.vicinity+')'}}
-    </div>
+    </div> -->
 
     <div class="card">
       <h2>Auslastung am Vortag</h2>
-      <p></p>
+      <div style="font-size: 5em">
+        {{freeSlots}}
+      </div>
     </div>
   </div>
 </template>
@@ -117,15 +118,23 @@ export default {
       return this.queue.find(
         ({ uid }) => uid === firebase.auth().currentUser.uid
       ).ticketCode;
+    },
+    freeSlots() {
+      console.log([this.shopParams, this.admittance]);
+
+      if (![this.shopParams, this.admittance].every(v => !!v)) {
+        return null;
+      }
+      return this.shopParams.capacity - this.admittance.count;
     }
   },
-  beforeDestroy(){
+  beforeDestroy() {
     this.inStore = false;
   },
   watch: {
     positionInQ(newVal, oldVal) {
       let name = this.placeDetails.name;
-      if(newVal === 0) {
+      if (newVal === 0) {
         this.inStore = true;
       }
       if (oldVal !== -1 && newVal === 0) {
@@ -152,7 +161,8 @@ export default {
       queue: [],
       shop: null,
       inStore: false,
-      defaultShopParams: null
+      defaultShopParams: null,
+      admittance: null
     };
   },
   firestore: {
@@ -181,6 +191,10 @@ export default {
         this.placeDetails = await this.getPlaceDetails();
         await this.$bind("shop", db.collection("shops").doc(this.id));
         await this.$bind("queue", this.queueRef.collection("users"));
+        await this.$bind(
+          "admittance",
+          db.collection("admittances").doc(this.id)
+        );
       } finally {
         this.loading = false;
       }
@@ -240,12 +254,12 @@ export default {
   border-color: #dd363a;
 }
 
-#you-made-it{
+#you-made-it {
   margin: 30px 0;
   font-size: 2em;
   font-weight: bold;
 }
-#you-made-it > #store{
+#you-made-it > #store {
   background-color: #64c7a6;
   padding: 4px 6px;
   margin: 4px;
