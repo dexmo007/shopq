@@ -61,16 +61,20 @@ button {
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  transition: box-shadow 280ms cubic-bezier(0.43, 0, 0.37, 0.94),
+        background-color 140ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  color: #2c3e50;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-  button[type=submit]{
-    background-color: #64c7a6;
-    color: #2c3e50;
-    border: 1px solid rgba(33, 33, 33, 0.4);
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
-  }
-button[type=submit]:hover{
+button[type=submit], button.success{
+  border: 1px solid rgba(33, 33, 33, 0.4);
+  background-color: #64c7a6;
+}
+button[type=submit], button.danger{
+  border: 1px solid rgba(136, 32, 34, 0.75);
+  background-color: #fb6b6f;
+}
+button:hover{
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
 </style>

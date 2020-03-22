@@ -4,7 +4,10 @@
       to="./"
       tag="h1"
     >{{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</router-link>
-    <router-link to="./einlass">Einlass-Zähler</router-link>
+    <router-link
+      to="./einlass"
+      tag="button"
+    >Einlass-Zähler</router-link>
     <h3>Stammdaten</h3>
     <div v-if="form">
       <form @submit.prevent="saveForm">
