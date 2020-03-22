@@ -14,7 +14,8 @@
         :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"
       />
       {{placeDetails.name}}</h1>
-    <h2>{{placeDetails.vicinity}}</h2>
+    <span>
+      <font-awesome-icon icon="map-marked-alt" /> {{placeDetails.vicinity}}</span>
     <div
       id="primary-interaction"
       v-if="!inQ"
@@ -183,11 +184,21 @@ export default {
 #isOpenDot.open {
   background-color: #64c7a6;
 }
+#primary-interaction {
+  margin: 30px 0;
+}
 #joinQ-btn {
   background-color: #64c7a6;
+  color: #2c3e50;
   width: 100%;
   max-width: 480px;
-  margin: 0 auto;
+  margin: 4px auto;
+  border: 1px solid rgba(33, 33, 33, 0.4);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+}
+#joinQ-btn:hover {
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
 #quitQ-btn {
   background-color: transparent;
