@@ -24,10 +24,16 @@
         id="joinQ-btn"
         @click="joinQ()"
       >virtuell anstellen</button>
+      <span>{{queue.length}} Personen in der Schlange</span>
       <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
     </div>
     <div v-else>
       <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
+      <div>
+        <span>Dein Ticket:</span>
+        <QRCode :text="yourTicketCode" />
+        <span>{{yourTicketCode}}</span>
+      </div>
       <button
         id="quitQ-btn"
         @click="quitQ()"
@@ -52,6 +58,7 @@
 <script>
 import { gmapApi } from "vue2-google-maps";
 import firebase from "firebase/app";
+import QRCode from "@/components/QRCode.vue";
 
 const db = firebase.firestore();
 
@@ -60,6 +67,7 @@ export default {
   props: {
     id: String
   },
+  components: { QRCode },
   computed: {
     google: gmapApi,
     queueRef() {
@@ -69,26 +77,31 @@ export default {
       return "12min";
     },
     inQ() {
-      return (
-        this.queue &&
-        this.queue.users.some(
-          ({ uid }) => uid === firebase.auth().currentUser.uid
-        )
+      return this.queue.some(
+        ({ uid }) => uid === firebase.auth().currentUser.uid
       );
     },
     positionInQ() {
       if (!this.inQ) {
         return -1;
       }
-      return this.queue.users
-        .map(({ uid }) => uid)
-        .indexOf(firebase.auth().currentUser.uid);
+      return this.queue.findIndex(
+        ({ uid }) => uid === firebase.auth().currentUser.uid
+      );
     },
     shopParams() {
       return {
         ...this.defaultShopParams,
         ...this.shop
       };
+    },
+    yourTicketCode() {
+      if (!this.inQ) {
+        return null;
+      }
+      return this.queue.find(
+        ({ uid }) => uid === firebase.auth().currentUser.uid
+      ).ticketCode;
     }
   },
   watch: {
@@ -97,7 +110,7 @@ export default {
       if (newVal === 0 && this.inQ) {
         if (Notification.permission === "granted") {
           navigator.serviceWorker.getRegistration().then(reg => {
-            console.log(reg);
+            // console.log(reg);
 
             reg.showNotification("Willkommen bei " + name + ". Sie sind dran!");
           });
@@ -109,7 +122,7 @@ export default {
     return {
       loading: true,
       placeDetails: null,
-      queue: null,
+      queue: [],
       shop: null,
       defaultShopParams: null
     };
@@ -139,32 +152,31 @@ export default {
       try {
         this.placeDetails = await this.getPlaceDetails();
         await this.$bind("shop", db.collection("shops").doc(this.id));
-        await this.$bind("queue", this.queueRef);
+        await this.$bind("queue", this.queueRef.collection("users"));
       } finally {
         this.loading = false;
       }
     },
-    joinQ() {
-      this.queueRef.set(
-        {
-          users: firebase.firestore.FieldValue.arrayUnion({
-            uid: firebase.auth().currentUser.uid
-          })
-        },
-        { merge: true }
-      );
+    generateTicketCode() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      return Array(5)
+        .fill()
+        .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
+        .join("");
+    },
+    async joinQ() {
+      this.queueRef.collection("users").add({
+        uid: firebase.auth().currentUser.uid,
+        ticketCode: this.generateTicketCode()
+      });
       // to notify if we are done
       Notification.requestPermission();
     },
-    quitQ() {
-      this.queueRef.set(
-        {
-          users: firebase.firestore.FieldValue.arrayRemove({
-            uid: firebase.auth().currentUser.uid
-          })
-        },
-        { merge: true }
-      );
+    async quitQ() {
+      await this.queueRef
+        .collection("users")
+        .where("uid", "==", firebase.auth().currentUser.uid)
+        .delete();
     }
   },
   async mounted() {
