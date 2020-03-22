@@ -12,20 +12,41 @@
         </button>
 
         <button
-          @click="admitExchange"
-          :disabled="admittance.count === 0"
-        >
-          Tausch
-        </button>
-
-        <button
-          @click="handleChange(-1)"
+          @click="onLeave"
           :disabled="admittance.count === 0"
         >Geht</button>
       </div>
       <div class="row-center">
         <span>Im Laden: {{admittance.count}}</span>
       </div>
+      <section
+        v-if="nextAdmittance"
+        id="next-admittance"
+      >
+        <template v-if="nextAdmittance.ticketCode">
+          <div>
+            <span>QR Code scannen:</span>
+            <!-- <video
+              autoplay
+              ref="qrscan"
+            ></video> -->
+            <QRCodeScanner />
+          </div>
+          <div>
+            <button @click="admitNext">Einlassen</button>
+            <button @click="dismissNextAdmittance">Nicht erschienen</button>
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            Ohne Ticket
+          </div>
+          <div>
+            <button @click="admitNext">Einlassen</button>
+            <button @click="dismissNextAdmittance">Nicht erschienen</button>
+          </div>
+        </template>
+      </section>
       <section>
         <h3>Warteschlange</h3>
         <div>
@@ -58,6 +79,7 @@
 <script>
 import firebase from "firebase/app";
 import { selectUnit } from "@formatjs/intl-utils";
+import QRCodeScanner from "@/components/QRCodeScanner.vue";
 
 const db = firebase.firestore();
 
@@ -69,12 +91,13 @@ const eventTypesI18n = {
 export default {
   name: "MarketAdmittance",
   props: ["id"],
+  components: { QRCodeScanner },
   data() {
     return {
       admittance: null,
       shop: null,
       defaultShopParams: null,
-      queue: null,
+      queue: [],
       eventData: [],
       rtf: new Intl.RelativeTimeFormat("de", { numeric: "auto" })
     };
@@ -99,7 +122,13 @@ export default {
         });
     }
     // queue
-    this.$bind("queue", db.collection("queues").doc(this.id));
+    this.$bind(
+      "queue",
+      db
+        .collection("queues")
+        .doc(this.id)
+        .collection("users")
+    );
     // events
     this.$bind(
       "eventData",
@@ -121,18 +150,23 @@ export default {
       return this.admittance.count >= this.shopParams.capacity;
     },
     peopleInQueue() {
-      if (!this.queue || !this.queue.users) {
-        return 0;
-      }
-      return this.queue.users.length;
+      return this.queue.length;
     },
     events() {
-      return this.eventData.map(({ type, timestamp }) => ({
-        type,
-        typeText: eventTypesI18n[type],
-        timestamp: timestamp.toDate(),
-        relativeTime: this.formatTimeRelatively(timestamp)
-      }));
+      return this.eventData.map(({ type, timestamp }) => {
+        if (!timestamp) {
+          timestamp = firebase.firestore.Timestamp.now();
+        }
+        return {
+          type,
+          typeText: eventTypesI18n[type],
+          timestamp: timestamp.toDate(),
+          relativeTime: this.formatTimeRelatively(timestamp)
+        };
+      });
+    },
+    nextAdmittance() {
+      return this.queue[0];
     }
   },
   methods: {
@@ -172,31 +206,54 @@ export default {
       batch.set(eventRef, this.createEvent(c));
       await batch.commit();
     },
-    async admitExchange() {
-      const batch = db.batch();
-      const eventsRef = db.collection("admittanceEvents");
-      const enterEvent = eventsRef.doc();
-      batch.set(enterEvent, this.createEvent("ENTER"));
-      const leaveEvent = eventsRef.doc();
-      batch.set(leaveEvent, this.createEvent("LEAVE"));
-      await batch.commit();
+    async onLeave() {
+      await this.handleChange(-1);
+      // if (this.queue.length) {
+      //   const user = this.queue[0];
+      //   this.nextAdmittance = {
+      //     type: "FROM_QUEUE",
+      //     user
+      //   };
+      //   if (user.ticketCode) {
+      //     // const constraints = {
+      //     //   video: true
+      //     // };
+      //     // navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      //     //   this.$refs.qrscan.srcObject = stream;
+      //     // });
+      //   }
+      // }
     },
     async addAnonToQueue() {
       db.collection("queues")
         .doc(this.id)
-        .set(
-          {
-            users: firebase.firestore.FieldValue.arrayUnion({
-              uid: db
-                .collection("queues")
-                .doc(this.id)
-                .collection("users")
-                .doc().id,
-              type: "ANON"
-            })
-          },
-          { merge: true }
-        );
+        .collection("users")
+        .add({
+          uid: db
+            .collection("queues")
+            .doc(this.id)
+            .collection("users")
+            .doc().id,
+          type: "ANON"
+        });
+    },
+    async removeFromQueue(uid) {
+      const snap = await db
+        .collection("queues")
+        .doc(this.id)
+        .collection("users")
+        .where("uid", "==", uid)
+        .get();
+      snap.forEach(doc => {
+        doc.ref.delete();
+      });
+    },
+    async admitNext() {
+      await this.handleChange(1);
+      await this.removeFromQueue(this.nextAdmittance.uid);
+    },
+    async dismissNextAdmittance() {
+      await this.removeFromQueue(this.nextAdmittance.uid);
     }
   }
 };
@@ -210,5 +267,10 @@ export default {
 }
 .filled {
   background-color: darkorange;
+}
+#next-admittance {
+  border: 1px solid darkgray;
+  border-radius: 3px;
+  padding: 1em;
 }
 </style>
