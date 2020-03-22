@@ -150,7 +150,7 @@ export default {
       if (newVal > 0 && this.positionInQ === 0) {
         if (
           Notification.permission === "granted" &&
-          !this.stage === "waiting-in-q"
+          this.stage === "waiting-in-q"
         ) {
           new Notification("Sie sind dran! 🎉", {
             body: "Willkommen bei " + name + "."
