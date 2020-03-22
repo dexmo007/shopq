@@ -1,5 +1,7 @@
 <template>
   <video
+    v-on="$listeners"
+    v-bind="$attrs"
     autoplay
     ref="qrscan"
   ></video>
@@ -15,9 +17,15 @@ QrScanner.WORKER_PATH = "./assets/qr-scanner-worker.min.js";
 
 export default {
   mounted() {
-    new QrScanner(this.$refs.qrscan, result =>
-      console.log("decoded qr code:", result)
-    );
+    // new QrScanner(this.$refs.qrscan, result =>
+    //   console.log("decoded qr code:", result)
+    // );
+    const constraints = {
+      video: true
+    };
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      this.$refs.qrscan.srcObject = stream;
+    });
   }
   // mounted() {
   //   let scanner = new Instascan.Scanner({

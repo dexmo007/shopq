@@ -28,7 +28,7 @@
       id="next-admittance"
     >
       <template v-if="nextAdmittance.ticketCode">
-        <div>
+        <div class="col">
           <span>QR Code scannen:</span>
           <!-- <video
               autoplay
@@ -36,7 +36,7 @@
             ></video> -->
           <QRCodeScanner />
         </div>
-        <div>
+        <div class="center-row">
           <button @click="admitNext">Einlassen</button>
           <button @click="dismissNextAdmittance">Nicht erschienen</button>
         </div>
@@ -299,5 +299,14 @@ section {
   border: 1px solid darkgray;
   border-radius: 3px;
   padding: 1em;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+}
+.center-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
