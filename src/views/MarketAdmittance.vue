@@ -36,7 +36,10 @@
           Person zu Warteschlange hinzufügen
         </button>
       </div>
-      <div v-if="nextAdmittance" id="next-admittance">
+      <div
+        v-if="nextAdmittance"
+        id="next-admittance"
+      >
         <template v-if="nextAdmittance.ticketCode">
           <div class="col">
             <span>QR Code scannen:</span>
@@ -45,9 +48,15 @@
                 ref="qrscan"
               ></video> -->
             <QRCodeScanner />
+            <div>
+              Ticket-Nr.: {{nextAdmittance.ticketCode}}
+            </div>
           </div>
           <div class="center-row">
-            <button class="success" @click="admitNext">Nächsten Einlassen</button>
+            <button
+              class="success"
+              @click="admitNext"
+            >Nächsten Einlassen</button>
             <button @click="dismissNextAdmittance">Nicht erschienen</button>
           </div>
         </template>
@@ -56,7 +65,10 @@
             Ohne Ticketcode
           </div>
           <div>
-            <button class="success" @click="admitNext">Nächsten Einlassen</button>
+            <button
+              class="success"
+              @click="admitNext"
+            >Nächsten Einlassen</button>
             <button @click="dismissNextAdmittance">Nicht erschienen</button>
           </div>
         </template>
@@ -111,7 +123,7 @@ export default {
       "defaultShopParams",
       db.collection("shops").doc("default")
     );
-    this.shop = await this.$bind("shop", db.collection("shop").doc(this.id));
+    this.shop = await this.$bind("shop", db.collection("shops").doc(this.id));
     // admittance control
     const a = await this.$bind(
       "admittance",
@@ -150,7 +162,7 @@ export default {
       };
     },
     capacityLimitReached() {
-      return this.admittance.count >= this.shopParams.capacity;
+      return this.admittance.count >= Number(this.shopParams.capacity);
     },
     peopleInQueue() {
       return this.queue.length;
@@ -188,14 +200,15 @@ export default {
       }
       return type;
     },
-    createEvent(type) {
+    createEvent(type, admittanceEventData) {
       return {
+        ...(admittanceEventData || {}),
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         shopId: this.id,
         type: this.resolveType(type)
       };
     },
-    async handleChange(c) {
+    async handleChange(c, admittanceEventData) {
       const batch = db.batch();
       const admittanceRef = db.collection("admittances").doc(this.id);
       batch.set(
@@ -206,26 +219,11 @@ export default {
         { merge: true }
       );
       const eventRef = db.collection("admittanceEvents").doc();
-      batch.set(eventRef, this.createEvent(c));
+      batch.set(eventRef, this.createEvent(c, admittanceEventData));
       await batch.commit();
     },
     async onLeave() {
       await this.handleChange(-1);
-      // if (this.queue.length) {
-      //   const user = this.queue[0];
-      //   this.nextAdmittance = {
-      //     type: "FROM_QUEUE",
-      //     user
-      //   };
-      //   if (user.ticketCode) {
-      //     // const constraints = {
-      //     //   video: true
-      //     // };
-      //     // navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      //     //   this.$refs.qrscan.srcObject = stream;
-      //     // });
-      //   }
-      // }
     },
     async addAnonToQueue() {
       db.collection("queues")
@@ -252,7 +250,17 @@ export default {
       });
     },
     async admitNext() {
-      await this.handleChange(1);
+      await this.handleChange(1, {
+        type: "TICKET",
+        ticketCode: this.nextAdmittance.ticketCode,
+        ticketId: this.nextAdmittance.ticketId
+      });
+      await db.collection("ticketAdmission").add({
+        uid: this.nextAdmittance.uid,
+        ticketCode: this.nextAdmittance.ticketCode,
+        ticketId: this.nextAdmittance.ticketId,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
       await this.removeFromQueue(this.nextAdmittance.uid);
     },
     async dismissNextAdmittance() {

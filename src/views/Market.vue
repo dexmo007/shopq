@@ -7,66 +7,80 @@
     v-else
   >
     <h1>
-<!--      <div-->
-<!--        v-if="placeDetails.opening_hours"-->
-<!--        id="isOpenDot"-->
-<!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
-<!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
-<!--      />-->
+      <!--      <div-->
+      <!--        v-if="placeDetails.opening_hours"-->
+      <!--        id="isOpenDot"-->
+      <!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
+      <!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
+      <!--      />-->
       {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
     <span>
       <font-awesome-icon icon="map-marked-alt" /> {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}</span>
 
     <div v-if="stage === 'default'">
-        <div v-if="freeSlots > 0">
-            <h2>Es gibt keine Schlange!</h2>
-            <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
-        </div>
-        <div v-else class="primary-interaction">
-            <button
-                    class="success"
-                    id="joinQ-btn"
-                    @click="joinQ()"
-            >virtuell anstellen</button>
-            <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
-            <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
-        </div>
+      <div v-if="freeSlots > 0">
+        <h2>Es gibt keine Schlange!</h2>
+        <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
+        <span>{{freeSlots}}/{{shop.capacity}} Plätze frei!</span>
+      </div>
+      <div
+        v-else
+        class="primary-interaction"
+      >
+        <button
+          class="success"
+          id="joinQ-btn"
+          @click="joinQ()"
+        >virtuell anstellen</button>
+        <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
+        <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
+      </div>
     </div>
 
-    <div v-if="stage === 'q-finished'" id="you-made-it">
+    <div
+      v-if="stage === 'q-finished'"
+      id="you-made-it"
+    >
       <span>Viel Spaß</span><br>
       <span id="store">beim 🛒!</span>
       <count-down
-              v-if="shopParams.freeSlots <= 0"
-              @end-timer="inStore = false"
-              :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))" />
+        v-if="shopParams.freeSlots <= 0"
+        @end-timer="inStore = false"
+        :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))"
+      />
+      <button @click="setAdmissionInactive">Nicht mehr da.</button>
     </div>
     <div
-    class="primary-interaction"
-    v-if="stage === 'waiting-in-q'"
+      class="primary-interaction"
+      v-if="stage === 'waiting-in-q'"
     >
-    <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
-    <div id="ticket">
-      <b>Dein Ticket:</b>
-      <QRCode :text="yourTicketCode" />
-      <span>{{yourTicketCode}}</span>
-    </div>
-    <button
-      id="quitQ-btn"
-      @click="quitQ()"
-    >Schlange verlassen</button>
+      <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
+      <div
+        id="ticket"
+        v-if="queueSlot"
+      >
+        <b>Dein Ticket:</b>
+        <QRCode :text="queueSlot.ticketCode" />
+        <span>{{queueSlot.ticketCode}}</span>
+      </div>
+      <button
+        id="quitQ-btn"
+        @click="quitQ()"
+      >Schlange verlassen</button>
     </div>
 
-    <div class="shopq-info">
-      {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
+    <div id="shopq-info">
+      <h5>Zusatzinfo für diesen Markt:</h5>
+      <p>
+        {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
+      </p>
     </div>
 
-
-    <div class="card">
+    <!-- <div class="card">
       <h2>Auslastung am Vortag</h2>
       <div style="font-size: 5em">
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -76,6 +90,8 @@ import CountDown from "@/components/CountDown";
 import QRCode from "@/components/QRCode.vue";
 
 const db = firebase.firestore();
+
+const ONE_HOUR = 60 * 60 * 1000;
 
 export default {
   name: "market",
@@ -88,7 +104,7 @@ export default {
     queueRef() {
       return db.collection("queues").doc(this.id);
     },
-    WaitingTimeStr () {
+    WaitingTimeStr() {
       return null;
     },
     inQ() {
@@ -110,30 +126,32 @@ export default {
         ...this.shop
       };
     },
-    yourTicketCode() {
+    queueSlot() {
       if (!this.inQ) {
         return null;
       }
       return this.queue.find(
         ({ uid }) => uid === firebase.auth().currentUser.uid
-      ).ticketCode;
+      );
     },
     freeSlots() {
       if (![this.shopParams, this.admittance].every(v => !!v)) {
         return null;
       }
-      console.log(this.shopParams.capacity - this.admittance.count);
       return this.shopParams.capacity - this.admittance.count;
     }
   },
   beforeDestroy() {
-    this.stage = 'default';
+    this.stage = "default";
   },
   watch: {
-    freeSlots(newVal){
+    freeSlots(newVal) {
       let name = this.placeDetails.name;
-      if(newVal > 0 && this.positionInQ === 0){
-        if (Notification.permission === "granted" && !this.stage === "waiting-in-q") {
+      if (newVal > 0 && this.positionInQ === 0) {
+        if (
+          Notification.permission === "granted" &&
+          !this.stage === "waiting-in-q"
+        ) {
           new Notification("Sie sind dran! 🎉", {
             body: "Willkommen bei " + name + "."
           });
@@ -149,6 +167,19 @@ export default {
           });
         }
       }
+    },
+    ticketAdmission(admitted) {
+      if (admitted && admitted.length) {
+        const [admission] = admitted;
+        if (
+          admission.inactive ||
+          admission.timestamp.toDate() < Date.now() - ONE_HOUR
+        ) {
+          this.stage = "default";
+          return;
+        }
+        this.stage = "q-finished";
+      }
     }
   },
   data() {
@@ -157,9 +188,10 @@ export default {
       placeDetails: null,
       queue: [],
       shop: null,
-      stage: 'default',
+      stage: "default",
       defaultShopParams: null,
-      admittance: null
+      admittance: null,
+      ticketAdmission: null
     };
   },
   firestore: {
@@ -192,6 +224,19 @@ export default {
           "admittance",
           db.collection("admittances").doc(this.id)
         );
+        await this.$bind(
+          "ticketAdmission",
+          db
+            .collection("ticketAdmission")
+            .where("uid", "==", firebase.auth().currentUser.uid)
+            .orderBy("timestamp", "desc")
+            .limit(1)
+        );
+        if (
+          this.queue.some(({ uid }) => uid === firebase.auth().currentUser.uid)
+        ) {
+          this.stage = "waiting-in-q";
+        }
       } finally {
         this.loading = false;
       }
@@ -204,21 +249,33 @@ export default {
         .join("");
     },
     async joinQ() {
-      this.queueRef.collection("users").add({
+      Notification.requestPermission();
+      const ticketId = db.collection("tickets").doc().id;
+      await this.queueRef.collection("users").add({
         uid: firebase.auth().currentUser.uid,
+        ticketId,
         ticketCode: this.generateTicketCode()
       });
       // to notify if we are done
-      Notification.requestPermission();
       this.stage = "waiting-in-q";
     },
     async quitQ() {
       const snap = await this.queueRef
         .collection("users")
-        .where("uid", "==", firebase.auth().currentUser.uid).get();
-        //.delete();
-      snap.forEach((doc) => {doc.ref.delete()});
+        .where("uid", "==", firebase.auth().currentUser.uid)
+        .get();
+      //.delete();
+      snap.forEach(doc => {
+        doc.ref.delete();
+      });
       this.stage = "default";
+    },
+    async setAdmissionInactive() {
+      db.collection("ticketAdmission")
+        .doc(this.ticketAdmission[0].id)
+        .update({
+          inactive: true
+        });
     }
   },
   async mounted() {
@@ -250,14 +307,14 @@ export default {
   margin: 4px auto;
 }
 
-#ticket{
-    border: 1px solid rgba(33,33,33,0.3);
-    display: flex;
-    flex-direction: column;
-    max-width: 480px;
-    margin: 15px auto;
-    padding: 18px;
-    border-radius: 4px;
+#ticket {
+  border: 1px solid rgba(33, 33, 33, 0.3);
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 15px auto;
+  padding: 18px;
+  border-radius: 4px;
 }
 #quitQ-btn {
   background-color: transparent;
@@ -275,5 +332,15 @@ export default {
   padding: 4px 6px;
   margin: 4px;
   border-radius: 4px;
+}
+#shopq-info {
+  padding: 4px 6px;
+  margin: 4px;
+  margin-top: 10px;
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+}
+#shopq-info h5 {
+  margin: 0;
 }
 </style>
