@@ -19,9 +19,13 @@
       >Schlange verlassen</button>
     </div>
 
-    <div class="info">
+    <div class="shopq-info">
+      {{!shop && !defaultShopParams ? 'Loading...' : shopParams}}
+    </div>
 
-      {{!placeDetails ? 'Loading...' : placeDetails}}
+    <div class="general-info">
+
+      {{!placeDetails ? 'Loading...' : placeDetails.name+'('+placeDetails.vicinity+')'}}
     </div>
 
     <div class="card">
@@ -43,30 +47,73 @@ export default {
   },
   computed: {
     google: gmapApi,
+    queueRef() {
+      return db.collection("queues").doc(this.id);
+    },
     WaitingTimeStr() {
       return "12min";
     },
+    inQ() {
+      return (
+        this.queue &&
+        this.queue.users.some(
+          ({ uid }) => uid === firebase.auth().currentUser.uid
+        )
+      );
+    },
     positionInQ() {
-      return 4;
+      if (!this.inQ) {
+        return -1;
+      }
+      return (
+        this.queue.users
+          .map(({ uid }) => uid)
+          .indexOf(firebase.auth().currentUser.uid) + 1
+      );
+    },
+    shopParams() {
+      return {
+        ...this.defaultShopParams,
+        ...this.shop
+      };
     }
   },
   data() {
     return {
       placeDetails: null,
-      inQ: false,
-      queue: null
+      queue: null,
+      shop: null,
+      defaultShopParams: null
     };
+  },
+  firestore: {
+    defaultShopParams: db.collection("shops").doc("default")
   },
   methods: {
     joinQ() {
-      this.inQ = true;
+      this.queueRef.set(
+        {
+          users: firebase.firestore.FieldValue.arrayUnion({
+            uid: firebase.auth().currentUser.uid
+          })
+        },
+        { merge: true }
+      );
     },
     quitQ() {
-      this.inQ = false;
+      this.queueRef.set(
+        {
+          users: firebase.firestore.FieldValue.arrayRemove({
+            uid: firebase.auth().currentUser.uid
+          })
+        },
+        { merge: true }
+      );
     }
   },
   async mounted() {
-    this.$bind("queue", db.collection("queues").doc(this.id));
+    this.$bind("queue", this.queueRef);
+    this.$bind("shop", db.collection("shops").doc(this.id));
     await this.$gmapApiPromiseLazy();
     const google = this.google;
     const service = new google.maps.places.PlacesService(

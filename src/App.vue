@@ -4,31 +4,51 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+
+    <router-view v-if="signedIn" />
+    <div v-else>
+      Loading...
+    </div>
   </div>
 </template>
 
+<script>
+import firebase from "firebase/app";
+
+export default {
+  data() {
+    return {
+      signedIn: false
+    };
+  },
+  async mounted() {
+    await firebase.auth().signInAnonymously();
+    this.signedIn = true;
+  }
+};
+</script>
+
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
-  button{
-    display: block;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
-  }
+button {
+  display: block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+}
 </style>
