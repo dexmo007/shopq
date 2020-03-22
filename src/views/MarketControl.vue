@@ -7,6 +7,7 @@
     <router-link
       to="./einlass"
       tag="button"
+      style="margin: 0 auto;"
     >Einlass-Zähler</router-link>
     <h3>Stammdaten</h3>
     <div v-if="form">
