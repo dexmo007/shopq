@@ -1,6 +1,9 @@
 <template>
   <div>
-    <router-link to="./" tag="h1">REWE</router-link>
+    <router-link
+      to="./"
+      tag="h1"
+    >{{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</router-link>
     <router-link to="./einlass">Einlass-Zähler</router-link>
     <h3>Stammdaten</h3>
     <div v-if="form">
@@ -31,7 +34,7 @@
             cols="30"
             rows="10"
           />
-        </label>
+          </label>
         <button
           type="submit"
           :disabled="!formChanged"
@@ -45,6 +48,7 @@
 <script>
 import firebase from "firebase/app";
 import deepEqual from "deepequal";
+import { getPlaceDetails } from "@/api/places";
 
 const db = firebase.firestore();
 
@@ -63,7 +67,7 @@ export default {
       "shop",
       db.collection("shops").doc("default")
     );
-    const shop = await this.$bind("shop", this.shopRef);
+    const shop = await this.initShop();
     this.form = JSON.parse(JSON.stringify(shop || {}));
   },
   computed: {
@@ -75,6 +79,39 @@ export default {
     }
   },
   methods: {
+    async initShop() {
+      let shop = await this.$bind("shop", this.shopRef);
+      if (!shop) {
+        shop = {};
+      }
+      if (!shop.placeDetails) {
+        const details = await getPlaceDetails(this.id);
+
+        shop.placeDetails = {
+          ...details,
+          geometry: {
+            location: {
+              lat: details.geometry.location.lat(),
+              lng: details.geometry.location.lng()
+            }
+          },
+          opening_hours: {
+            periods: details.opening_hours.periods,
+            weekday_text: details.opening_hours.weekday_text
+          },
+          photos: details.photos.map(p => ({
+            height: p.height,
+            width: p.width,
+            html_attributions: p.html_attributions,
+            url: p.getUrl()
+          }))
+        };
+        db.collection("shops")
+          .doc(this.id)
+          .set(shop, { merge: true });
+      }
+      return shop;
+    },
     async saveForm() {
       try {
         this.saving = true;
@@ -92,7 +129,7 @@ form {
   display: flex;
   flex-direction: column;
 }
-form label{
+form label {
   display: flex;
   flex-direction: column;
   margin: 15px auto;
@@ -100,12 +137,13 @@ form label{
   width: 480px;
   max-width: 100%;
 }
-form button{
+form button {
   margin: 15px auto;
   width: 480px;
   max-width: 100%;
 }
-form input, form textarea{
+form input,
+form textarea {
   margin: 4px 0;
   border: 1px solid #2c3e50;
   border-radius: 4px;
@@ -114,7 +152,8 @@ form input, form textarea{
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   outline: none;
 }
-form input:focus, form textarea:focus{
+form input:focus,
+form textarea:focus {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
   border-color: #64c7a6;
 }
