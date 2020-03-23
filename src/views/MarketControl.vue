@@ -13,21 +13,21 @@
     <div v-if="form">
       <form @submit.prevent="saveForm">
         <label>Kapazität: <input
-            type="text"
-            v-model="form.capacity"
+            type="number"
+            v-model.number="form.capacity"
           ><span class="default-value">{{defaultShopParams.capacity}}</span></label>
         <label>
           Max. Einkaufszeit pro Besucher:
           <input
-            type="text"
-            v-model="form.maxShoppingTime"
+            type="number"
+            v-model.number="form.maxShoppingTime"
           ><span class="default-value">{{defaultShopParams.maxShoppingTime}}</span>
         </label>
         <label>
           Erwartete Analog-Rate:
           <input
-            type="text"
-            v-model="form.analogRatio"
+            type="number"
+            v-model.number="form.analogRatio"
           ><span class="default-value">{{defaultShopParams.analogRatio}}</span>
         </label>
         <label>Zusatzinfo:
