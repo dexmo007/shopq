@@ -254,11 +254,14 @@ export default {
         Notification.requestPermission();
       }
       const ticketId = db.collection("tickets").doc().id;
-      await this.queueRef.collection("users").add({
-        uid: firebase.auth().currentUser.uid,
-        ticketId,
-        ticketCode: this.generateTicketCode()
-      });
+      await this.queueRef
+        .collection("users")
+        .doc(`${Date.now()}-${ticketId}`)
+        .set({
+          uid: firebase.auth().currentUser.uid,
+          ticketId,
+          ticketCode: this.generateTicketCode()
+        });
       // to notify if we are done
       this.stage = "waiting-in-q";
     },

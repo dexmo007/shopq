@@ -234,7 +234,8 @@ export default {
       db.collection("queues")
         .doc(this.id)
         .collection("users")
-        .add({
+        .doc(`${Date.now()}-${db.collection("tmpId").doc().id}`)
+        .set({
           uid: db
             .collection("queues")
             .doc(this.id)
