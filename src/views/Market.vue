@@ -149,6 +149,7 @@ export default {
       let name = this.placeDetails.name;
       if (newVal > 0 && this.positionInQ === 0) {
         if (
+          "Notification" in window &&
           Notification.permission === "granted" &&
           this.stage === "waiting-in-q"
         ) {
@@ -161,7 +162,7 @@ export default {
     },
     positionInQ(newVal, oldVal) {
       if (oldVal >= 2 && newVal === 1) {
-        if (Notification.permission === "granted") {
+        if ("Notification" in window && Notification.permission === "granted") {
           new Notification("Gleich ist es geschafft!", {
             body: "Sie sind der nächste, der in den Laden darf 📯"
           });
@@ -249,7 +250,9 @@ export default {
         .join("");
     },
     async joinQ() {
-      Notification.requestPermission();
+      if ("Notification" in window) {
+        Notification.requestPermission();
+      }
       const ticketId = db.collection("tickets").doc().id;
       await this.queueRef.collection("users").add({
         uid: firebase.auth().currentUser.uid,
