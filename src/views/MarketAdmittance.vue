@@ -50,13 +50,20 @@
     <section v-if="nextAdmittance">
       <h3>Nächster Kunde</h3>
       <div id="next-admittance">
-        <div v-if="nextAdmittance.ticketCode">
-          <span>QR Code scannen:</span>
-          <!-- <video
-              autoplay
-              ref="qrscan"
-            ></video> -->
-          <QRCodeScanner />
+        <div
+          v-if="nextAdmittance.ticketCode"
+          id="qrscan-container"
+        >
+          <span v-if="scanning">QR Code scannen:</span>
+          <div>
+            <button
+              :class="{danger: scanning}"
+              @click="scanning = !scanning"
+            >{{scanning ? 'Stop' : 'QR-Code scannen'}}</button></div>
+          <QRCodeScanner
+            v-if="scanning"
+            @decode="onDecode"
+          />
           <span>Ticket-Nr.: {{nextAdmittance.ticketCode}}</span>
         </div>
         <div v-else>
@@ -111,7 +118,8 @@ export default {
       defaultShopParams: null,
       queue: [],
       eventData: [],
-      rtf: new Intl.RelativeTimeFormat("de", { numeric: "auto" })
+      rtf: new Intl.RelativeTimeFormat("de", { numeric: "auto" }),
+      scanning: false
     };
   },
   async mounted() {
@@ -247,8 +255,7 @@ export default {
       });
     },
     async admitNext() {
-      console.log(this.nextAdmittance.ticketCode);
-      if(this.nextAdmittance.ticketCode) {
+      if (this.nextAdmittance.ticketCode) {
         await this.handleChange(1, {
           type: "TICKET",
           ticketCode: this.nextAdmittance.ticketCode,
@@ -260,10 +267,23 @@ export default {
           ticketId: this.nextAdmittance.ticketId,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-      }else{
+      } else {
         await this.handleChange(1);
       }
       await this.removeFromQueue(this.nextAdmittance.uid);
+    },
+    async onDecode(decoded) {
+      if (!decoded) {
+        return;
+      }
+      if (decoded === this.nextAdmittance.ticketCode) {
+        await this.admitNext();
+      } else {
+        this.$toasted.show("Falsches Ticket!", {
+          icon: "times-circle",
+          duration: 2000
+        });
+      }
     },
     async dismissNextAdmittance() {
       await this.removeFromQueue(this.nextAdmittance.uid);
@@ -283,7 +303,7 @@ section {
   justify-content: space-around;
   align-items: center;
 }
-#store-quota{
+#store-quota {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -303,12 +323,12 @@ section {
   background-color: rgb(230, 230, 230);
 }
 
-.divider{
+.divider {
   display: inline-block;
   font-size: 4em;
   margin: 8px;
 }
-.divider .hline{
+.divider .hline {
   border: 1px solid #2c3e50;
   width: 100%;
 }
@@ -326,5 +346,14 @@ section {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
+}
+#qrscan-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#qrscan-container span {
+  margin: 0.5em 0;
 }
 </style>

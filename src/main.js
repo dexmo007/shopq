@@ -1,20 +1,30 @@
 import Vue from 'vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import { firestorePlugin } from 'vuefire';
+import VueToasted from 'vue-toasted';
 import App from './App.vue';
 import router from './router';
 import './firebase';
 import './polyfills';
 
 /** START FONTAWESOME **/
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import {
+  faSearch,
+  faMapMarkedAlt,
+  faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faSearch, faMapMarkedAlt);
+library.add(faSearch, faMapMarkedAlt, faTimesCircle);
+dom.watch();
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 /** END FONTAWESOME **/
+
+Vue.use(VueToasted, {
+  iconPack: 'fontawesome',
+});
 
 Vue.use(VueGoogleMaps, {
   load: {
