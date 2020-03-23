@@ -1,5 +1,15 @@
 <template>
   <div v-if="admittance">
+
+    <div id="store-quota">
+      <div class="divider">
+        {{admittance.count}}
+        <div class="hline"></div>
+        {{shopParams.capacity}}
+      </div>
+      <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
+    </div>
+
     <section>
       <h3>Einlass</h3>
       <div
@@ -21,7 +31,6 @@
           :disabled="admittance.count === 0"
         >Geht</button>
       </div>
-      <span>Im Laden: {{admittance.count}}</span>
     </section>
     <section>
       <h3>Warteschlange</h3>
@@ -238,17 +247,22 @@ export default {
       });
     },
     async admitNext() {
-      await this.handleChange(1, {
-        type: "TICKET",
-        ticketCode: this.nextAdmittance.ticketCode,
-        ticketId: this.nextAdmittance.ticketId
-      });
-      await db.collection("ticketAdmission").add({
-        uid: this.nextAdmittance.uid,
-        ticketCode: this.nextAdmittance.ticketCode,
-        ticketId: this.nextAdmittance.ticketId,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      console.log(this.nextAdmittance.ticketCode);
+      if(this.nextAdmittance.ticketCode) {
+        await this.handleChange(1, {
+          type: "TICKET",
+          ticketCode: this.nextAdmittance.ticketCode,
+          ticketId: this.nextAdmittance.ticketId
+        });
+        await db.collection("ticketAdmission").add({
+          uid: this.nextAdmittance.uid,
+          ticketCode: this.nextAdmittance.ticketCode,
+          ticketId: this.nextAdmittance.ticketId,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }else{
+        await this.handleChange(1);
+      }
       await this.removeFromQueue(this.nextAdmittance.uid);
     },
     async dismissNextAdmittance() {
@@ -269,6 +283,11 @@ section {
   justify-content: space-around;
   align-items: center;
 }
+#store-quota{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 #primary-interaction {
   margin: 15px 0;
 }
@@ -282,6 +301,16 @@ section {
 }
 .filled {
   background-color: rgb(230, 230, 230);
+}
+
+.divider{
+  display: inline-block;
+  font-size: 4em;
+  margin: 8px;
+}
+.divider .hline{
+  border: 1px solid #2c3e50;
+  width: 100%;
 }
 #addToQ-btn {
   background-color: #f8ac59;
@@ -297,14 +326,5 @@ section {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
-}
-.col {
-  display: flex;
-  flex-direction: column;
-}
-.center-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>
