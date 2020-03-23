@@ -1,12 +1,9 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-// import 'firebase/storage';
 import 'firebase/firestore';
-// import 'firebase/functions';
-// import 'firebase/performance';
 
 const config = {
-  apiKey: 'AIzaSyAT9sc-tJf7EiEYi6rvi6zB1Rlwln_UF8c',
+  apiKey: process.env.VUE_APP_GOOGLE_API_KEY,
   authDomain: 'shopq-271815.firebaseapp.com',
   databaseURL: 'https://shopq-271815.firebaseio.com',
   projectId: 'shopq-271815',
