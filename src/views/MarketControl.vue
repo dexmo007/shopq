@@ -23,18 +23,15 @@
             type="number"
             v-model.number="form.maxShoppingTime"
           >
-          <button v-else @click="form.maxShoppingTime = defaultShopParams.maxShoppingTime" class="success">
-            Einkaustimer aktivieren
+          <button
+            v-else
+            @click="form.maxShoppingTime = defaultShopParams.maxShoppingTime"
+            class="success"
+          >
+            Einkaufstimer aktivieren
           </button>
           <span class="default-value">{{defaultShopParams.maxShoppingTime}} min</span>
         </label>
-        <!-- <label>
-          Erwartete Analog-Rate:
-          <input
-            type="number"
-            v-model.number="form.analogRatio"
-          ><span class="default-value">{{defaultShopParams.analogRatio}}</span>
-        </label> -->
         <label>Zusatzinfo:
           <textarea
             v-model="form.additionalInfo"
@@ -108,12 +105,14 @@ export default {
             periods: details.opening_hours.periods,
             weekday_text: details.opening_hours.weekday_text
           },
-          photos: details.photos.map(p => ({
-            height: p.height,
-            width: p.width,
-            html_attributions: p.html_attributions,
-            url: p.getUrl()
-          }))
+          photos: !details.photos
+            ? null
+            : details.photos.map(p => ({
+                height: p.height,
+                width: p.width,
+                html_attributions: p.html_attributions,
+                url: p.getUrl()
+              }))
         };
         db.collection("shops")
           .doc(this.id)
