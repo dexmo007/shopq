@@ -9,28 +9,13 @@
       </div>
       <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
     </div>
-
+    <button
+      @click="onLeave"
+      class="danger"
+      :disabled="admittance.count === 0"
+    >Kunde verlässt Laden</button>
     <section>
       <h3>Einlass</h3>
-      <div
-        id="primary-interaction"
-        class="row-center"
-      >
-        <button
-          class="success"
-          :class="{filled: capacityLimitReached}"
-          @click="handleChange(1)"
-        >
-          Kommt
-          <span v-if="capacityLimitReached">(Laden voll!)</span>
-        </button>
-
-        <button
-          @click="onLeave"
-          class="danger"
-          :disabled="admittance.count === 0"
-        >Geht</button>
-      </div>
     </section>
     <section>
       <h3>Warteschlange</h3>
@@ -47,8 +32,8 @@
       </div>
     </section>
 
-    <section v-if="nextAdmittance">
-      <h3>Nächster Kunde</h3>
+    <section>
+      <h3> {{nextAdmittance ? 'nächster Kunde' : 'Einlass'}}</h3>
       <div id="next-admittance">
         <div
           v-if="nextAdmittance.ticketCode"
@@ -77,6 +62,14 @@
           <button @click="dismissNextAdmittance">Nicht erschienen</button>
         </div>
       </div>
+      <button
+              class="success"
+              :class="{filled: capacityLimitReached}"
+              @click="handleChange(1)"
+      >
+        Kommt
+        <span v-if="capacityLimitReached">(Laden voll!)</span>
+      </button>
     </section>
     <section>
       <h3>Log</h3>
@@ -99,6 +92,7 @@
 import firebase from "firebase/app";
 import { selectUnit } from "@formatjs/intl-utils";
 import QRCodeScanner from "@/components/QRCodeScanner.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
 
 const db = firebase.firestore();
 
@@ -110,7 +104,7 @@ const eventTypesI18n = {
 export default {
   name: "MarketAdmittance",
   props: ["id"],
-  components: { QRCodeScanner },
+  components: { QRCodeScanner, ProgressBar },
   data() {
     return {
       admittance: null,
@@ -324,15 +318,7 @@ section {
   background-color: rgb(230, 230, 230);
 }
 
-.divider {
-  display: inline-block;
-  font-size: 4em;
-  margin: 8px;
-}
-.divider .hline {
-  border: 1px solid #2c3e50;
-  width: 100%;
-}
+
 #addToQ-btn {
   background-color: #f8ac59;
   max-width: 480px;
