@@ -40,7 +40,9 @@ export default new Router({
         import(/* webpackChunkName: "markt-claim" */ './views/MarketClaim.vue'),
       beforeEnter: (to, from, next) => {
         if (firebase.auth().currentUser.isAnonymous) {
-          next(`/login?strict=true&redirect=${encodeURIComponent(to)}`);
+          next(`/login?strict=true&redirect=${encodeURIComponent(to.path)}`);
+        } else {
+          next();
         }
       },
     },
