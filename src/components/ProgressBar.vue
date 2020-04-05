@@ -1,9 +1,9 @@
 <template>
   <div id="progress">
     <div id="limit-wrapper">
-      <span :style="{width: underLimitWidth}" />
+      <span :style="{flex: !isOverflow ? 1 : threshold/overflowCapacity}" />
       <span id="limit">{{threshold}}</span>
-      <span :style="{width: overLimitWidth}" />
+      <span :style="{flex: !isOverflow ? 0 : 1-(threshold/overflowCapacity)}" />
     </div>
 
     <div id="progressbar-wrapper">
@@ -15,7 +15,7 @@
         <div
           id="under-limit"
           :style="{width: underLimitWidth}"
-        >{{this.count}}</div>
+        >{{isOverflow ? '' : count}}</div>
       </div>
       <div
         id="progressbar-overflow"
@@ -25,7 +25,9 @@
         <div
           id="over-limit"
           :style="{flex: (count-threshold)/(overflowCapacity-threshold)}"
-        ></div>
+        >
+          {{count}}
+        </div>
       </div>
     </div>
   </div>
@@ -98,5 +100,8 @@ export default {
   background-color: #fb6b6f;
   height: 30px;
   width: 100%;
+}
+#limit-wrapper {
+  display: flex;
 }
 </style>
