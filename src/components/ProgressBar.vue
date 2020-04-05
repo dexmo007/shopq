@@ -4,56 +4,31 @@
       <span :style="{width: underLimitWidth}" />
       <span id="limit">{{threshold}}</span>
       <span :style="{width: overLimitWidth}" />
-      =======
-      <div id="progress">
-        <div id="limit-wrapper">
-          <span :style="{width: underLimitWidth}" />
-          <span id="limit">{{this.threshold}}</span>
-          <span :style="{width: overLimitWidth}" />
-        </div>
-        <div id="progressbar-wrapper">
-          <div
-            id="progressbar"
-            :class="{alone: !isOverflow}"
-          >
-            <div
-              id="under-limit"
-              :style="{width: underLimitWidth}"
-            >{{isOverflow ? '' :this.count}}</div>
-          </div>
-          <div
-            id="progressbar-overflow"
-            v-if="isOverflow"
-            :style="{width: overLimitWidth}"
-          >
-            <div id="over-limit">{{this.count}}</div>
-          </div>
-        </div>
-        >>>>>>> 3040234571f56cac8ce72ba5b4fc1d4326949928
+    </div>
+
+    <div id="progressbar-wrapper">
+      <div
+        id="progressbar"
+        :class="{alone: !isOverflow}"
+        :style="{flex: !isOverflow ? 1 : (threshold / overflowCapacity)}"
+      >
+        <div
+          id="under-limit"
+          :style="{width: underLimitWidth}"
+        >{{this.count}}</div>
       </div>
-      <div id="progressbar-wrapper">
+      <div
+        id="progressbar-overflow"
+        v-if="isOverflow"
+        :style="{flex: 1 - (threshold / overflowCapacity)}"
+      >
         <div
-          id="progressbar"
-          :class="{alone: !isOverflow}"
-          :style="{flex: !isOverflow ? 1 : (threshold / overflowCapacity)}"
-        >
-          <div
-            id="under-limit"
-            :style="{width: underLimitWidth}"
-          >{{this.count}}</div>
-        </div>
-        <div
-          id="progressbar-overflow"
-          v-if="isOverflow"
-          :style="{flex: 1 - (threshold / overflowCapacity)}"
-        >
-          <div
-            id="over-limit"
-            :style="{flex: (count-threshold)/(overflowCapacity-threshold)}"
-          ></div>
-        </div>
+          id="over-limit"
+          :style="{flex: (count-threshold)/(overflowCapacity-threshold)}"
+        ></div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
