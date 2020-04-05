@@ -17,19 +17,24 @@
             v-model.number="form.capacity"
           ><span class="default-value">{{defaultShopParams.capacity}}</span></label>
         <label>
-          Max. Einkaufszeit pro Besucher:
+          Max. Einkaufszeit pro Besucher (in Minuten):
           <input
+            v-if="form.maxShoppingTime"
             type="number"
             v-model.number="form.maxShoppingTime"
-          ><span class="default-value">{{defaultShopParams.maxShoppingTime}}</span>
+          >
+          <button v-else @click="form.maxShoppingTime = defaultShopParams.maxShoppingTime" class="success">
+            Einkaustimer aktivieren
+          </button>
+          <span class="default-value">{{defaultShopParams.maxShoppingTime}} min</span>
         </label>
-        <label>
+        <!-- <label>
           Erwartete Analog-Rate:
           <input
             type="number"
             v-model.number="form.analogRatio"
           ><span class="default-value">{{defaultShopParams.analogRatio}}</span>
-        </label>
+        </label> -->
         <label>Zusatzinfo:
           <textarea
             v-model="form.additionalInfo"

@@ -21,6 +21,24 @@
     </span>
     </div>
     <div id="market-body">
+      <div v-if="stage === 'no-support'">
+        <h2 class="text-danger">Dieser Laden benutzt die App nicht</h2>
+        <span>Gehen Sie so hin und versuchen Ihr Glück!</span>
+        <information-box title="Ist das Ihr Geschäft?">
+          <div>
+            <span v-if="isUserAnonymous">
+            <router-link :to="'/login?strict=true&redirect='
+            + encodeURIComponent($router.currentRoute.fullPath)">Erstellen Sie ein Konto</router-link> und </span>
+            <b>Nutzen Sie shopQ!</b>
+            <ul>
+              <li>kostenlos</li>
+              <li>einfache Bedienung</li>
+              <li>minimieren Sie die Warteschlange vor ihrem Laden!</li>
+            </ul>
+            <router-link :to="'/claimMarket/' + id" tag="button" class="success">Geschäft bestätigen</router-link>
+          </div>
+        </information-box>
+      </div>
       <div v-if="stage === 'default'">
         <div v-if="freeSlots > 0">
           <h2>Es gibt keine Schlange!</h2>
@@ -73,10 +91,10 @@
         >Schlange verlassen</button>
       </div>
 
-      <div id="shopq-info">
+      <div id="shopq-info" v-if="shopParams && shopParams.additionalInfo">
         <h5>Zusatzinfo für diesen Markt:</h5>
         <p>
-          {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
+          {{shopParams.additionalInfo}}
         </p>
       </div>
     </div>
@@ -86,6 +104,7 @@
 import { gmapApi } from "vue2-google-maps";
 import firebase from "firebase/app";
 import CountDown from "@/components/CountDown";
+import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
 
 const db = firebase.firestore();
@@ -97,7 +116,7 @@ export default {
   props: {
     id: String
   },
-  components: { QRCode, CountDown },
+  components: { QRCode, CountDown, InformationBox },
   computed: {
     google: gmapApi,
     queueRef() {
@@ -302,6 +321,7 @@ export default {
 }
 #market{
   margin: 0 12px;
+  padding-bottom: 12px;
 }
 .primary-interaction {
   margin: 30px 0;

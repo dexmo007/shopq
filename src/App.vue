@@ -76,6 +76,7 @@ body {
   border-radius: 0 0 8px 8px;
   background: white;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
+  width: 98%;
   max-width: 720px;
   margin: 8px auto;
 }
@@ -108,6 +109,7 @@ body {
   padding: 12px 18px;
   border-radius: 8px;
   color: white;
+  text-shadow: 0 0 4px rgb(0, 0, 0);
 }
 #nav-account-area {
   top: 6px;
@@ -136,6 +138,10 @@ button {
     background-color 140ms cubic-bezier(0.43, 0, 0.37, 0.94);
   color: #2c3e50;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+button[disabled]{
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 button[type="submit"],
 button.success {

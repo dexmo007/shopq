@@ -75,5 +75,6 @@ export default {
 <style scoped>
 #search-input{
  border: none;
+ margin-left: 6px;
 }
 </style>

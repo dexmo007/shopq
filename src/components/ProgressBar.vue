@@ -77,14 +77,13 @@ export default {
 }
 #progressbar {
   border-style: solid;
-  border-width: 1px 0 1px 1px;
+  border-width: 1px;
   flex: 1;
   overflow: hidden;
   border-radius: 4px 0 0 4px;
 }
 #progressbar.alone {
   border-radius: 5px;
-  border-width: 1px;
 }
 #progressbar-overflow {
   border-style: dotted;
@@ -95,11 +94,12 @@ export default {
 #under-limit {
   background-color: #64c7a6;
   height: 30px;
+  line-height: 30px;
 }
 #over-limit {
   background-color: #fb6b6f;
   height: 30px;
-  width: 100%;
+  line-height: 30px;
 }
 #limit-wrapper {
   display: flex;

@@ -1,17 +1,20 @@
 <template>
-  <div v-if="admittance">
-
-    <div id="store-quota">
-      <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>
-      <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
-    </div>
-    <button
-      id="market-leave"
-      @click="onLeave"
-      class="danger"
-      :disabled="admittance.count === 0"
-    >Kunde verlässt Laden</button>
+  <div v-if="admittance" id="einlass">
     <section>
+      <div id="store-quota">
+        <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>
+        <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
+      </div>
+      <button
+        id="market-leave"
+        @click="onLeave"
+        class="danger"
+        :disabled="admittance.count === 0"
+      >
+        Kunde verlässt Laden
+      </button>
+    </section>
+    <section v-if="capacityLimitReached">
       <h3>Warteschlange</h3>
       <div>
         <span>{{peopleInQueue}} Personen in der Warteschlange</span>
@@ -27,10 +30,10 @@
     </section>
 
     <section>
-      <h3> {{nextAdmittance ? 'nächster Kunde' : 'Einlass'}}</h3>
-      <div id="next-admittance">
+      <h3> {{capacityLimitReached ? 'nächster Kunde' : 'Einlass'}}</h3>
+      <div id="next-admittance" v-if="capacityLimitReached && nextAdmittance">
         <div
-          v-if="nextAdmittance && nextAdmittance.ticketCode"
+          v-if="nextAdmittance.ticketCode"
           id="qrscan-container"
         >
           <span v-if="scanning">QR Code scannen:</span>
@@ -57,8 +60,8 @@
         </div>
       </div>
       <button
+              id="market-enter"
         class="success"
-        :class="{filled: capacityLimitReached}"
         @click="handleChange(1)"
       >
         Kommt
@@ -67,7 +70,7 @@
     </section>
     <section>
       <h3>Log</h3>
-      <ul>
+      <ul id="log-box">
         <li
           v-for="event in events"
           :key="event.id"
@@ -77,7 +80,7 @@
       </ul>
     </section>
   </div>
-  <div v-else>
+  <div v-else class="loading">
     Loading...
   </div>
 </template>
@@ -282,22 +285,13 @@ export default {
 </script>
 
 <style scoped>
+#market-enter, #market-leave{
+  margin: 12px auto;
+}
 section {
-  margin: 21px auto;
-  max-width: 480px;
-  padding-bottom: 21px;
-}
-.row-center {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-#store-quota {
-  margin: 15px 0;
-}
-
-.filled {
-  background-color: rgb(230, 230, 230);
+  margin: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
 #addToQ-btn {
@@ -306,9 +300,9 @@ section {
   margin: 4px auto;
 }
 #next-admittance {
-  border: 1px solid darkgray;
+  border: 1px solid #f8ac59;
   border-radius: 3px;
-  padding: 1em;
+  padding: 0.6em 1em;
 }
 #next-admittance-interaction {
   display: flex;
@@ -323,5 +317,12 @@ section {
 }
 #qrscan-container span {
   margin: 0.5em 0;
+}
+#log-box{
+  max-height: 420px;
+  overflow-y: auto;
+  text-align: initial;
+  border: 1px solid rgba(33,33,33, 0.3);
+  background: rgb(245,245,245);
 }
 </style>
