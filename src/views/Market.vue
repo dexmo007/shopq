@@ -60,7 +60,6 @@
             @click="joinQ()"
           >virtuell anstellen</button>
           <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
-          <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
         </div>
       </div>
 
@@ -71,9 +70,9 @@
         <span>Viel Spaß</span><br>
         <span id="store">beim 🛒!</span>
         <count-down
-          v-if="shopParams.freeSlots <= 0"
+          v-if="shop.maxShoppingTime"
           @end-timer="inStore = false"
-          :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))"
+          :end-date="shoppingTimeEnd"
         />
         <button @click="setAdmissionInactive">Nicht mehr da.</button>
       </div>
@@ -130,9 +129,6 @@ export default {
     queueRef() {
       return db.collection("queues").doc(this.id);
     },
-    WaitingTimeStr() {
-      return null;
-    },
     inQ() {
       return this.queue.some(
         ({ uid }) => uid === firebase.auth().currentUser.uid
@@ -168,6 +164,14 @@ export default {
     },
     isUserAnonymous() {
       return firebase.auth().currentUser.isAnonymous;
+    },
+    shoppingTimeEnd(){
+      let start = new Date();
+      if(this.ticketAdmission && this.ticketAdmission.length) {
+        const [admission] = this.ticketAdmission;
+        start = new Date(admission.timestamp.toDate());
+      }
+      return new Date( start.getTime() + (this.shop.maxShoppingTime * 60 * 1000));
     }
   },
   beforeDestroy() {

@@ -39,7 +39,7 @@
             id=""
             cols="30"
             rows="10"
-          />
+          >z.B.: Einlass nur mit Wagen!</textarea>
           </label>
         <button
           type="submit"
