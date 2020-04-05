@@ -1,25 +1,27 @@
 <template>
   <div id="app">
+    <div id="nav-account-area">
+        <span v-if="user">
+          <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
+          <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
+        </span>
+      <router-link
+              v-if="!user"
+              tag="button"
+              to="/login"
+              class="success"
+      >Login</router-link>
+      <button
+              v-else
+              class="danger"
+      >Logout</button>
+    </div>
     <div id="nav">
       <router-link
         to="/"
         tag="span"
         id="home-link"
       >shop<span style="color: #64c7a6;">Q</span></router-link>
-      <div id="nav-account-area">
-        <span v-if="user">
-          {{user.isAnonymous ? 'Gast' : (user.displayName || user.email)}}
-        </span>
-        <router-link
-          v-if="!user || user.isAnonymous"
-          tag="button"
-          to="/login"
-        >Login</router-link>
-        <button
-          v-else
-          class="danger"
-        >Logout</button>
-      </div>
     </div>
 
     <router-view v-if="user" />
@@ -70,25 +72,32 @@ body {
   color: #2c3e50;
   margin: 0;
 }
+#app {
+  border-radius: 0 0 8px 8px;
+  background: white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
+  max-width: 720px;
+  margin: 8px auto;
+}
 #nav {
   width: calc(100% + 16px);
   position: relative;
   z-index: 1;
   padding: 12px 0 18px;
-  margin: 50px 0 50px -8px;
+  margin: 70px 0 50px -8px;
   background: #2c3e50;
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
 }
 #nav::before {
   content: "";
   position: absolute;
+  width: 100%;
+  height: calc(100% + 56px);
   background: #2c3e50;
   z-index: -1;
-  top: -42px;
+  top: -28px;
   left: 0;
-  width: 100%;
-  height: calc(100% + 84px);
-  clip-path: polygon(0% 0%, 100% 42px, 100% 100%, 0% calc(100% - 42px));
+  clip-path: polygon(0% 0%, 100% 28px, 100% 100%, 0% calc(100% - 28px));
 }
 #home-link {
   font-size: 3em;
@@ -100,15 +109,16 @@ body {
   border-radius: 8px;
   color: white;
 }
-#app {
-  border-radius: 0 0 8px 8px;
-  background: white;
-  margin: 8px;
-}
 #nav-account-area {
-  float: right;
+  top: 6px;
+  right: 6px;
+  position: absolute;
+  color: white;
   display: flex;
   align-items: center;
+}
+#nav-account-area > *{
+  margin: 4px;
 }
 button {
   display: block;

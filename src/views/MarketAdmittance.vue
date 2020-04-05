@@ -6,13 +6,11 @@
       <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
     </div>
     <button
+      id="market-leave"
       @click="onLeave"
       class="danger"
       :disabled="admittance.count === 0"
     >Kunde verlässt Laden</button>
-    <section>
-      <h3>Einlass</h3>
-    </section>
     <section>
       <h3>Warteschlange</h3>
       <div>
@@ -295,21 +293,9 @@ section {
   align-items: center;
 }
 #store-quota {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-#primary-interaction {
   margin: 15px 0;
 }
-#primary-interaction > button {
-  max-width: 180px;
-  max-height: 180px;
-  width: 40vw;
-  height: 25vh;
-  font-size: 2em;
-  font-weight: bold;
-}
+
 .filled {
   background-color: rgb(230, 230, 230);
 }

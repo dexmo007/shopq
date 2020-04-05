@@ -3,7 +3,7 @@
     <router-link
       to="./"
       tag="h1"
-    >{{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</router-link>
+    >{{(shop && shop.placeDetails) ? shop.placeDetails.name : '...'}}</router-link>
     <router-link
       to="./einlass"
       tag="button"
@@ -136,15 +136,11 @@ form {
 form label {
   display: flex;
   flex-direction: column;
-  margin: 15px auto;
+  margin: 15px 8px;
   text-align: left;
-  width: 480px;
-  max-width: 100%;
 }
 form button {
-  margin: 15px auto;
-  width: 480px;
-  max-width: 100%;
+  margin: 15px 8px;
 }
 form input,
 form textarea {
