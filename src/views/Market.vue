@@ -304,6 +304,9 @@ export default {
   },
   async mounted() {
     await this.initialize();
+    if(!this.shop){
+      this.stage = "no-support";
+    }
   }
 };
 </script>

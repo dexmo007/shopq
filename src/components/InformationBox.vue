@@ -1,6 +1,6 @@
 <template>
-    <div id="information" :class="variant">
-        <h1 v-if="title" @mouseover="isShown = true" @mouseleave="isShown = !unfold">{{title}}</h1>
+    <div id="information" :class="variant" @mouseover="isShown = true" @mouseleave="isShown = !unfold">
+        <h1 v-if="title">{{title}}</h1>
         <slot v-if="isShown"/>
     </div>
 </template>
