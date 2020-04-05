@@ -39,10 +39,26 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "markt-claim" */ './views/MarketClaim.vue'),
       beforeEnter: (to, from, next) => {
-        if (firebase.auth().currentUser.isAnonymous) {
-          next(`/login?strict=true&redirect=${encodeURIComponent(to.path)}`);
+        if (firebase.auth().currentUser) {
+          if (firebase.auth().currentUser.isAnonymous) {
+            next(`/login?strict=true&redirect=${encodeURIComponent(to.path)}`);
+          } else {
+            next();
+          }
         } else {
-          next();
+          firebase.auth().onAuthStateChanged((user, error) => {
+            if (!user || error) {
+              next(false);
+              return;
+            }
+            if (user.isAnonymous) {
+              next(
+                `/login?strict=true&redirect=${encodeURIComponent(to.path)}`
+              );
+            } else {
+              next();
+            }
+          });
         }
       },
     },
