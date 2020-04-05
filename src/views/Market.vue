@@ -13,14 +13,9 @@
       id="market-header"
       v-else
     >
-      <h1>
-        <!--      <div-->
-        <!--        v-if="placeDetails.opening_hours"-->
-        <!--        id="isOpenDot"-->
-        <!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
-        <!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
-        <!--      />-->
-        {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
+      <router-link
+              to="./control"
+              tag="h1">{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
       <span>
         <font-awesome-icon icon="map-marked-alt" />
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
