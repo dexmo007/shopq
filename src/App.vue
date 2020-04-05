@@ -112,12 +112,15 @@ body {
   text-shadow: 0 0 4px rgb(0, 0, 0);
 }
 #nav-account-area {
-  top: 6px;
-  right: 6px;
   position: absolute;
+  top: 6px;
+  max-width: 720px;
+  width: 98%;
+  margin: 0 auto;
   color: white;
   display: flex;
   align-items: center;
+  justify-content: end;
 }
 #nav-account-area > *{
   margin: 4px;
