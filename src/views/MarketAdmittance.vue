@@ -6,14 +6,14 @@
     <router-link
       to="./control"
       tag="h1"
-    >{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
+    >{{!shop || !shop.placeDetails ? 'Name lädt...' : shop.placeDetails.name}}</router-link>
     <section>
       <div id="store-quota">
         <progress-bar
           :threshold="shopParams.capacity"
           :count="admittance.count"
         />
-        <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
+        <span>{{admittance.count}} von max. {{shopParams.capacity}} Kunden im Geschäft</span>
       </div>
       <button
         id="market-leave"
@@ -43,7 +43,7 @@
       <h3> {{capacityLimitReached ? 'nächster Kunde' : 'Einlass'}}</h3>
       <div
         id="next-admittance"
-        v-if="capacityLimitReached && nextAdmittance"
+        v-if="nextAdmittance !== undefined"
       >
         <div
           v-if="nextAdmittance.ticketCode"
@@ -64,6 +64,7 @@
         <div v-else>
           Ohne Ticketcode
         </div>
+
         <div id="next-admittance-interaction">
           <button
             class="success"
@@ -104,6 +105,7 @@
 <script>
 import firebase from "firebase/app";
 import { selectUnit } from "@formatjs/intl-utils";
+import { getPlaceDetails } from "@/api/places";
 import QRCodeScanner from "@/components/QRCodeScanner.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
@@ -122,6 +124,7 @@ export default {
     return {
       admittance: null,
       shop: null,
+      placeDetails: null,
       defaultShopParams: null,
       queue: [],
       eventData: [],
@@ -135,6 +138,7 @@ export default {
       "defaultShopParams",
       db.collection("shops").doc("default")
     );
+    //this.placeDetails = await getPlaceDetails(this.id);
     this.shop = await this.$bind("shop", db.collection("shops").doc(this.id));
     // admittance control
     const a = await this.$bind(
