@@ -16,9 +16,9 @@
         <!--      />-->
         {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
       <span>
-      <font-awesome-icon icon="map-marked-alt" />
-      {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
-    </span>
+        <font-awesome-icon icon="map-marked-alt" />
+        {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
+      </span>
     </div>
     <div id="market-body">
       <div v-if="stage === 'no-support'">
@@ -27,15 +27,20 @@
         <information-box title="Ist das Ihr Geschäft?">
           <div>
             <span v-if="isUserAnonymous">
-            <router-link :to="'/login?strict=true&redirect='
-            + encodeURIComponent($router.currentRoute.fullPath)">Erstellen Sie ein Konto</router-link> und </span>
+              <router-link :to="'/login?strict=true&redirect='
+            + encodeURIComponent($router.currentRoute.fullPath)">Erstellen Sie ein Konto</router-link> und
+            </span>
             <b>Nutzen Sie shopQ!</b>
             <ul>
               <li>kostenlos</li>
               <li>einfache Bedienung</li>
               <li>minimieren Sie die Warteschlange vor ihrem Laden!</li>
             </ul>
-            <router-link :to="'/claimMarket/' + id" tag="button" class="success">Geschäft bestätigen</router-link>
+            <router-link
+              :to="`/markt/${id}/claim`"
+              tag="button"
+              class="success"
+            >Geschäft bestätigen</router-link>
           </div>
         </information-box>
       </div>
@@ -43,7 +48,7 @@
         <div v-if="freeSlots > 0">
           <h2>Es gibt keine Schlange!</h2>
           <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
-          <span>{{freeSlots}}/{{shop.capacity}} Plätze frei!</span>
+          <span>{{freeSlots}}/{{shopParams.capacity}} Plätze frei!</span>
         </div>
         <div
           v-else
@@ -91,7 +96,10 @@
         >Schlange verlassen</button>
       </div>
 
-      <div id="shopq-info" v-if="shopParams && shopParams.additionalInfo">
+      <div
+        id="shopq-info"
+        v-if="shopParams && shopParams.additionalInfo"
+      >
         <h5>Zusatzinfo für diesen Markt:</h5>
         <p>
           {{shopParams.additionalInfo}}
@@ -142,7 +150,7 @@ export default {
       return {
         ...this.defaultShopParams,
         ...(this.shop || {})
-      }
+      };
     },
     queueSlot() {
       if (!this.inQ) {
@@ -157,6 +165,9 @@ export default {
         return null;
       }
       return this.shopParams.capacity - this.admittance.count;
+    },
+    isUserAnonymous() {
+      return firebase.auth().currentUser.isAnonymous;
     }
   },
   beforeDestroy() {
@@ -236,8 +247,12 @@ export default {
     },
     async initialize() {
       try {
-        this.placeDetails = await this.getPlaceDetails();
         await this.$bind("shop", db.collection("shops").doc(this.id));
+        if (this.shop && this.shop.placeDetails) {
+          this.placeDetails = this.shop.placeDetails;
+        } else {
+          this.placeDetails = await this.getPlaceDetails();
+        }
         await this.$bind("queue", this.queueRef.collection("users"));
         await this.$bind(
           "admittance",
@@ -304,6 +319,9 @@ export default {
   },
   async mounted() {
     await this.initialize();
+    if (!this.shop) {
+      this.stage = "no-support";
+    }
   }
 };
 </script>
@@ -319,7 +337,7 @@ export default {
 #isOpenDot.open {
   background-color: #64c7a6;
 }
-#market{
+#market {
   margin: 0 12px;
   padding-bottom: 12px;
 }

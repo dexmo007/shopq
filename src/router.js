@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
+import firebase from 'firebase/app';
 
 Vue.use(Router);
 
@@ -30,6 +31,18 @@ export default new Router({
       props: true,
       component: () =>
         import(/* webpackChunkName: "markt" */ './views/Market.vue'),
+    },
+    {
+      path: '/markt/:id/claim',
+      name: 'MarketClaim',
+      props: true,
+      component: () =>
+        import(/* webpackChunkName: "markt-claim" */ './views/MarketClaim.vue'),
+      beforeEnter: (to, from, next) => {
+        if (firebase.auth().currentUser.isAnonymous) {
+          next(`/login?strict=true&redirect=${encodeURIComponent(to)}`);
+        }
+      },
     },
     {
       path: '/markt/:id/control',
