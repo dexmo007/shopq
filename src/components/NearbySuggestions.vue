@@ -1,7 +1,7 @@
 <template>
   <div id="nearby">
     <h1>{{title}}</h1>
-    <div id="wrapper">
+    <div id="wrapper" v-if="status === 'found-suggestions'">
       <router-link
         v-for="market in suggestions"
         :key="market.id"
@@ -13,6 +13,12 @@
         <span class="suggestion-name">{{market.name}}</span>
         <span class="suggestion-addr">{{market.vicinity}}</span>
       </router-link>
+    </div>
+    <div v-if="status === 'location-disabled'">
+      <label>
+        PLZ eingeben:
+        <input placeholder="PLZ"/>
+      </label>
     </div>
   </div>
 </template>
@@ -30,7 +36,8 @@ export default {
   },
   data() {
     return {
-      suggestions: null
+      suggestions: null,
+      status: "searching"
     };
   },
   mounted() {
@@ -51,9 +58,13 @@ export default {
           rankBy: google.maps.places.RankBy.DISTANCE
         },
         nearbyPlaces => {
+          this.status = "found-suggestions";
           this.suggestions = nearbyPlaces;
         }
       );
+    }, positionError => {
+      console.error(positionError);
+      this.status = "location-disabled";
     });
   }
 };

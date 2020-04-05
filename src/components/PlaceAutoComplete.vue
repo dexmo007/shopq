@@ -1,6 +1,7 @@
 <template>
   <AutoComplete
     id="search-input"
+    class="blank"
     v-bind="$attrs"
     v-on="$listeners"
     :types="['establishment']"

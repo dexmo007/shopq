@@ -125,6 +125,21 @@ body {
 #nav-account-area > *{
   margin: 4px;
 }
+input:not(.blank),
+textarea:not(.blank){
+  margin: 4px 0;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+input:focus:not(.blank),
+textarea:focus:not(.blank){
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  border-color: #64c7a6;
+}
 button {
   display: block;
   font-weight: 400;
