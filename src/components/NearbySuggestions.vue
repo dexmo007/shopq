@@ -52,7 +52,6 @@ export default {
         },
         nearbyPlaces => {
           this.suggestions = nearbyPlaces;
-          console.log(nearbyPlaces);
         }
       );
     });
