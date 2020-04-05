@@ -1,10 +1,6 @@
 <template>
   <div id="app">
     <div id="nav-account-area">
-        <span v-if="user">
-          <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
-          <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
-        </span>
       <router-link
               v-if="!user"
               tag="button"
@@ -15,6 +11,10 @@
               v-else
               class="danger"
       >Logout</button>
+      <span v-if="user">
+          <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
+          <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
+        </span>
     </div>
     <div id="nav">
       <router-link
@@ -120,7 +120,7 @@ body {
   color: white;
   display: flex;
   align-items: center;
-  justify-content: end;
+  flex-direction: row-reverse;
 }
 #nav-account-area > *{
   margin: 4px;
