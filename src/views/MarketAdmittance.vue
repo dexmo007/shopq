@@ -1,5 +1,8 @@
 <template>
   <div v-if="admittance" id="einlass">
+    <router-link
+            to="./control"
+            tag="h1">{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
     <section>
       <div id="store-quota">
         <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>

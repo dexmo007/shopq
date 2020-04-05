@@ -101,7 +101,7 @@ export default {
               lng: details.geometry.location.lng()
             }
           },
-          opening_hours: {
+          opening_hours: !details.opening_hours ? null : {
             periods: details.opening_hours.periods,
             weekday_text: details.opening_hours.weekday_text
           },
