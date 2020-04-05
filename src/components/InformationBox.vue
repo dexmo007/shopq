@@ -1,5 +1,5 @@
 <template>
-    <div id="information" :class="variant" @mouseover="isShown = true" @mouseleave="isShown = !unfold">
+    <div id="information" :class="variant" @mouseover="isShown = true">
         <h1 v-if="title">{{title}}</h1>
         <slot v-if="isShown"/>
     </div>
@@ -41,5 +41,8 @@
     border-radius: 5px;
     text-align: initial;
     padding: 5px;
+}
+#information > h1{
+    text-align: center;
 }
 </style>
