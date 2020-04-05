@@ -14,6 +14,17 @@ export default new Router({
       component: Home,
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () =>
+        import(/* webpackChunkName: "login" */ './views/Login.vue'),
+    },
+    {
+      path: '/me',
+      name: 'me',
+      component: () => import(/* webpackChunkName: "me" */ './views/Me.vue'),
+    },
+    {
       path: '/markt/:id',
       name: 'markt',
       props: true,

@@ -6,9 +6,23 @@
         tag="span"
         id="home-link"
       >shop<span style="color: #64c7a6;">Q</span></router-link>
+      <div id="nav-account-area">
+        <span v-if="user">
+          {{user.isAnonymous ? 'Gast' : (user.displayName || user.email)}}
+        </span>
+        <router-link
+          v-if="!user || user.isAnonymous"
+          tag="button"
+          to="/login"
+        >Login</router-link>
+        <button
+          v-else
+          class="danger"
+        >Logout</button>
+      </div>
     </div>
 
-    <router-view v-if="signedIn" />
+    <router-view v-if="user" />
     <div v-else>
       Loading...
     </div>
@@ -21,12 +35,27 @@ import firebase from "firebase/app";
 export default {
   data() {
     return {
-      signedIn: false
+      user: null
     };
   },
   async mounted() {
-    await firebase.auth().signInAnonymously();
-    this.signedIn = true;
+    this.user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user, error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (user) {
+          resolve(user);
+          return;
+        }
+        firebase
+          .auth()
+          .signInAnonymously()
+          .then(resolve)
+          .catch(reject);
+      });
+    });
   }
 };
 </script>
@@ -48,6 +77,12 @@ body {
   font-weight: bolder;
   cursor: pointer;
   border-bottom: 16px;
+  float: none;
+}
+#nav-account-area {
+  float: right;
+  display: flex;
+  align-items: center;
 }
 button {
   display: block;
