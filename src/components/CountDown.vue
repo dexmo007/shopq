@@ -1,6 +1,9 @@
 <template>
-    <div :class="{danger: critical}">
+    <div :class="{danger: critical}" v-if="running">
         <span>{{min}}</span>:<span>{{sec}}</span>
+    </div>
+    <div v-else>
+        over
     </div>
 </template>
 
@@ -23,7 +26,8 @@
             return{
                 now : new Date(),
                 critical: null,
-                timer : null
+                timer : null,
+                running: true
             }
         },
         computed:{
@@ -37,6 +41,9 @@
             }
         },
         mounted(){
+            if(this.endDate - new Date()){
+                this.running = false;
+            }
             if(this.endDate - new Date() < 2 * 60 * 1000){
                 this.critical = false;
             }
@@ -58,6 +65,7 @@
                         }
                         if(this.now > newVal){
                             this.now = newVal;
+                            this.running = false;
                             this.$emit('end-timer');
                             clearInterval(this.timer)
                         }
