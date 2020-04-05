@@ -1,8 +1,14 @@
 <template>
-  <div v-if="admittance" id="einlass">
+  <div
+    v-if="admittance"
+    id="einlass"
+  >
     <section>
       <div id="store-quota">
-        <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>
+        <progress-bar
+          :threshold="shopParams.capacity"
+          :count="admittance.count"
+        />
         <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
       </div>
       <button
@@ -31,7 +37,10 @@
 
     <section>
       <h3> {{capacityLimitReached ? 'nächster Kunde' : 'Einlass'}}</h3>
-      <div id="next-admittance" v-if="capacityLimitReached && nextAdmittance">
+      <div
+        id="next-admittance"
+        v-if="capacityLimitReached && nextAdmittance"
+      >
         <div
           v-if="nextAdmittance.ticketCode"
           id="qrscan-container"
@@ -60,7 +69,7 @@
         </div>
       </div>
       <button
-              id="market-enter"
+        id="market-enter"
         class="success"
         @click="handleChange(1)"
       >
@@ -80,7 +89,10 @@
       </ul>
     </section>
   </div>
-  <div v-else class="loading">
+  <div
+    v-else
+    class="loading"
+  >
     Loading...
   </div>
 </template>
@@ -242,6 +254,7 @@ export default {
         .collection("users")
         .where("uid", "==", uid)
         .get();
+
       snap.forEach(doc => {
         doc.ref.delete();
       });
@@ -254,6 +267,7 @@ export default {
           ticketId: this.nextAdmittance.ticketId
         });
         await db.collection("ticketAdmission").add({
+          shopId: this.id,
           uid: this.nextAdmittance.uid,
           ticketCode: this.nextAdmittance.ticketCode,
           ticketId: this.nextAdmittance.ticketId,
@@ -285,13 +299,14 @@ export default {
 </script>
 
 <style scoped>
-#market-enter, #market-leave{
+#market-enter,
+#market-leave {
   margin: 12px auto;
 }
 section {
   margin: 16px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 #addToQ-btn {
@@ -318,11 +333,11 @@ section {
 #qrscan-container span {
   margin: 0.5em 0;
 }
-#log-box{
+#log-box {
   max-height: 420px;
   overflow-y: auto;
   text-align: initial;
-  border: 1px solid rgba(33,33,33, 0.3);
-  background: rgb(245,245,245);
+  border: 1px solid rgba(33, 33, 33, 0.3);
+  background: rgb(245, 245, 245);
 }
 </style>

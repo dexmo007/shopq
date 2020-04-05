@@ -170,13 +170,13 @@ export default {
     isUserAnonymous() {
       return firebase.auth().currentUser.isAnonymous;
     },
-    shoppingTimeEnd(){
+    shoppingTimeEnd() {
       let start = new Date();
-      if(this.ticketAdmission && this.ticketAdmission.length) {
+      if (this.ticketAdmission && this.ticketAdmission.length) {
         const [admission] = this.ticketAdmission;
         start = new Date(admission.timestamp.toDate());
       }
-      return new Date( start.getTime() + (this.shop.maxShoppingTime * 60 * 1000));
+      return new Date(start.getTime() + this.shop.maxShoppingTime * 60 * 1000);
     }
   },
   beforeDestroy() {
@@ -255,7 +255,10 @@ export default {
           return;
         }
 
-        await this.$bind("queue", this.queueRef.collection("users"));
+        await this.$bind(
+          "queue",
+          this.queueRef.collection("users").orderBy("joinedAt", "asc")
+        );
         await this.$bind(
           "admittance",
           db.collection("admittances").doc(this.id)
@@ -289,14 +292,12 @@ export default {
         Notification.requestPermission();
       }
       const ticketId = db.collection("tickets").doc().id;
-      await this.queueRef
-        .collection("users")
-        .doc(`${Date.now()}-${ticketId}`)
-        .set({
-          uid: firebase.auth().currentUser.uid,
-          ticketId,
-          ticketCode: this.generateTicketCode()
-        });
+      await this.queueRef.collection("users").add({
+        uid: firebase.auth().currentUser.uid,
+        ticketId,
+        ticketCode: this.generateTicketCode(),
+        joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
       // to notify if we are done
       this.stage = "waiting-in-q";
     },
