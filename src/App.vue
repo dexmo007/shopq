@@ -66,11 +66,29 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background: #373737;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
 }
 #nav {
-  margin: 30px 0;
+  width: calc(100% + 16px);
+  position: relative;
+  z-index: 1;
+  padding: 12px 0 18px;
+  margin: 50px 0 50px -8px;
+  background: #2c3e50;
+  filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
+}
+#nav::before {
+  content: "";
+  position: absolute;
+  background: #2c3e50;
+  z-index: -1;
+  top: -42px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 84px);
+  clip-path: polygon(0% 0%, 100% 42px, 100% 100%, 0% calc(100% - 42px));
 }
 #home-link {
   font-size: 3em;
@@ -78,6 +96,14 @@ body {
   cursor: pointer;
   border-bottom: 16px;
   float: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: white;
+}
+#app {
+  border-radius: 0 0 8px 8px;
+  background: white;
+  margin: 8px;
 }
 #nav-account-area {
   float: right;

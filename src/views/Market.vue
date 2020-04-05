@@ -6,81 +6,80 @@
     id="market"
     v-else
   >
-    <h1>
-      <!--      <div-->
-      <!--        v-if="placeDetails.opening_hours"-->
-      <!--        id="isOpenDot"-->
-      <!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
-      <!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
-      <!--      />-->
-      {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
-    <span>
-      <font-awesome-icon icon="map-marked-alt" /> {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}</span>
+    <div id="market-header">
+      <h1>
+        <!--      <div-->
+        <!--        v-if="placeDetails.opening_hours"-->
+        <!--        id="isOpenDot"-->
+        <!--        :class="{'open': placeDetails.opening_hours.isOpen()}"-->
+        <!--        :title="placeDetails.opening_hours.isOpen() ? 'geöffnet' : 'geschlossen'"-->
+        <!--      />-->
+        {{!placeDetails ? 'Name lädt...' : placeDetails.name}}</h1>
+      <span>
+      <font-awesome-icon icon="map-marked-alt" />
+      {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
+    </span>
+    </div>
+    <div id="market-body">
+      <div v-if="stage === 'default'">
+        <div v-if="freeSlots > 0">
+          <h2>Es gibt keine Schlange!</h2>
+          <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
+          <span>{{freeSlots}}/{{shop.capacity}} Plätze frei!</span>
+        </div>
+        <div
+          v-else
+          class="primary-interaction"
+        >
+          <button
+            class="success"
+            id="joinQ-btn"
+            @click="joinQ()"
+          >virtuell anstellen</button>
+          <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
+          <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
+        </div>
+      </div>
 
-    <div v-if="stage === 'default'">
-      <div v-if="freeSlots > 0">
-        <h2>Es gibt keine Schlange!</h2>
-        <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
-        <span>{{freeSlots}}/{{shop.capacity}} Plätze frei!</span>
+      <div
+        v-if="stage === 'q-finished'"
+        id="you-made-it"
+      >
+        <span>Viel Spaß</span><br>
+        <span id="store">beim 🛒!</span>
+        <count-down
+          v-if="shopParams.freeSlots <= 0"
+          @end-timer="inStore = false"
+          :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))"
+        />
+        <button @click="setAdmissionInactive">Nicht mehr da.</button>
       </div>
       <div
-        v-else
         class="primary-interaction"
+        v-if="stage === 'waiting-in-q'"
       >
+        <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
+        <div
+          id="ticket"
+          v-if="queueSlot"
+        >
+          <b>Dein Ticket:</b>
+          <QRCode :text="queueSlot.ticketCode" />
+          <span>{{queueSlot.ticketCode}}</span>
+        </div>
         <button
-          class="success"
-          id="joinQ-btn"
-          @click="joinQ()"
-        >virtuell anstellen</button>
-        <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
-        <span v-if="WaitingTimeStr">geschätzte Wartezeit: <b>{{WaitingTimeStr}}</b></span>
+          id="quitQ-btn"
+          @click="quitQ()"
+        >Schlange verlassen</button>
+      </div>
+
+      <div id="shopq-info">
+        <h5>Zusatzinfo für diesen Markt:</h5>
+        <p>
+          {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
+        </p>
       </div>
     </div>
-
-    <div
-      v-if="stage === 'q-finished'"
-      id="you-made-it"
-    >
-      <span>Viel Spaß</span><br>
-      <span id="store">beim 🛒!</span>
-      <count-down
-        v-if="shopParams.freeSlots <= 0"
-        @end-timer="inStore = false"
-        :end-date="new Date(new Date().getTime() + (shopParams.maxShoppingTime * 60 * 1000))"
-      />
-      <button @click="setAdmissionInactive">Nicht mehr da.</button>
-    </div>
-    <div
-      class="primary-interaction"
-      v-if="stage === 'waiting-in-q'"
-    >
-      <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
-      <div
-        id="ticket"
-        v-if="queueSlot"
-      >
-        <b>Dein Ticket:</b>
-        <QRCode :text="queueSlot.ticketCode" />
-        <span>{{queueSlot.ticketCode}}</span>
-      </div>
-      <button
-        id="quitQ-btn"
-        @click="quitQ()"
-      >Schlange verlassen</button>
-    </div>
-
-    <div id="shopq-info">
-      <h5>Zusatzinfo für diesen Markt:</h5>
-      <p>
-        {{!shop && !defaultShopParams ? 'Loading...' : (shopParams.additionalInfo) ? shopParams.additionalInfo : ''}}
-      </p>
-    </div>
-
-    <!-- <div class="card">
-      <h2>Auslastung am Vortag</h2>
-      <div style="font-size: 5em">
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -123,8 +122,8 @@ export default {
     shopParams() {
       return {
         ...this.defaultShopParams,
-        ...this.shop
-      };
+        ...(this.shop || {})
+      }
     },
     queueSlot() {
       if (!this.inQ) {
@@ -300,6 +299,9 @@ export default {
 }
 #isOpenDot.open {
   background-color: #64c7a6;
+}
+#market{
+  margin: 0 12px;
 }
 .primary-interaction {
   margin: 30px 0;
