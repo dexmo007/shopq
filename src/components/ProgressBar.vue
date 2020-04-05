@@ -7,10 +7,10 @@
         </div>
         <div id="progressbar-wrapper">
             <div id="progressbar" :class="{alone: !isOverflow}">
-                <div id="under-limit" :style="{width: underLimitWidth}">{{this.count}}</div>
+                <div id="under-limit" :style="{width: underLimitWidth}">{{isOverflow ? '' :this.count}}</div>
             </div>
             <div id="progressbar-overflow" v-if="isOverflow" :style="{width: overLimitWidth}">
-                <div id="over-limit"></div>
+                <div id="over-limit">{{this.count}}</div>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
                 return this.isOverflow ? "100%" : this.count/this.threshold * 100 + "%";
             },
             overLimitWidth(){
-                return !this.isOverflow ? "0%" : this.count-this.threshold * 12 + "px";
+                return !this.isOverflow ? "0%" : (this.count-this.threshold) * 12 + "px";
             }
 
         }
@@ -61,10 +61,12 @@
 }
 #progressbar.alone{
     border-radius: 5px;
+    border-width: 1px;
 }
 #progressbar-overflow{
     border-style: dotted;
     border-width: 1px 1px 1px 0;
+    border-radius: 0 4px 4px 0;
     flex: 1;
 }
 #under-limit{
@@ -72,7 +74,7 @@
     height: 30px;
 }
 #over-limit{
-    background-color: #dd363a;
+    background-color: #fb6b6f;
     height: 30px;
     width: 100%;
 }

@@ -3,11 +3,6 @@
 
     <div id="store-quota">
       <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>
-      <div class="divider">
-        {{admittance.count}}
-        <div class="hline"></div>
-        {{shopParams.capacity}}
-      </div>
       <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
     </div>
     <button
@@ -37,7 +32,7 @@
       <h3> {{nextAdmittance ? 'nächster Kunde' : 'Einlass'}}</h3>
       <div id="next-admittance">
         <div
-          v-if="nextAdmittance.ticketCode"
+          v-if="nextAdmittance && nextAdmittance.ticketCode"
           id="qrscan-container"
         >
           <span v-if="scanning">QR Code scannen:</span>
