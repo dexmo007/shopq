@@ -63,9 +63,9 @@
         </div>
       </div>
       <button
-              class="success"
-              :class="{filled: capacityLimitReached}"
-              @click="handleChange(1)"
+        class="success"
+        :class="{filled: capacityLimitReached}"
+        @click="handleChange(1)"
       >
         Kommt
         <span v-if="capacityLimitReached">(Laden voll!)</span>
@@ -317,7 +317,6 @@ section {
 .filled {
   background-color: rgb(230, 230, 230);
 }
-
 
 #addToQ-btn {
   background-color: #f8ac59;
