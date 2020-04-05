@@ -17,13 +17,17 @@ async function getPlacesService() {
 
 export async function getPlaceDetails(placeId) {
   const service = await getPlacesService();
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     service.getDetails(
       {
         placeId,
       },
-      (placeDetails) => {
-        resolve(placeDetails);
+      (placeDetails, error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(placeDetails);
+        }
       }
     );
   });

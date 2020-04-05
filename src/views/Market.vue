@@ -6,7 +6,13 @@
     id="market"
     v-else
   >
-    <div id="market-header">
+    <div v-if="stage === 'not-found'">
+      Den Markt kann ich nicht finden.
+    </div>
+    <div
+      id="market-header"
+      v-else
+    >
       <h1>
         <!--      <div-->
         <!--        v-if="placeDetails.opening_hours"-->
@@ -109,11 +115,11 @@
   </div>
 </template>
 <script>
-import { gmapApi } from "vue2-google-maps";
 import firebase from "firebase/app";
 import CountDown from "@/components/CountDown";
 import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
+import { getPlaceDetails } from "@/api/places";
 
 const db = firebase.firestore();
 
@@ -126,7 +132,6 @@ export default {
   },
   components: { QRCode, CountDown, InformationBox },
   computed: {
-    google: gmapApi,
     queueRef() {
       return db.collection("queues").doc(this.id);
     },
@@ -228,31 +233,24 @@ export default {
     defaultShopParams: db.collection("shops").doc("default")
   },
   methods: {
-    async getPlaceDetails() {
-      await this.$gmapApiPromiseLazy();
-      const google = this.google;
-      return new Promise(resolve => {
-        const service = new google.maps.places.PlacesService(
-          document.createElement("div")
-        );
-        service.getDetails(
-          {
-            placeId: this.id
-          },
-          placeDetails => {
-            resolve(placeDetails);
-          }
-        );
-      });
-    },
     async initialize() {
       try {
         await this.$bind("shop", db.collection("shops").doc(this.id));
         if (this.shop && this.shop.placeDetails) {
           this.placeDetails = this.shop.placeDetails;
         } else {
-          this.placeDetails = await this.getPlaceDetails();
+          try {
+            this.placeDetails = await getPlaceDetails(this.id);
+          } catch (e) {
+            this.stage = "not-found";
+          } finally {
+            this.loading = false;
+          }
         }
+        if (this.stage === "not-found") {
+          return;
+        }
+
         await this.$bind("queue", this.queueRef.collection("users"));
         await this.$bind(
           "admittance",
@@ -319,7 +317,7 @@ export default {
   },
   async mounted() {
     await this.initialize();
-    if (!this.shop) {
+    if (!this.shop && this.stage !== "not-found") {
       this.stage = "no-support";
     }
   }
