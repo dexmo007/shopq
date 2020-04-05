@@ -37,9 +37,9 @@
 
 <style scoped>
 #information{
-    padding: 5px;
-    background-color: #f8ac59;
+    border: 5px solid #f8ac59;
     border-radius: 5px;
     text-align: initial;
+    padding: 5px;
 }
 </style>
