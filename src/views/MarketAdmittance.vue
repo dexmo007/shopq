@@ -2,15 +2,7 @@
   <div v-if="admittance">
 
     <div id="store-quota">
-      <progress-bar
-        :threshold="shopParams.capacity"
-        :count="admittance.count"
-      />
-      <div class="divider">
-        {{admittance.count}}
-        <div class="hline"></div>
-        {{shopParams.capacity}}
-      </div>
+      <progress-bar :threshold="shopParams.capacity" :count="admittance.count"/>
       <span>Kunden in {{shop && shop.placeDetails ? shop.placeDetails.name : '...'}}</span>
     </div>
     <button
