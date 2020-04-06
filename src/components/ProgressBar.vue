@@ -50,17 +50,12 @@ export default {
       return this.count > this.threshold;
     },
     overflowCapacity() {
-      return this.count * 1.1;
+      return this.count * 1.01;
     },
     underLimitWidth() {
       return this.isOverflow
         ? "100%"
         : (this.count / this.threshold) * 100 + "%";
-    },
-    overLimitWidth() {
-      return !this.isOverflow
-        ? "0%"
-        : (this.count - this.threshold) * 12 + "px";
     }
   }
 };
@@ -87,8 +82,8 @@ export default {
 }
 #progressbar-overflow {
   border-style: dotted;
-  border-width: 1px 1px 1px 0;
-  border-radius: 0 4px 4px 0;
+  border-width: 1px 0 1px 0;
+  border-radius: 0;
   display: flex;
 }
 #under-limit {

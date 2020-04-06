@@ -48,8 +48,8 @@
       <div v-if="stage === 'default'">
         <div v-if="freeSlots > 0">
           <h2>Es gibt keine Schlange!</h2>
-          <span>Sie können zur Zeit ohne anzustehen einkaufen gehen.</span>
-          <span>{{freeSlots}}/{{shopParams.capacity}} Plätze frei!</span>
+          <span>Sie können zur Zeit ohne anzustehen einkaufen gehen,</span><br>
+          <span>es {{freeSlots === 1 ? 'ist ein Platz' : `sind ${freeSlots} Plätze`}} frei!</span>
         </div>
         <div
           v-else

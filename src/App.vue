@@ -156,6 +156,8 @@ button {
     background-color 140ms cubic-bezier(0.43, 0, 0.37, 0.94);
   color: #2c3e50;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  /* prevents double-tap to zoom action */
+  touch-action: manipulation;
 }
 button[disabled]{
   cursor: not-allowed;

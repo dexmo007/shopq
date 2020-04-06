@@ -15,12 +15,14 @@
         <label>Kapazität: <input
             type="number"
             v-model.number="form.capacity"
-          ><span class="default-value">{{defaultShopParams.capacity}}</span></label>
+          ><span class="default-value">Stellen Sie ein, wie viele Kunden sich gleichzeitig im Geschäft aufhalten dürfen</span></label>
         <label>
           Max. Einkaufszeit pro Besucher (in Minuten):
           <input
-            v-if="form.maxShoppingTime"
+            v-if="form.maxShoppingTime || showShoppingTimeInput"
             type="number"
+            @focus="showShoppingTimeInput = true"
+            @blur="showShoppingTimeInput = false"
             v-model.number="form.maxShoppingTime"
           >
           <button
@@ -30,16 +32,15 @@
           >
             Einkaufstimer aktivieren
           </button>
-          <span class="default-value">{{defaultShopParams.maxShoppingTime}} min</span>
+          <span class="default-value">Zeigt Kunden mit der App einen Timer an, wie lange Sie sich noch im Geschäft aufhalten dürfen</span>
         </label>
         <label>Zusatzinfo:
           <textarea
-            v-model="form.additionalInfo"
-            name=""
-            id=""
-            cols="30"
-            rows="10"
-          >z.B.: Einlass nur mit Wagen!</textarea>
+                  v-model="form.additionalInfo"
+                  cols="30"
+                  rows="10"
+                  placeholder="z.B.: Einlass nur mit Wagen!"
+          />
           </label>
         <button
           type="submit"
@@ -65,6 +66,7 @@ export default {
       shop: null,
       defaultShopParams: null,
       form: null,
+      showShoppingTimeInput: false,
       saving: false
     };
   },
@@ -152,7 +154,7 @@ form label .default-value {
   font-size: 0.9em;
 }
 form label .default-value::before {
-  content: " (Standard: ";
+  content: "(";
 }
 form label .default-value::after {
   content: ")";
