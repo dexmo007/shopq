@@ -22,6 +22,7 @@
         tag="span"
         id="home-link"
       >shop<span style="color: #64c7a6;">Q</span></router-link>
+      <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
     </div>
 
     <router-view v-if="user" />
@@ -72,6 +73,20 @@ body {
   color: #2c3e50;
   margin: 0;
 }
+#nav-account-area {
+  position: absolute;
+  top: 6px;
+  max-width: 720px;
+  width: 98%;
+  margin: 0 auto;
+  color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+#nav-account-area > *{
+  margin: 4px;
+}
 #app {
   border-radius: 0 0 8px 8px;
   background: white;
@@ -106,24 +121,28 @@ body {
   cursor: pointer;
   border-bottom: 16px;
   float: none;
-  padding: 12px 18px;
   border-radius: 8px;
   color: white;
   text-shadow: 0 0 4px rgb(0, 0, 0);
 }
-#nav-account-area {
-  position: absolute;
-  top: 6px;
-  max-width: 720px;
-  width: 98%;
-  margin: 0 auto;
-  color: white;
-  display: flex;
+#about-link{
+  display: inline-flex;
+  color: #2c3e50;
+  font-size: 0.6em;
+  padding: 0.5em 0.6em;
+  vertical-align: top;
+  height: 0.8rem;
+  width: 0.8rem;
+  border-radius: 50%;
+  justify-content: center;
   align-items: center;
-  flex-direction: row-reverse;
+  background: white;
+  cursor: pointer;
+  border: 1px solid #373737;
+  transition: box-shadow 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-#nav-account-area > *{
-  margin: 4px;
+#about-link:hover{
+  box-shadow: 0 0 3px white;
 }
 input:not(.blank),
 textarea:not(.blank){
@@ -168,7 +187,6 @@ button.success {
   border: 1px solid rgba(33, 33, 33, 0.4);
   background-color: #64c7a6;
 }
-button[type="submit"],
 button.danger {
   border: 1px solid rgba(136, 32, 34, 0.75);
   background-color: #fb6b6f;
@@ -176,7 +194,37 @@ button.danger {
 button:hover {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
-.toasted > svg:first-child {
-  margin-right: 0.7rem;
+form {
+  display: flex;
+  flex-direction: column;
+}
+form p{
+  text-align: initial;
+  margin: 0;
+}
+form section{
+  margin: 18px 10px;
+  display: flex;
+  flex-direction: column;
+}
+form label {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 8px;
+  text-align: left;
+}
+form button {
+  margin: 15px 8px;
+}
+form label .default-value {
+  color: gray;
+  font-style: italic;
+  font-size: 0.9em;
+}
+form label .default-value::before {
+  content: "(";
+}
+form label .default-value::after {
+  content: ")";
 }
 </style>

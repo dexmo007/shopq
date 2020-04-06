@@ -135,28 +135,5 @@ export default {
 </script>
 
 <style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-}
-form label {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 8px;
-  text-align: left;
-}
-form button {
-  margin: 15px 8px;
-}
-form label .default-value {
-  color: gray;
-  font-style: italic;
-  font-size: 0.9em;
-}
-form label .default-value::before {
-  content: "(";
-}
-form label .default-value::after {
-  content: ")";
-}
+
 </style>

@@ -9,12 +9,28 @@
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
       </span>
     </div>
-    <p>
-      Mit Klick auf den Button stimmen Sie den AGB's und allgemeinen Geschäftisbedingungen zu
-    </p>
-    <button @click="claim" class="success">
-      shopQ für {{!placeDetails ? 'ihr Geschäft' : placeDetails.name}} nutzen
-    </button>
+    <form @submit.prevent="claim">
+      <section id="market-capacity">
+        <p>
+          <b>Bevor es losgeht:</b>
+          Legen Sie fest, wie viele Kunden ihr Geschäft gleichzeitig betreten dürfen.
+        </p>
+        <label>Kapazität: <input
+                type="number"
+                v-model.number="form.capacity"
+        ><span class="default-value">Sie können die Kapazität ihres Geschäfts jederzeit anpassen.</span></label>
+      </section>
+      <section>
+        <p>
+          Mit Klick auf den Button stimmen Sie den
+          <router-link to="/agb">AGB's</router-link> und
+          <router-link to="/agb">allgemeinen Geschäftisbedingungen</router-link> zu.
+        </p>
+        <button type="submit" class="success">
+          shopQ für {{!placeDetails ? 'ihr Geschäft' : placeDetails.name}} nutzen
+        </button>
+      </section>
+    </form>
   </div>
 </template>
 
@@ -27,6 +43,9 @@ export default {
   data(){
     return {
       placeDetails: null,
+      form: {
+        capacity: 20,
+      }
     }
   },
   async mounted(){
@@ -46,3 +65,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+  #market-header{
+    padding-bottom: 21px;
+  }
+</style>

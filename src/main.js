@@ -13,10 +13,11 @@ import {
   faSearch,
   faMapMarkedAlt,
   faTimesCircle,
+  faQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faSearch, faMapMarkedAlt, faTimesCircle);
+library.add(faSearch, faMapMarkedAlt, faTimesCircle, faQuestion);
 dom.watch();
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
