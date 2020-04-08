@@ -1,5 +1,9 @@
 <template>
-  <div>
+
+  <div v-if="loading">
+    loading...
+  </div>
+  <div v-else>
     <div id="market-header">
       <router-link
             to="./"
@@ -42,6 +46,7 @@ export default {
   props: ["id"],
   data(){
     return {
+      loading: true,
       placeDetails: null,
       form: {
         capacity: 20,
@@ -49,7 +54,12 @@ export default {
     }
   },
   async mounted(){
-    this.placeDetails = await getPlaceDetails(this.id);
+    try {
+      this.placeDetails = await getPlaceDetails(this.id);
+    } finally {
+      console.log(this.placeDetails);
+      this.loading = false;
+    }
   },
   methods: {
     async claim() {

@@ -1,7 +1,7 @@
 <template>
   <canvas
-          height="400px"
-          width="400px"
+          height="420px"
+          width="420px"
     v-bind="$attrs"
     v-on="$listeners"
     ref="canvas"

@@ -87,7 +87,7 @@
           v-if="queueSlot"
         >
           <b>Dein Ticket:</b>
-          <QRCode :text="queueSlot.ticketCode" />
+          <QRCode height="420px" width="420px" :text="queueSlot.ticketCode" />
           <span>{{queueSlot.ticketCode}}</span>
         </div>
         <button

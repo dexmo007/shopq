@@ -23,7 +23,8 @@ export async function getPlaceDetails(placeId) {
         placeId,
       },
       (placeDetails, error) => {
-        if (error) {
+        // TODO HENRIK GUCK DIR DAS AN!
+        if (error && error !== 'OK') {
           reject(error);
         } else {
           resolve(placeDetails);
