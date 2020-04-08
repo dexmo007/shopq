@@ -83,15 +83,16 @@
       </button>
     </section>
     <section>
-      <h3>Log</h3>
-      <ul id="log-box">
-        <li
-          v-for="event in events"
-          :key="event.id"
-        >
-          {{event.relativeTime}}: {{event.typeText}}
-        </li>
-      </ul>
+      <information-box title="Log" v-if="events.length">
+        <ul id="log-box">
+          <li
+                  v-for="event in events"
+                  :key="event.id"
+          >
+            {{event.relativeTime}}: {{event.typeText}}
+          </li>
+        </ul>
+    </information-box>
     </section>
   </div>
   <div
@@ -105,7 +106,7 @@
 <script>
 import firebase from "firebase/app";
 import { selectUnit } from "@formatjs/intl-utils";
-import { getPlaceDetails } from "@/api/places";
+import InformationBox from "@/components/InformationBox";
 import QRCodeScanner from "@/components/QRCodeScanner.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
@@ -119,7 +120,7 @@ const eventTypesI18n = {
 export default {
   name: "MarketAdmittance",
   props: ["id"],
-  components: { QRCodeScanner, ProgressBar },
+  components: { QRCodeScanner, ProgressBar, InformationBox },
   data() {
     return {
       admittance: null,
@@ -342,7 +343,7 @@ section {
   margin: 0.5em 0;
 }
 #log-box {
-  max-height: 420px;
+  max-height: 120px;
   overflow-y: auto;
   text-align: initial;
   border: 1px solid rgba(33, 33, 33, 0.3);
