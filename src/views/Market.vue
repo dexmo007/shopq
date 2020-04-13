@@ -14,8 +14,9 @@
       v-else
     >
       <router-link
-              to="./control"
-              tag="h1">{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
+        to="./control"
+        tag="h1"
+      >{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
       <span>
         <font-awesome-icon icon="map-marked-alt" />
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
@@ -87,7 +88,11 @@
           v-if="queueSlot"
         >
           <b>Dein Ticket:</b>
-          <QRCode height="420px" width="420px" :text="queueSlot.ticketCode" />
+          <QRCode
+            height="420px"
+            width="420px"
+            :text="queueSlot.ticketCode"
+          />
           <span>{{queueSlot.ticketCode}}</span>
         </div>
         <button

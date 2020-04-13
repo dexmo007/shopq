@@ -83,16 +83,19 @@
       </button>
     </section>
     <section>
-      <information-box title="Log" v-if="events.length">
+      <information-box
+        title="Log"
+        v-if="events.length"
+      >
         <ul id="log-box">
           <li
-                  v-for="event in events"
-                  :key="event.id"
+            v-for="event in events"
+            :key="event.id"
           >
             {{event.relativeTime}}: {{event.typeText}}
           </li>
         </ul>
-    </information-box>
+      </information-box>
     </section>
   </div>
   <div
@@ -160,6 +163,7 @@ export default {
         .collection("queues")
         .doc(this.id)
         .collection("users")
+        .orderBy("joinedAt", "asc")
     );
     // events
     this.$bind(
@@ -253,7 +257,8 @@ export default {
             .doc(this.id)
             .collection("users")
             .doc().id,
-          type: "ANON"
+          type: "ANON",
+          joinedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
     },
     async removeFromQueue(uid) {
