@@ -300,7 +300,10 @@ export default {
       });
     },
     async admitNext() {
-      if (this.nextAdmittance.ticketCode) {
+      if (
+        this.nextAdmittance.ticketCode &&
+        this.nextAdmittance.type !== "ANON"
+      ) {
         await this.handleChange(1, {
           type: "TICKET",
           ticketCode: this.nextAdmittance.ticketCode,
