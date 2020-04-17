@@ -1,9 +1,12 @@
 <template>
     <div id="about">
-        shopQ ist ein kostenloses Managementsystem für eine Warteschlange.<br>
-        Wollen sie überwachen, wie viele Leute gleichzeitig im Laden sind und wann Sie neue Kunden in ihr Geschäft lassen können?
-        Kein Problem. Über diese App können sich Kunden schon bequem von zu Hause aus für ihr Geschäft anstellen!
-        Vermeiden sie Warteschlangen und dadurch zusätzliche Begegnungen mit anderen Menschen.
+        <div id="img" :style="{ backgroundImage: 'url(' + require('@/assets/images/about_bg.jpg') + ')' }">
+            <span>shopQ ist ein kostenloses Managementsystem für Warteschlangen vor Geschäften</span>
+        </div>
+        <p>
+        Wollen Sie überwachen, wie viele Leute gleichzeitig im Laden sind und wann Sie neue Kunden in ihr Geschäft lassen können?<br>
+        Kein Problem!<br> Über diese App können sich Kunden schon bequem von zu Hause aus für ihr Geschäft anstellen.
+        Vermeiden sie Warteschlangen und dadurch zusätzliche Begegnungen mit anderen Menschen.</p>
     </div>
 </template>
 
@@ -14,5 +17,31 @@
 </script>
 
 <style scoped>
-
+#about{
+    margin-top: -50px;
+}
+#img{
+    width: 100%;
+    height: 380px;
+    background:  no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+#img > span{
+    background: #2c3e50;
+    color: white;
+    top: 120px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 1.2em;
+    padding: 8px 20px;
+    text-shadow: 0 0 2px rgb(0, 0, 0);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.42);
+}
+#about > p{
+    text-align: justify;
+    margin: 18px;
+    padding-bottom: 24px;
+}
 </style>
