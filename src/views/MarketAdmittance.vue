@@ -38,11 +38,12 @@
         </button>
       </div>
       <div
-        v-if="lastAnonQueueEntry"
+        v-if="lastAnonQueueEntry && peopleInQueue > 0"
         class="row-center"
+        id="lastWord"
       >
-        <h6>Zuletzt zugewiesenes Ticket-Wort:</h6>
-        <span>{{lastAnonQueueEntry}}</span>
+        <b>{{lastAnonQueueEntry}}</b><br/>
+        <span>Zuletzt zugewiesenes Ticket-Wort</span>
       </div>
     </section>
 
@@ -69,14 +70,10 @@
           <span>Ticket-Nr.: {{nextAdmittance.ticketCode}}</span>
         </div>
         <div v-else>
-          Ohne Ticketcode
+            <span>Ticket-Wort:  {{nextAdmittance.ticketCode}} </span>
         </div>
 
         <div id="next-admittance-interaction">
-          <div>
-            <h6>Ticket-Wort:</h6>
-            <span> {{nextAdmittance.ticketCode}} </span>
-          </div>
           <button
             class="success"
             @click="admitNext"
@@ -358,6 +355,16 @@ section {
   border: 1px solid #f8ac59;
   border-radius: 3px;
   padding: 0.6em 1em;
+}
+#lastWord{
+  margin-top: 16px;
+}
+#lastWord > b{
+  background: #373737;
+  color: #f8ac59;
+  padding: 0.4em 0.8em;
+  border-radius: 0.2em;
+  display: inline-block;
 }
 #next-admittance-interaction {
   display: flex;
