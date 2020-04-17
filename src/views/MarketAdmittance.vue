@@ -37,6 +37,13 @@
           Person zu Warteschlange hinzufügen
         </button>
       </div>
+      <div
+        v-if="lastAnonQueueEntry"
+        class="row-center"
+      >
+        <h6>Zuletzt zugewiesenes Ticket-Wort:</h6>
+        <span>{{lastAnonQueueEntry}}</span>
+      </div>
     </section>
 
     <section>
@@ -46,7 +53,7 @@
         v-if="nextAdmittance !== undefined"
       >
         <div
-          v-if="nextAdmittance.ticketCode"
+          v-if="nextAdmittance.ticketCode && nextAdmittance.type !== 'ANON'"
           id="qrscan-container"
         >
           <span v-if="scanning">QR Code scannen:</span>
@@ -66,6 +73,10 @@
         </div>
 
         <div id="next-admittance-interaction">
+          <div>
+            <h6>Ticket-Wort:</h6>
+            <span> {{nextAdmittance.ticketCode}} </span>
+          </div>
           <button
             class="success"
             @click="admitNext"
@@ -109,6 +120,7 @@
 <script>
 import firebase from "firebase/app";
 import { selectUnit } from "@formatjs/intl-utils";
+import { getRandomDocument } from "@/util/firebase-rng";
 import InformationBox from "@/components/InformationBox";
 import QRCodeScanner from "@/components/QRCodeScanner.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
@@ -133,7 +145,8 @@ export default {
       queue: [],
       eventData: [],
       rtf: new Intl.RelativeTimeFormat("de", { numeric: "auto" }),
-      scanning: false
+      scanning: false,
+      lastAnonQueueEntry: null
     };
   },
   async mounted() {
@@ -247,7 +260,17 @@ export default {
       await this.handleChange(-1);
     },
     async addAnonToQueue() {
-      db.collection("queues")
+      const randomWord = (
+        await getRandomDocument(
+          firebase
+            .firestore()
+            .collection("randomWords")
+            .doc("de")
+            .collection("vegetables")
+        )
+      ).data().word;
+      await db
+        .collection("queues")
         .doc(this.id)
         .collection("users")
         .doc(`${Date.now()}-${db.collection("tmpId").doc().id}`)
@@ -258,8 +281,11 @@ export default {
             .collection("users")
             .doc().id,
           type: "ANON",
-          joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+          joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          ticketCode: randomWord
         });
+
+      this.lastAnonQueueEntry = randomWord;
     },
     async removeFromQueue(uid) {
       const snap = await db
