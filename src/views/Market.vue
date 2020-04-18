@@ -87,6 +87,7 @@
         <span>Sie sind der <b>{{positionInQ+1}}.</b> in der Schlange.</span>
         <div
           id="ticket"
+          :class="{active: positionInQ === 0}"
           v-if="queueSlot"
         >
           <b>Dein Ticket:</b>
@@ -366,12 +367,28 @@ export default {
 
 #ticket {
   border: 1px solid rgba(33, 33, 33, 0.3);
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   max-width: 480px;
   margin: 15px auto;
   padding: 18px;
   border-radius: 4px;
+}
+#ticket.active{
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(0.43, 0, 0.37, 0.94);
+}
+
+
+@keyframes pulse {
+  from {  box-shadow: 0 0 6px rgba(0,0,0,0.4)  }
+  to   {
+    box-shadow: 0 0 12px #64c7a6;
+    border-color: #64c7a6; }
 }
 #quitQ-btn {
   background-color: transparent;
