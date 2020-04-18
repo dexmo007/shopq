@@ -1,6 +1,12 @@
 <template>
-    <div :class="{danger: critical}" v-if="running">
-        <span>{{min}}</span>:<span>{{sec}}</span>
+    <div id="count-down" :class="{danger: critical}" :style="{ background: 'linear-gradient(\n'+
+'          rgba(0, 0, 0, 0.28), \n'+
+'          rgba(0, 0, 0, 0.42)\n'+
+'        ),url(' + require('@/assets/images/about_bg.jpg') + ')' }" v-if="running">
+        <span>
+            <span>{{min}}</span>:<span>{{sec}}</span>
+        </span>
+        <span style="font-size: 1rem">verbleibende Zeit</span>
     </div>
     <div v-else>
         over
@@ -36,16 +42,13 @@
                 return m>9?m:'0'+m;
             },
             sec(){
-                let s = Math.trunc((this.endDate - this.now)/1000) % 60
+                let s = Math.trunc((this.endDate - this.now)/1000) % 60;
                 return s>9?s:'0'+s;
             }
         },
         mounted(){
             if(this.endDate - new Date() < 0){
                 this.running = false;
-            }
-            if(this.endDate - new Date() < 2 * 60 * 1000){
-                this.critical = false;
             }
         },
         watch : {
@@ -82,6 +85,27 @@
 
 <style scoped>
 .danger{
-    color: #dd363a;
+    border: 8px solid #dd363a !important;
+    box-shadow:
+        inset 0 0 23vmin rgb(0, 0, 0),
+        0 0 8px rgba(0, 0, 0, 0.4) !important;
+}
+#count-down{
+    background: #2c3e50;
+    background-size: cover !important;
+    color: white;
+    height: 240px;
+    width: 240px;
+    margin: 32px auto;
+    border-radius: 50%;
+    border: 8px solid rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    box-shadow: inset 0 0 15px rgb(0, 0, 0);
+    text-shadow: 0 0 6px rgb(0, 0, 0);
+    transition: border, box-shadow 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
 </style>
