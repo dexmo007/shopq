@@ -11,7 +11,7 @@
           <span class="suggestion-name">Rewe</span>
           <span class="suggestion-addr">Teststraße 123 Berlin</span>
         </div>
-        <div class="suggestion-realtime" >
+        <div class="suggestion-realtime q-free" >
           <div class="suggestion-q-text">Keine<br/>Schlange!</div>
         </div>
       </router-link>
@@ -90,13 +90,11 @@ export default {
           rankBy: google.maps.places.RankBy.DISTANCE
         },
         nearbyPlaces => {
-          console.log(nearbyPlaces);
           this.status = "found-suggestions";
           this.suggestions = nearbyPlaces;
         }
       );
-    }, positionError => {
-      console.error(positionError);
+    }, () => {
       this.status = "location-disabled";
     });
   }
@@ -121,7 +119,7 @@ export default {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 
@@ -136,10 +134,10 @@ export default {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 }
 
-.suggestion-q-text{
+.q-free .suggestion-q-text{
  box-shadow: 0 0 5px rgba(100, 199, 166, 0.8);
 }
-.suggestion:hover .suggestion-q-text{
+.suggestion:hover .q-free .suggestion-q-text{
 box-shadow: 0 0 12px rgba(100, 199, 166, 1);
 }
 
@@ -178,7 +176,6 @@ box-shadow: 0 0 12px rgba(100, 199, 166, 1);
   font-size: 1em;
 }
 .suggestion-realtime{
-  background-color: rgb(100, 199, 166);
   border: 1px solid rgba(33, 33, 33, 0.4);
   display: flex;
   justify-content: center;
@@ -186,6 +183,9 @@ box-shadow: 0 0 12px rgba(100, 199, 166, 1);
   margin-top: -1px;
   margin-bottom: -1px;
   margin-right: -1px;
+}
+.suggestion-realtime.q-free{
+  background-color: rgb(100, 199, 166);
 }
 
 .suggestion-q-counter{
@@ -202,7 +202,6 @@ box-shadow: 0 0 12px rgba(100, 199, 166, 1);
 }
 .suggestion-q-text{
   padding: 10px;
-  width: 96px;
   display: flex;
   justify-content: center;
   align-items: center;
