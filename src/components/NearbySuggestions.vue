@@ -135,6 +135,7 @@ export default {
 }
 
 .q-free .suggestion-q-text{
+  border-radius: 0 3px 3px 0;
  box-shadow: 0 0 5px rgba(100, 199, 166, 0.8);
 }
 .suggestion:hover .q-free .suggestion-q-text{
