@@ -7,7 +7,8 @@
     v-else
   >
     <div v-if="stage === 'not-found'">
-      Den Markt kann ich nicht finden.
+      Der Markt <i>{{id}}</i> konnte nicht gefunden werden.
+      <router-link to="/" tag="button" class="success">Zurück zur Startseite</router-link>
     </div>
     <div
       id="market-header"

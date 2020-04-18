@@ -75,9 +75,9 @@ body {
 }
 #nav-account-area {
   position: absolute;
-  top: 6px;
+  top: 8px;
   max-width: 720px;
-  width: 98%;
+  width: 96%;
   margin: 0 auto;
   color: white;
   display: flex;
@@ -91,16 +91,16 @@ body {
   border-radius: 0 0 8px 8px;
   background: white;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
-  width: 98%;
+  width: 96%;
   max-width: 720px;
   margin: 8px auto;
 }
 #nav {
-  width: calc(100% + 16px);
+  width: calc(100% + 32px);
   position: relative;
   z-index: 1;
   padding: 12px 0 18px;
-  margin: 70px 0 50px -8px;
+  margin: 70px 0 50px -16px;
   background: #2c3e50;
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
 }

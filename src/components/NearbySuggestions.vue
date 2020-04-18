@@ -3,6 +3,35 @@
     <h1>{{title}}</h1>
     <div id="suggestions-wrapper" v-if="status === 'found-suggestions'">
       <router-link
+              to="markt/123"
+              tag="div"
+              class="suggestion"
+      >
+        <div class="suggestion-info">
+          <span class="suggestion-name">Rewe</span>
+          <span class="suggestion-addr">Teststraße 123 Berlin</span>
+        </div>
+        <div class="suggestion-realtime no-q" >
+          Keine<br/>Schlange!
+        </div>
+      </router-link>
+      <router-link
+              to="markt/123"
+              tag="div"
+              class="suggestion"
+      >
+        <div class="suggestion-info">
+          <span class="suggestion-name">Aldi</span>
+          <span class="suggestion-addr">Custom Lane 456 TempTown</span>
+        </div>
+        <div class="suggestion-realtime">
+          <div class="suggestion-q-counter">
+            0
+          </div>
+          <div class="suggestion-q-text">Personen in<br/> der Schlange</div>
+        </div>
+      </router-link>
+      <router-link
         v-for="market in suggestions"
         :key="market.id"
         :to="'markt/' + market.place_id"
@@ -10,8 +39,10 @@
         class="suggestion"
         :style="{backgroundColor: market.color}"
       >
-        <span class="suggestion-name">{{market.name}}</span>
-        <span class="suggestion-addr">{{market.vicinity}}</span>
+        <div class="suggestion-info">
+          <span class="suggestion-name">{{market.name}}</span>
+          <span class="suggestion-addr">{{market.vicinity}}</span>
+        </div>
       </router-link>
     </div>
     <div v-if="status === 'location-disabled'">
@@ -84,15 +115,10 @@ export default {
   width: 100%;
   max-width: 380px;
   margin: 14px;
-  padding: 10px;
   border: 1px solid rgba(33, 33, 33, 0.4);
-  background-color: rgb(100, 199, 166);
   border-radius: 4px;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  align-items: start;
-  font-size: 1.2em;
   cursor: pointer;
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
@@ -100,10 +126,46 @@ export default {
 .suggestion:hover {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
+.suggestion-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  padding: 10px;
+  text-align: initial;
+}
 .suggestion-name {
+  font-size: 1.2em;
   font-weight: bold;
 }
 .suggestion-addr {
-  font-size: 0.8em;
+  font-size: 1em;
 }
+.suggestion-realtime{
+  background-color: rgb(100, 199, 166);
+  border-left: 1px solid rgba(33, 33, 33, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.suggestion-realtime.no-q{
+  padding: 10px;
+}
+.suggestion-q-counter{
+  font-size: 2em;
+  height: 100%;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: #2b3e50;
+  color: white;
+  margin-left: -1px;
+  border-left: 1px solid rgba(0,0,0,0.4);
+}
+  .suggestion-q-text{
+    padding: 10px;
+    width: 96px;
+  }
 </style>

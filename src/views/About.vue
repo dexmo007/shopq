@@ -23,7 +23,6 @@
 #img{
     width: 100%;
     height: 380px;
-    background:  no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;

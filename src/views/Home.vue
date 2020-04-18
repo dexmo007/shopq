@@ -42,7 +42,6 @@ export default {
     background: #373737;
     width: 100%;
     height: 380px;
-    background:  no-repeat center center fixed;
     background-size: cover;
     position: relative;
     display: flex;
