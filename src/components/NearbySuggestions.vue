@@ -43,6 +43,7 @@
           <span class="suggestion-name">{{market.name}}</span>
           <span class="suggestion-addr">{{market.vicinity}}</span>
         </div>
+        <div class="suggestion-realtime-empty"/>
       </router-link>
     </div>
     <div v-if="status === 'location-disabled'">
@@ -120,12 +121,36 @@ export default {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.2);
+}
+
+
+.suggestion-info, .suggestion-q-text, .suggestion-q-counter{
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-.suggestion:hover {
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+
+.suggestion-info{
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
+.suggestion:hover .suggestion-info{
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.suggestion-q-text{
+ box-shadow: 0 0 5px rgba(100, 199, 166, 0.8);
+}
+.suggestion:hover .suggestion-q-text{
+box-shadow: 0 0 12px rgba(100, 199, 166, 1);
+}
+
+.suggestion-q-counter{
+  z-index: 1;
+   box-shadow: 0 0 5px rgba(43, 62, 80,0.2);
+ }
+.suggestion:hover .suggestion-q-counter{
+  box-shadow: 0 0 12px rgba(43, 62, 80,0.4);
+}
+
 .suggestion-info{
   display: flex;
   flex-direction: column;
@@ -133,6 +158,17 @@ export default {
   align-items: start;
   padding: 10px;
   text-align: initial;
+  background: white;
+  z-index: 1;
+  flex: 1;
+  border-radius: 4px 0 0 4px;
+}
+/* this is needed, to get all 4 corners smooth */
+.suggestion-realtime-empty{
+  border-radius: 0 4px 4px 0;
+  width: 4px;
+  background: white;
+  z-index: 2;
 }
 .suggestion-name {
   font-size: 1.2em;
