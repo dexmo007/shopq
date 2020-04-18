@@ -1,7 +1,7 @@
 <template>
   <div id="nearby">
     <h1>{{title}}</h1>
-    <div id="wrapper" v-if="status === 'found-suggestions'">
+    <div id="suggestions-wrapper" v-if="status === 'found-suggestions'">
       <router-link
         v-for="market in suggestions"
         :key="market.id"
@@ -58,6 +58,7 @@ export default {
           rankBy: google.maps.places.RankBy.DISTANCE
         },
         nearbyPlaces => {
+          console.log(nearbyPlaces);
           this.status = "found-suggestions";
           this.suggestions = nearbyPlaces;
         }
@@ -72,24 +73,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#wrapper {
+#suggestions-wrapper {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
   max-width: 480px;
   margin: 0 auto;
 }
 .suggestion {
-  width: 190px;
-  height: 190px;
+  width: 100%;
+  max-width: 380px;
+  margin: 14px;
+  padding: 10px;
   border: 1px solid rgba(33, 33, 33, 0.4);
   background-color: rgb(100, 199, 166);
   border-radius: 4px;
-  margin: 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px;
-  align-items: center;
+  align-items: start;
   font-size: 1.2em;
   cursor: pointer;
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);

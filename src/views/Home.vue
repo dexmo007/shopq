@@ -4,6 +4,7 @@
       <label id="search" :class="{focus: isFocus}">
         <font-awesome-icon icon="search" id="search-icon" />
         <PlaceAutoComplete
+                id="search-input"
                 @place_changed="onPlaceSelected"
                 @blur="isFocus = false"
                 @focus="isFocus = true"/>
@@ -50,6 +51,9 @@ export default {
     box-shadow: 0 0 12px rgb(0, 0, 0);
   }
   #search{
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
     background: white;
     margin: 4px 0;
     border: 1px solid #2c3e50;
@@ -61,6 +65,9 @@ export default {
   }
   #search-icon{
     transition: color 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
+  }
+  #search-input{
+    font-size: 1.2rem;
   }
   #search.focus{
     border-color: #64c7a6;

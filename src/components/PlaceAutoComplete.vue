@@ -7,7 +7,7 @@
     :types="['establishment']"
     :bounds="bounds"
     :options="options"
-    :placeholder="userAddress || $attrs.placeholder || 'In der Nähe suchen...'"
+    :placeholder="userAddress || $attrs.placeholder || 'Geschäft suchen...'"
   />
 </template>
 
