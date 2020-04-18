@@ -41,7 +41,7 @@
             }
         },
         mounted(){
-            if(this.endDate - new Date()){
+            if(this.endDate - new Date() < 0){
                 this.running = false;
             }
             if(this.endDate - new Date() < 2 * 60 * 1000){
