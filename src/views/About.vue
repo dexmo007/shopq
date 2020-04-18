@@ -25,17 +25,17 @@
     height: 380px;
     background:  no-repeat center center fixed;
     background-size: cover;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 12px rgb(0, 0, 0);
 }
 #img > span{
     background: #2c3e50;
     color: white;
-    top: 120px;
-    position: absolute;
-    left: 0;
-    right: 0;
     font-size: 1.2em;
     padding: 8px 20px;
+    margin: 18px;
     text-shadow: 0 0 2px rgb(0, 0, 0);
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.42);
 }
