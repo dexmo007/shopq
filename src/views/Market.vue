@@ -119,6 +119,7 @@ import CountDown from "@/components/CountDown";
 import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
 import { getPlaceDetails } from "@/api/places";
+import {getRandomDocument} from "@/util/firebase-rng";
 
 const db = firebase.firestore();
 
@@ -280,22 +281,27 @@ export default {
         this.loading = false;
       }
     },
-    generateTicketCode() {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      return Array(5)
-        .fill()
-        .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
-        .join("");
+    async generateTicketCode() {
+      return(
+        await getRandomDocument(
+                firebase
+                        .firestore()
+                        .collection("randomWords")
+                        .doc("de")
+                        .collection("vegetables")
+        )
+      ).data().word;
     },
     async joinQ() {
       if ("Notification" in window) {
         Notification.requestPermission();
       }
       const ticketId = db.collection("tickets").doc().id;
+      const ticketCode = await this.generateTicketCode();
       await this.queueRef.collection("users").add({
         uid: firebase.auth().currentUser.uid,
         ticketId,
-        ticketCode: this.generateTicketCode(),
+        ticketCode: ticketCode,
         joinedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       // to notify if we are done
