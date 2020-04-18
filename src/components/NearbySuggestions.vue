@@ -26,7 +26,7 @@
         </div>
         <div class="suggestion-realtime">
           <div class="suggestion-q-counter">
-            0
+            12
           </div>
           <div class="suggestion-q-text">Personen in<br/> der Schlange</div>
         </div>

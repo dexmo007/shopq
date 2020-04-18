@@ -62,7 +62,8 @@
             id="joinQ-btn"
             @click="joinQ()"
           >virtuell anstellen</button>
-          <span><b>{{queue.length}}</b> Personen in der Schlange</span><br>
+          <span v-if="queue.length === 0">Sei der erste in der Schlange!</span>
+          <span v-else><b>{{queue.length}}</b> Personen in der Schlange</span>
         </div>
       </div>
 

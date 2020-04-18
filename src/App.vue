@@ -65,13 +65,15 @@ export default {
 
 <style>
 body {
+  width: 100%;
+  margin: 0;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   background: #373737;
   color: #2c3e50;
-  margin: 0;
+  overflow-x: hidden;
 }
 #nav-account-area {
   position: absolute;
