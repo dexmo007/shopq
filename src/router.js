@@ -31,6 +31,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
     {
+      path: '/impressum',
+      name: 'impressum',
+      component: () => import(/* webpackChunkName: "impressum" */ './views/Impressum.vue'),
+    },
+    {
       path: '/markt/:id',
       name: 'markt',
       props: true,

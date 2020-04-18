@@ -1,34 +1,37 @@
 <template>
-  <div id="app">
-    <div id="nav-account-area">
-      <router-link
-              v-if="!user"
-              tag="button"
-              to="/login"
-              class="success"
-      >Login</router-link>
-      <button
-              v-else
-              class="danger"
-      >Logout</button>
-      <span v-if="user">
-          <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
-          <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
-        </span>
-    </div>
-    <div id="nav">
-      <router-link
-        to="/"
-        tag="span"
-        id="home-link"
-      >shop<span style="color: #64c7a6;">Q</span></router-link>
-      <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
-    </div>
+  <div>
+    <div id="app">
+      <div id="nav-account-area">
+        <router-link
+                v-if="!user"
+                tag="button"
+                to="/login"
+                class="success"
+        >Login</router-link>
+        <button
+                v-else
+                class="danger"
+        >Logout</button>
+        <span v-if="user">
+            <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
+            <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
+          </span>
+      </div>
+      <div id="nav">
+        <router-link
+          to="/"
+          tag="span"
+          id="home-link"
+        >shop<span style="color: #64c7a6;">Q</span></router-link>
+        <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
+      </div>
 
-    <router-view v-if="user" />
-    <div v-else>
-      Loading...
+      <router-view v-if="user" />
+      <div v-else>
+        Loading...
+      </div>
     </div>
+    <router-link to="/impressum" id="impressum-link" tag="div">Impressum</router-link>
   </div>
 </template>
 
@@ -228,5 +231,15 @@ form label .default-value::before {
 }
 form label .default-value::after {
   content: ")";
+}
+
+#impressum-link{
+  display: inline-block;
+  cursor: pointer;
+  color: white;
+  margin: 18px;
+}
+#impressum-link:hover{
+  text-decoration: underline;
 }
 </style>
