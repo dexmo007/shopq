@@ -11,8 +11,8 @@
           <span class="suggestion-name">Rewe</span>
           <span class="suggestion-addr">Teststraße 123 Berlin</span>
         </div>
-        <div class="suggestion-realtime no-q" >
-          Keine<br/>Schlange!
+        <div class="suggestion-realtime" >
+          <div class="suggestion-q-text">Keine<br/>Schlange!</div>
         </div>
       </router-link>
       <router-link
@@ -22,7 +22,7 @@
       >
         <div class="suggestion-info">
           <span class="suggestion-name">Aldi</span>
-          <span class="suggestion-addr">Custom Lane 456 TempTown</span>
+          <span class="suggestion-addr">abc street 456 TempTown</span>
         </div>
         <div class="suggestion-realtime">
           <div class="suggestion-q-counter">
@@ -143,17 +143,17 @@ export default {
 }
 .suggestion-realtime{
   background-color: rgb(100, 199, 166);
-  border-left: 1px solid rgba(33, 33, 33, 0.4);
+  border: 1px solid rgba(33, 33, 33, 0.4);
   display: flex;
   justify-content: center;
-  align-items: center;
+  border-radius: 0 4px 4px 0;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  margin-right: -1px;
 }
-.suggestion-realtime.no-q{
-  padding: 10px;
-}
+
 .suggestion-q-counter{
   font-size: 2em;
-  height: 100%;
   padding: 14px;
   display: flex;
   align-items: center;
@@ -161,11 +161,14 @@ export default {
   box-sizing: border-box;
   background: #2b3e50;
   color: white;
-  margin-left: -1px;
-  border-left: 1px solid rgba(0,0,0,0.4);
+  margin: -1px;
+  border: 1px solid rgba(0,0,0,0.4);
 }
-  .suggestion-q-text{
-    padding: 10px;
-    width: 96px;
-  }
+.suggestion-q-text{
+  padding: 10px;
+  width: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
