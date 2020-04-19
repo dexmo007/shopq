@@ -42,7 +42,7 @@
         class="row-center"
         id="lastWord"
       >
-        <b>{{lastAnonQueueEntry}}</b><br/>
+        <b>{{lastAnonQueueEntry}}</b><br />
         <span>Zuletzt zugewiesenes Ticket-Wort</span>
       </div>
     </section>
@@ -70,7 +70,7 @@
           <span>Ticket-Nr.: {{nextAdmittance.ticketCode}}</span>
         </div>
         <div v-else>
-            <span>Ticket-Wort:  {{nextAdmittance.ticketCode}} </span>
+          <span>Ticket-Wort: {{nextAdmittance.ticketCode}} </span>
         </div>
 
         <div id="next-admittance-interaction">
@@ -90,21 +90,6 @@
         <span v-if="capacityLimitReached">(Laden voll!)</span>
       </button>
     </section>
-    <section>
-      <information-box
-        title="Log"
-        v-if="events.length"
-      >
-        <ul id="log-box">
-          <li
-            v-for="event in events"
-            :key="event.id"
-          >
-            {{event.relativeTime}}: {{event.typeText}}
-          </li>
-        </ul>
-      </information-box>
-    </section>
   </div>
   <div
     v-else
@@ -116,23 +101,16 @@
 
 <script>
 import firebase from "firebase/app";
-import { selectUnit } from "@formatjs/intl-utils";
 import { getRandomDocument } from "@/util/firebase-rng";
-import InformationBox from "@/components/InformationBox";
 import QRCodeScanner from "@/components/QRCodeScanner.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
 const db = firebase.firestore();
 
-const eventTypesI18n = {
-  ENTER: "Kommt",
-  LEAVE: "Geht"
-};
-
 export default {
   name: "MarketAdmittance",
   props: ["id"],
-  components: { QRCodeScanner, ProgressBar, InformationBox },
+  components: { QRCodeScanner, ProgressBar },
   data() {
     return {
       admittance: null,
@@ -175,15 +153,6 @@ export default {
         .collection("users")
         .orderBy("joinedAt", "asc")
     );
-    // events
-    this.$bind(
-      "eventData",
-      db
-        .collection("admittanceEvents")
-        .where("shopId", "==", this.id)
-        .orderBy("timestamp", "desc")
-        .limit(20)
-    );
   },
   computed: {
     shopParams() {
@@ -198,28 +167,11 @@ export default {
     peopleInQueue() {
       return this.queue.length;
     },
-    events() {
-      return this.eventData.map(({ type, timestamp }) => {
-        if (!timestamp) {
-          timestamp = firebase.firestore.Timestamp.now();
-        }
-        return {
-          type,
-          typeText: eventTypesI18n[type],
-          timestamp: timestamp.toDate(),
-          relativeTime: this.formatTimeRelatively(timestamp)
-        };
-      });
-    },
     nextAdmittance() {
       return this.queue[0];
     }
   },
   methods: {
-    formatTimeRelatively(ts) {
-      const { value, unit } = selectUnit(ts.toDate(), Date.now());
-      return this.rtf.format(value, unit);
-    },
     resolveType(type) {
       if (typeof type === "number") {
         if (type === 1) {
@@ -359,10 +311,10 @@ section {
   border-radius: 3px;
   padding: 0.6em 1em;
 }
-#lastWord{
+#lastWord {
   margin-top: 16px;
 }
-#lastWord > b{
+#lastWord > b {
   background: #373737;
   color: #f8ac59;
   padding: 0.4em 0.8em;
