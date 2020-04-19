@@ -15,10 +15,11 @@ import {
   faTimesCircle,
   faQuestion,
   faEdit,
+  faCameraRetro,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faSearch, faMapMarkedAlt, faTimesCircle, faQuestion, faEdit);
+library.add(faSearch, faMapMarkedAlt, faTimesCircle, faQuestion, faEdit, faCameraRetro);
 dom.watch();
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

@@ -12,15 +12,18 @@
     </div>
     <div id="user-markets">
       <div class="market">
-        <router-link tag="a" to="/market/XXX"><b>Rewe</b>, Bissingzeile 4</router-link>
+        <market-preview :market="market"/>
       </div>
     </div>
   </div>
 </template>
 <script>
 import firebase from "firebase/app";
+import MarketPreview from "@/components/MarketPreview";
 
 export default {
+  name: "Me",
+  components: { MarketPreview },
   data() {
     return {
       user: null,

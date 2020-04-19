@@ -383,11 +383,4 @@ section {
 #qrscan-container span {
   margin: 0.5em 0;
 }
-#log-box {
-  max-height: 120px;
-  overflow-y: auto;
-  text-align: initial;
-  border: 1px solid rgba(33, 33, 33, 0.3);
-  background: rgb(245, 245, 245);
-}
 </style>

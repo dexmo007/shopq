@@ -3,6 +3,7 @@
         <div id="img" :style="{ backgroundImage: 'url(' + require('@/assets/images/about_bg.jpg') + ')' }">
             <span>Impressum</span>
         </div>
+        <font-awesome-icon icon="camera-retro" alt="photo"/> by <a href="https://www.pexels.com/de-de/foto/linie-menschen-schwarz-und-weiss-schwarzweiss-1604200/" target="_blank">pexels.com</a>
         <p>
             #todo
         </p>

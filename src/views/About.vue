@@ -21,7 +21,7 @@
     margin-top: -50px;
 }
 #img{
-    width: 100%;
+    width: calc(100% + 1px);
     height: 380px;
     background-size: cover;
     display: flex;
