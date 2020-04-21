@@ -107,11 +107,12 @@ body {
   margin-left: 8px;
 }
 #nav {
-  width: calc(100% + 32px);
+  width: calc(100%);
+  max-width: 752px; /* 720px + 32px */
   position: relative;
   z-index: 1;
   padding: 12px 0 18px;
-  margin: 20px 0 0 -16px;
+  margin: 20px auto 0;
   background: #2c3e50;
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
 }

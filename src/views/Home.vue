@@ -66,6 +66,7 @@ export default {
     outline: none;
     max-width: 60vw;
     min-width: 260px;
+    overflow: hidden;
   }
   #search-icon{
     transition: color 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
