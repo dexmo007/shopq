@@ -215,7 +215,12 @@ export default {
             .firestore()
             .collection("randomWords")
             .doc("de")
-            .collection("vegetables")
+            .collection("vegetables"),
+          ({ word }) =>
+            this.queue
+              .filter(({ type }) => type === "ANON")
+              .map(({ ticketCode }) => ticketCode)
+              .includes(word)
         )
       ).data().word;
       await db
