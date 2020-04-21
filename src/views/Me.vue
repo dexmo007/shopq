@@ -36,14 +36,17 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-  #user-area{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 18px;
-  }
-  #user-area #user{
-    font-size: 1.2em;
-    font-weight: bold;
-  }
+#user-area{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px;
+}
+#user-area #user{
+  font-size: 1.2em;
+  font-weight: bold;
+}
+#user-markets{
+  padding-bottom: 6px;
+}
 </style>

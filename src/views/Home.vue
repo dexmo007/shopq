@@ -41,7 +41,8 @@ export default {
     margin-top: -50px;
     background: #373737;
     width: calc(100% + 1px);
-    height: 380px;
+    height: 45vh;
+    min-height: 300px;
     background-size: cover;
     position: relative;
     display: flex;

@@ -30,13 +30,13 @@
     box-shadow: 0 0 12px rgb(0, 0, 0);
 }
 #img > span{
-    background: #2c3e50;
-    color: white;
-    font-size: 1.2em;
-    padding: 8px 20px;
-    margin: 18px;
-    text-shadow: 0 0 2px rgb(0, 0, 0);
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.42);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.4em;
+    padding: 18px;
+    margin: 40px;
+    text-shadow: 0 0 9px rgb(0, 0, 0);
+    border-radius: 5px;
 }
 #about > p{
     text-align: justify;
