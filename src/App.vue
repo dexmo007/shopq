@@ -82,7 +82,7 @@ body {
   overflow-x: hidden;
 }
 #fixed > #nav-account-area, #app{
-  width: 96%;
+  width: calc(100% - 32px);
   max-width: 720px;
   margin: 8px auto;
 }
@@ -104,7 +104,7 @@ body {
   flex-direction: row-reverse;
 }
 #nav-account-area > *{
-  margin: 4px;
+  margin-left: 8px;
 }
 #nav {
   width: calc(100% + 32px);

@@ -64,6 +64,8 @@ export default {
     transition: all 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
     box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.2);
     outline: none;
+    max-width: 60vw;
+    min-width: 260px;
   }
   #search-icon{
     transition: color 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
