@@ -40,7 +40,7 @@ export default {
   #main{
     margin-top: -50px;
     background: #373737;
-    width: 100%;
+    width: calc(100% + 1px);
     height: 380px;
     background-size: cover;
     position: relative;
@@ -53,7 +53,7 @@ export default {
     font-size: 1.4em;
     display: flex;
     align-items: center;
-    background: white;
+    background: rgba(255,255,255,0.78);
     margin: 4px 0;
     border: 1px solid #2c3e50;
     border-radius: 4px;
@@ -67,10 +67,12 @@ export default {
   }
   #search-input{
     font-size: 1.2rem;
+    background: none;
   }
   #search.focus{
     border-color: #64c7a6;
     box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.42);
+    background: rgba(255,255,255,0.95);
   }
   #search.focus > #search-icon{
     color: #64c7a6;

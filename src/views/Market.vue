@@ -27,8 +27,8 @@
       <div v-if="stage === 'no-support'">
         <h2 class="text-danger">Dieser Laden benutzt die App nicht</h2>
         <span>Gehen Sie so hin und versuchen Ihr Glück!</span>
-        <information-box title="Ist das Ihr Geschäft?">
-          <div>
+        <information-box title="Ist das Ihr Geschäft?" style="margin-top: 14px;">
+          <div style="margin: 12px;">
             <span v-if="isUserAnonymous">
               <router-link :to="'/login?strict=true&redirect='
             + encodeURIComponent($router.currentRoute.fullPath)">Erstellen Sie ein Konto</router-link> und
