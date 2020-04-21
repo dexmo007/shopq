@@ -1,6 +1,7 @@
 <template>
   <div id="home_container">
     <div id="main" :style="{ backgroundImage: 'url(' + require('@/assets/images/about_bg.jpg') + ')' }">
+      <div style="height: 45px;"><!-- 50px - 45px = 5px offset to the top of the center --></div>
       <label id="search" :class="{focus: isFocus}">
         <font-awesome-icon icon="search" id="search-icon" />
         <PlaceAutoComplete
@@ -41,11 +42,12 @@ export default {
     margin-top: -50px;
     background: #373737;
     width: calc(100% + 1px);
-    height: 45vh;
-    min-height: 300px;
+    height: 35vh;
+    min-height: 260px;
     background-size: cover;
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     box-shadow: 0 0 12px rgb(0, 0, 0);

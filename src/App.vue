@@ -1,34 +1,37 @@
 <template>
   <div>
     <div id="app">
-      <div id="nav-account-area">
-        <router-link
-                v-if="!user"
-                tag="button"
-                to="/login"
-                class="success"
-        >Login</router-link>
-        <button
-                v-else
-                class="danger"
-        >Logout</button>
-        <span v-if="user">
+      <div id="fixed">
+        <div id="nav-account-area">
+          <router-link
+                  v-if="!user"
+                  tag="button"
+                  to="/login"
+                  class="success"
+          >Login</router-link>
+          <button
+                  v-else
+                  class="danger"
+          >Logout</button>
+          <span v-if="user">
             <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
             <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
           </span>
+        </div>
+        <div id="nav">
+          <router-link
+                  to="/"
+                  tag="span"
+                  id="home-link"
+          >shop<span style="color: #64c7a6;">Q</span></router-link>
+          <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
+        </div>
       </div>
-      <div id="nav">
-        <router-link
-          to="/"
-          tag="span"
-          id="home-link"
-        >shop<span style="color: #64c7a6;">Q</span></router-link>
-        <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
-      </div>
-
-      <router-view v-if="user" />
-      <div v-else>
-        Loading...
+      <div id="scrollable">
+        <router-view v-if="user" />
+        <div v-else>
+          Loading...
+        </div>
       </div>
     </div>
     <router-link to="/impressum" id="impressum-link" tag="div">Impressum</router-link>
@@ -78,12 +81,23 @@ body {
   color: #2c3e50;
   overflow-x: hidden;
 }
-#nav-account-area {
-  position: absolute;
-  top: 8px;
-  max-width: 720px;
+#fixed > #nav-account-area, #app{
   width: 96%;
-  margin: 0 auto;
+  max-width: 720px;
+  margin: 8px auto;
+}
+
+#fixed{
+  position: fixed;
+  margin-top: 0;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #353535;
+}
+#nav-account-area {
   color: white;
   display: flex;
   align-items: center;
@@ -92,20 +106,12 @@ body {
 #nav-account-area > *{
   margin: 4px;
 }
-#app {
-  border-radius: 0 0 8px 8px;
-  background: white;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
-  width: 96%;
-  max-width: 720px;
-  margin: 8px auto;
-}
 #nav {
   width: calc(100% + 32px);
   position: relative;
   z-index: 1;
   padding: 12px 0 18px;
-  margin: 70px 0 50px -16px;
+  margin: 20px 0 0 -16px;
   background: #2c3e50;
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
 }
@@ -149,6 +155,17 @@ body {
 #about-link:hover{
   box-shadow: 0 0 3px white;
 }
+
+#scrollable{
+  border-radius: 0 0 8px 8px;
+  background: white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
+  margin-top: 160px;
+  padding-top: 20px;
+}
+
+
+
 input:not(.blank),
 textarea:not(.blank){
   margin: 4px 0;
