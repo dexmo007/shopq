@@ -3,16 +3,19 @@
     <button @click="isInEditMode = false">zurück</button>
     {{user}}
   </div>
-  <div v-else>
+  <div v-else-if="user">
     <div id="user-area">
       <span id="user">{{user.displayName || user.email}}</span>
-      <button class="success" @click="isInEditMode = true">
-        <font-awesome-icon icon="edit"/>
+      <button
+        class="success"
+        @click="isInEditMode = true"
+      >
+        <font-awesome-icon icon="edit" />
       </button>
     </div>
     <div id="user-markets">
       <div class="market">
-        <market-preview :market="market"/>
+        <market-preview :market="market" />
       </div>
     </div>
   </div>
@@ -36,17 +39,17 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-#user-area{
+#user-area {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 18px;
 }
-#user-area #user{
+#user-area #user {
   font-size: 1.2em;
   font-weight: bold;
 }
-#user-markets{
+#user-markets {
   padding-bottom: 6px;
 }
 </style>
