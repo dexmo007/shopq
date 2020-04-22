@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "shopq-271815"
+    "default": "shopq-271815",
+    "dev": "shopq-dev"
   }
 }
