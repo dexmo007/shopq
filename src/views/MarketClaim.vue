@@ -6,8 +6,9 @@
   <div v-else>
     <div id="market-header">
       <router-link
-            to="./"
-            tag="h1">{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
+        to="./"
+        tag="h1"
+      >{{!placeDetails ? 'Name lädt...' : placeDetails.name}}</router-link>
       <span>
         <font-awesome-icon icon="map-marked-alt" />
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
@@ -20,9 +21,9 @@
           Legen Sie fest, wie viele Kunden ihr Geschäft gleichzeitig betreten dürfen.
         </p>
         <label>Kapazität: <input
-                type="number"
-                v-model.number="form.capacity"
-        ><span class="default-value">Sie können die Kapazität ihres Geschäfts jederzeit anpassen.</span></label>
+            type="number"
+            v-model.number="form.capacity"
+          ><span class="default-value">Sie können die Kapazität ihres Geschäfts jederzeit anpassen.</span></label>
       </section>
       <section>
         <p>
@@ -30,7 +31,10 @@
           <router-link to="/agb">AGB's</router-link> und
           <router-link to="/agb">allgemeinen Geschäftisbedingungen</router-link> zu.
         </p>
-        <button type="submit" class="success">
+        <button
+          type="submit"
+          class="success"
+        >
           shopQ für {{!placeDetails ? 'ihr Geschäft' : placeDetails.name}} nutzen
         </button>
       </section>
@@ -44,20 +48,19 @@ import { getPlaceDetails } from "@/api/places";
 
 export default {
   props: ["id"],
-  data(){
+  data() {
     return {
       loading: true,
       placeDetails: null,
       form: {
-        capacity: 20,
+        capacity: 20
       }
-    }
+    };
   },
-  async mounted(){
+  async mounted() {
     try {
       this.placeDetails = await getPlaceDetails(this.id);
     } finally {
-      console.log(this.placeDetails);
       this.loading = false;
     }
   },
@@ -68,15 +71,26 @@ export default {
         .collection("shopControl")
         .doc(this.id)
         .set({
+          ...this.form,
           admins: [firebase.auth().currentUser.uid]
         });
+      await firebase
+        .firestore()
+        .collection("shops")
+        .doc(this.id)
+        .set(
+          {
+            ...this.form
+          },
+          { merge: true }
+        );
       this.$router.push(`/markt/${this.id}/control`);
     }
   }
 };
 </script>
 <style scoped>
-  #market-header{
-    padding-bottom: 21px;
-  }
+#market-header {
+  padding-bottom: 21px;
+}
 </style>
