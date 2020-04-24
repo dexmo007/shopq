@@ -44,7 +44,7 @@
 
 <script>
 import firebase from "firebase/app";
-import { getPlaceDetails } from "@/api/places";
+import { getPlaceDetails } from "@/api/google-maps";
 
 export default {
   props: ["id"],

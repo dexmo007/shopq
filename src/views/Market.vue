@@ -8,7 +8,11 @@
   >
     <div v-if="stage === 'not-found'">
       Der Markt <i>{{id}}</i> konnte nicht gefunden werden.
-      <router-link to="/" tag="button" class="success">Zurück zur Startseite</router-link>
+      <router-link
+        to="/"
+        tag="button"
+        class="success"
+      >Zurück zur Startseite</router-link>
     </div>
     <div
       id="market-header"
@@ -27,7 +31,10 @@
       <div v-if="stage === 'no-support'">
         <h2 class="text-danger">Dieser Laden benutzt die App nicht</h2>
         <span>Gehen Sie so hin und versuchen Ihr Glück!</span>
-        <information-box title="Ist das Ihr Geschäft?" style="margin-top: 14px;">
+        <information-box
+          title="Ist das Ihr Geschäft?"
+          style="margin-top: 14px;"
+        >
           <div style="margin: 12px;">
             <span v-if="isUserAnonymous">
               <router-link :to="'/login?strict=true&redirect='
@@ -121,8 +128,8 @@ import firebase from "firebase/app";
 import CountDown from "@/components/CountDown";
 import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
-import { getPlaceDetails } from "@/api/places";
-import {getRandomDocument} from "@/util/firebase-rng";
+import { getPlaceDetails } from "@/api/google-maps";
+import { getRandomDocument } from "@/util/firebase-rng";
 
 const db = firebase.firestore();
 
@@ -285,13 +292,13 @@ export default {
       }
     },
     async generateTicketCode() {
-      return(
+      return (
         await getRandomDocument(
-                firebase
-                        .firestore()
-                        .collection("randomWords")
-                        .doc("de")
-                        .collection("vegetables")
+          firebase
+            .firestore()
+            .collection("randomWords")
+            .doc("de")
+            .collection("vegetables")
         )
       ).data().word;
     },
@@ -367,7 +374,7 @@ export default {
 
 #ticket {
   border: 1px solid rgba(33, 33, 33, 0.3);
-  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   max-width: 480px;
@@ -375,7 +382,7 @@ export default {
   padding: 18px;
   border-radius: 4px;
 }
-#ticket.active{
+#ticket.active {
   animation-name: pulse;
   animation-duration: 1s;
   animation-iteration-count: infinite;
@@ -383,12 +390,14 @@ export default {
   animation-timing-function: cubic-bezier(0.43, 0, 0.37, 0.94);
 }
 
-
 @keyframes pulse {
-  from {  box-shadow: 0 0 6px rgba(0,0,0,0.4)  }
-  to   {
+  from {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  }
+  to {
     box-shadow: 0 0 12px #64c7a6;
-    border-color: #64c7a6; }
+    border-color: #64c7a6;
+  }
 }
 #quitQ-btn {
   background-color: transparent;

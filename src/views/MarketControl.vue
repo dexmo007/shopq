@@ -36,10 +36,10 @@
         </label>
         <label>Zusatzinfo:
           <textarea
-                  v-model="form.additionalInfo"
-                  cols="30"
-                  rows="10"
-                  placeholder="z.B.: Einlass nur mit Wagen!"
+            v-model="form.additionalInfo"
+            cols="30"
+            rows="10"
+            placeholder="z.B.: Einlass nur mit Wagen!"
           />
           </label>
         <button
@@ -55,7 +55,7 @@
 <script>
 import firebase from "firebase/app";
 import deepEqual from "deepequal";
-import { getPlaceDetails } from "@/api/places";
+import { getPlaceDetails } from "@/api/google-maps";
 
 const db = firebase.firestore();
 
@@ -103,10 +103,12 @@ export default {
               lng: details.geometry.location.lng()
             }
           },
-          opening_hours: !details.opening_hours ? null : {
-            periods: details.opening_hours.periods,
-            weekday_text: details.opening_hours.weekday_text
-          },
+          opening_hours: !details.opening_hours
+            ? null
+            : {
+                periods: details.opening_hours.periods,
+                weekday_text: details.opening_hours.weekday_text
+              },
           photos: !details.photos
             ? null
             : details.photos.map(p => ({
@@ -135,5 +137,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
