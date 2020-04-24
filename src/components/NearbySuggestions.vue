@@ -1,6 +1,7 @@
 <template>
   <div id="nearby">
-    <h1>{{title}}</h1>
+    <h1 v-if="mode === 'USER_LOCATION'">In der Nähe</h1>
+    <h1 v-else-if="mode === 'POSTAL_CODE'">Geschäfte in {{postalCode}}</h1>
     <div
       v-if="status === 'searching'"
       id="searching"
@@ -55,26 +56,22 @@ import MarketPreview from "@/components/MarketPreview";
 
 export default {
   name: "NearbySuggestions",
-  props: {
-    title: {
-      type: String,
-      default: "In der Nähe"
-    }
-  },
   components: { MarketPreview },
   data() {
     return {
       suggestionResults: null,
       status: "searching",
+      mode: "USER_LOCATION",
       postalCode: "",
-      realtimeInfos: null
+      realtimeInfos1: null,
+      realtimeInfos2: null
     };
   },
   computed: {
+    realtimeInfos() {
+      return [...(this.realtimeInfos1 || []), ...(this.realtimeInfos2 || [])];
+    },
     suggestions() {
-      console.log(this.suggestionResults);
-      console.log(this.realtimeInfos);
-
       if (!this.suggestionResults) {
         return null;
       }
@@ -91,6 +88,7 @@ export default {
       if (!this.postalCode.trim()) {
         return;
       }
+      this.mode = "POSTAL_CODE";
       const result = await geocode({
         componentRestrictions: {
           country: "DE",
@@ -105,17 +103,31 @@ export default {
     },
     async fetchNearbySuggestions({ lat, lng }) {
       this.suggestionResults = await nearbySearch({ lat, lng });
+      const ids = this.suggestionResults.map(p => p.place_id);
       await this.$bind(
-        "realtimeInfos",
+        "realtimeInfos1",
         firebase
           .firestore()
           .collection("shops")
           .where(
             firebase.firestore.FieldPath.documentId(),
             "in",
-            this.suggestionResults.map(p => p.place_id)
+            ids.slice(0, 10)
           )
       );
+      if (ids.length > 10) {
+        await this.$bind(
+          "realtimeInfos2",
+          firebase
+            .firestore()
+            .collection("shops")
+            .where(
+              firebase.firestore.FieldPath.documentId(),
+              "in",
+              ids.slice(10)
+            )
+        );
+      }
       setTimeout(() => {
         this.status = "found-suggestions";
       }, Math.floor(Math.random() * (1800 - 900 + 1)) + 900);
