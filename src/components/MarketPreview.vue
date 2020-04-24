@@ -9,25 +9,11 @@
       <span class="suggestion-name">{{market.name}}</span>
       <span class="suggestion-addr">{{market.vicinity}}</span>
     </div>
-    <div
-      class="suggestion-realtime-empty"
-      v-if="!market.shopQ"
-    />
-    <div
-      class="suggestion-realtime q-free"
-      v-else-if="!market.shopQ.queueCounter"
-    >
-      <div class="suggestion-q-text">Keine<br />Schlange!</div>
-    </div>
-    <div
-      class="suggestion-realtime"
-      v-else
-    >
-      <div class="suggestion-q-counter">
-        {{market.shopQ.queueCounter}}
-      </div>
-      <div class="suggestion-q-text">Personen in<br /> der Schlange</div>
-    </div>
+    <slot>
+      <div
+              class="suggestion-realtime-empty"
+      />
+    </slot>
   </router-link>
 </template>
 
@@ -40,8 +26,7 @@ export default {
       default() {
         return {
           name: "Ups",
-          vicinity: "...",
-          shopQ: null
+          vicinity: "..."
         };
       }
     }

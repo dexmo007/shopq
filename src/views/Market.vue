@@ -40,7 +40,7 @@
               <router-link :to="'/login?strict=true&redirect='
             + encodeURIComponent($router.currentRoute.fullPath)">Erstellen Sie ein Konto</router-link> und
             </span>
-            <b>Nutzen Sie shopQ!</b>
+            <b>Nutzen Sie die Vorteile von shopQ!</b>
             <ul>
               <li>kostenlos</li>
               <li>einfache Bedienung</li>
@@ -78,8 +78,8 @@
         v-if="stage === 'q-finished'"
         id="you-made-it"
       >
-        <span>Viel Spaß</span><br>
-        <span id="store">beim 🛒!</span>
+        <span id="store">Viel Spaß</span><br>
+        <span>beim 🛒!</span>
         <count-down
           v-if="shop.maxShoppingTime"
           @end-timer="inStore = false"

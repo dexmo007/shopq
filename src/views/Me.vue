@@ -2,6 +2,8 @@
   <div v-if="isInEditMode">
     <button @click="isInEditMode = false">zurück</button>
     {{user}}
+    <input type="text" v-model="user.email" placeholder="email"/>
+    <input type="text" v-model="user.password" placeholder="neues Passwort"/>
   </div>
   <div v-else-if="user">
     <div id="user-area">
@@ -15,7 +17,9 @@
     </div>
     <div id="user-markets">
       <div class="market">
-        <market-preview :market="market" />
+        <market-preview :market="market" >
+          <router-link to="/todo" tag="button" class="success">Einlass</router-link>
+        </market-preview>
       </div>
     </div>
   </div>

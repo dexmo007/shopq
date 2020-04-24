@@ -15,10 +15,26 @@
     >
       <market-preview
         class="suggestion"
-        v-for="market in suggestions"
+        v-for="(market, index) in suggestions"
         :key="market.id"
         :market="market"
-      />
+      >
+        <div
+                class="suggestion-realtime q-free"
+                v-if="!market.shopQ.queueCounter"
+        >
+          <div class="suggestion-q-text">Keine<br />Schlange!</div>
+        </div>
+        <div
+                class="suggestion-realtime"
+                v-else-if="null"
+        >
+          <div class="suggestion-q-counter">
+            {{market.shopQ.queueCounter}}
+          </div>
+          <div class="suggestion-q-text">Personen in<br /> der Schlange</div>
+        </div>
+      </market-preview>
     </div>
 
     <div
@@ -187,22 +203,22 @@ export default {
 
 .dots span {
   animation-name: color;
-  animation-duration: 0.6s;
+  animation-duration: 0.9s;
   animation-iteration-count: infinite;
 }
 
 .dots span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 }
 
 .dots span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.6s;
 }
 
 #geo-error {
   font-size: 1.4em;
   font-weight: bold;
-  max-width: 470px;
+  max-width: 320px;
   margin: -40px auto 0;
 }
 #geo-error > .emoji {
