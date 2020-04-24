@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+  // match /{document=**} {
+  //     allow read, write: if true;
+  //   }
+
+  	function isAdmission(shopId) {
+    	let data = get(/databases/$(database)/documents/shopControl/$(shopId)).data;
+      return request.auth.uid in data.admins
+      	|| ('admission' in data && request.auth.uid in data.admission);
+    }
+
+    match /shops/default {
+    	allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /shops/{shopId} {
+    	allow read: if request.auth != null;
+      allow write: if request.auth.uid in get(/databases/$(database)/documents/shopControl/$(shopId)).data.admins;
+
+    }
+
+    match /shopControl/{shopId} {
+    	allow create: if request.auth.uid in request.resource.data.admins;
+      allow update: if request.auth.uid in resource.data.admins
+      							&& request.resource.data.keys() == ['admission'];
+    }
+
+    match /ticketAdmission/{taid} {
+    	allow read: if resource.data.uid == request.auth.uid;
+      allow create: if isAdmission(request.resource.data.shopId);
+      allow update: if request.auth.uid == resource.data.uid
+      							&& resource.data.keys() == ['inactive'];
+    }
+
+    match /admittances/{shopId} {
+    	allow read: if request.auth != null;
+    	allow create: if isAdmission(shopId)
+                    && request.resource.data.keys() == ['count'];
+      allow update: if isAdmission(shopId)
+                    && request.resource.data.keys() == ['count'];
+    }
+
+    match /admittanceEvents/{eventId} {
+    	allow read: if request.auth != null;
+      allow create: if isAdmission(request.resource.data.shopId)
+      							&& request.resource.data.timestamp == request.time
+                    && request.resource.data.type in ['ENTER','LEAVE'];
+    }
+
+    match /queues/{shopId}/users/{userId} {
+
+      allow read: if request.auth != null;
+      allow create: if isAdmission(shopId) ||
+      							(request.resource.data.uid == request.auth.uid
+                    	&& request.resource.data.joinedAt == request.time);
+      allow delete: if isAdmission(shopId)
+      							|| request.auth.uid == resource.data.uid;
+
+    }
+
+    match /randomWords/{lang}/{type}/{id} {
+      allow read: if request.auth != null;
+    }
+
+  }
+}
