@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import firebase from "firebase/app";
 import { nearbySearch, geocode } from "@/api/google-maps";
 import MarketPreview from "@/components/MarketPreview";
 
@@ -63,10 +64,27 @@ export default {
   components: { MarketPreview },
   data() {
     return {
-      suggestions: null,
+      suggestionResults: null,
       status: "searching",
-      postalCode: ""
+      postalCode: "",
+      realtimeInfos: null
     };
+  },
+  computed: {
+    suggestions() {
+      console.log(this.suggestionResults);
+      console.log(this.realtimeInfos);
+
+      if (!this.suggestionResults) {
+        return null;
+      }
+      return this.suggestionResults.map(market => ({
+        ...market,
+        shopQ: (this.realtimeInfos || []).find(
+          ({ id }) => id == market.place_id
+        )
+      }));
+    }
   },
   methods: {
     async submitPostalCode() {
@@ -86,7 +104,18 @@ export default {
       });
     },
     async fetchNearbySuggestions({ lat, lng }) {
-      this.suggestions = await nearbySearch({ lat, lng });
+      this.suggestionResults = await nearbySearch({ lat, lng });
+      await this.$bind(
+        "realtimeInfos",
+        firebase
+          .firestore()
+          .collection("shops")
+          .where(
+            firebase.firestore.FieldPath.documentId(),
+            "in",
+            this.suggestionResults.map(p => p.place_id)
+          )
+      );
       setTimeout(() => {
         this.status = "found-suggestions";
       }, Math.floor(Math.random() * (1800 - 900 + 1)) + 900);
