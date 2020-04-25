@@ -4,27 +4,37 @@
       <div id="fixed">
         <div id="nav-account-area">
           <router-link
-                  v-if="!user"
-                  tag="button"
-                  to="/login"
-                  class="success"
+            v-if="!user || user.isAnonymous"
+            tag="button"
+            to="/login?strict=true"
+            class="success"
           >Login</router-link>
-          <button
-                  v-else
-                  class="danger"
-          >Logout</button>
-          <span v-if="user">
-            <router-link v-if="!user.isAnonymous" to="/me"  tag="span">{{user.displayName || user.email}}</router-link>
-            <router-link v-else to="/login?strict=true" tag="span">Account updaten</router-link>
-          </span>
+          <template v-else>
+            <button
+              class="danger"
+              @click="logout"
+            >Logout</button>
+            <router-link
+              to="/me"
+              tag="span"
+            >{{user.displayName || user.email}}</router-link>
+
+          </template>
+
         </div>
         <div id="nav">
           <router-link
-                  to="/"
-                  tag="span"
-                  id="home-link"
+            to="/"
+            tag="span"
+            id="home-link"
           >shop<span style="color: #64c7a6;">Q</span></router-link>
-          <router-link to="/about" tag="span" id="about-link"><font-awesome-icon icon="question"></font-awesome-icon></router-link>
+          <router-link
+            to="/about"
+            tag="span"
+            id="about-link"
+          >
+            <font-awesome-icon icon="question"></font-awesome-icon>
+          </router-link>
         </div>
       </div>
       <div id="scrollable">
@@ -34,7 +44,11 @@
         </div>
       </div>
     </div>
-    <router-link to="/impressum" id="impressum-link" tag="div">Impressum</router-link>
+    <router-link
+      to="/impressum"
+      id="impressum-link"
+      tag="div"
+    >Impressum</router-link>
   </div>
 </template>
 
@@ -46,6 +60,12 @@ export default {
     return {
       user: null
     };
+  },
+  methods: {
+    async logout() {
+      await firebase.auth().signOut();
+      this.user = await firebase.auth().signInAnonymously();
+    }
   },
   async mounted() {
     this.user = await new Promise((resolve, reject) => {
@@ -81,13 +101,14 @@ body {
   color: #2c3e50;
   overflow-x: hidden;
 }
-#fixed > #nav-account-area, #app{
+#fixed > #nav-account-area,
+#app {
   width: calc(100% - 32px);
   max-width: 720px;
   margin: 8px auto;
 }
 
-#fixed{
+#fixed {
   position: fixed;
   margin-top: 0;
   z-index: 20;
@@ -103,7 +124,7 @@ body {
   align-items: center;
   flex-direction: row-reverse;
 }
-#nav-account-area > *{
+#nav-account-area > * {
   margin-left: 8px;
 }
 #nav {
@@ -137,7 +158,7 @@ body {
   color: white;
   text-shadow: 0 0 4px rgb(0, 0, 0);
 }
-#about-link{
+#about-link {
   display: inline-flex;
   color: #2c3e50;
   font-size: 0.6em;
@@ -153,11 +174,11 @@ body {
   border: 1px solid #373737;
   transition: box-shadow 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-#about-link:hover{
+#about-link:hover {
   box-shadow: 0 0 3px white;
 }
 
-#scrollable{
+#scrollable {
   border-radius: 0 0 8px 8px;
   background: white;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
@@ -165,10 +186,8 @@ body {
   padding-top: 20px;
 }
 
-
-
 input:not(.blank),
-textarea:not(.blank){
+textarea:not(.blank) {
   margin: 4px 0;
   border: 1px solid #2c3e50;
   border-radius: 4px;
@@ -178,7 +197,7 @@ textarea:not(.blank){
   outline: none;
 }
 input:focus:not(.blank),
-textarea:focus:not(.blank){
+textarea:focus:not(.blank) {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
   border-color: #64c7a6;
 }
@@ -201,7 +220,7 @@ button {
   /* prevents double-tap to zoom action */
   touch-action: manipulation;
 }
-button[disabled]{
+button[disabled] {
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -221,11 +240,11 @@ form {
   display: flex;
   flex-direction: column;
 }
-form p{
+form p {
   text-align: initial;
   margin: 0;
 }
-form section{
+form section {
   margin: 18px 10px;
   display: flex;
   flex-direction: column;
@@ -251,13 +270,13 @@ form label .default-value::after {
   content: ")";
 }
 
-#impressum-link{
+#impressum-link {
   display: inline-block;
   cursor: pointer;
   color: white;
   margin: 18px;
 }
-#impressum-link:hover{
+#impressum-link:hover {
   text-decoration: underline;
 }
 </style>
