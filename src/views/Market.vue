@@ -26,6 +26,7 @@
         <font-awesome-icon icon="map-marked-alt" />
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
       </span>
+      <span v-if="latestActivity">Letzte Aktivität: {{latestActivity}}</span>
     </div>
     <div id="market-body">
       <div v-if="stage === 'no-support'">
@@ -125,6 +126,7 @@
 </template>
 <script>
 import firebase from "firebase/app";
+import { selectUnit } from "@formatjs/intl-utils";
 import CountDown from "@/components/CountDown";
 import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
@@ -188,6 +190,18 @@ export default {
         start = new Date(admission.timestamp.toDate());
       }
       return new Date(start.getTime() + this.shop.maxShoppingTime * 60 * 1000);
+    },
+    latestActivity() {
+      if (
+        !this.latestAdmittanceEvent ||
+        this.latestAdmittanceEvent.length === 0
+      ) {
+        return null;
+      }
+      const [event] = this.latestAdmittanceEvent;
+      const ts = new Date(event.timestamp.toDate());
+      const diff = selectUnit(ts);
+      return this.rtf.format(diff.value, diff.unit);
     }
   },
   beforeDestroy() {
@@ -241,7 +255,9 @@ export default {
       stage: "default",
       defaultShopParams: null,
       admittance: null,
-      ticketAdmission: null
+      ticketAdmission: null,
+      latestAdmittanceEvent: null,
+      rtf: new Intl.RelativeTimeFormat("de", { numeric: "auto" })
     };
   },
   firestore: {
@@ -265,6 +281,15 @@ export default {
         if (this.stage === "not-found") {
           return;
         }
+        await this.$bind(
+          "latestAdmittanceEvent",
+          firebase
+            .firestore()
+            .collection("admittanceEvents")
+            .where("shopId", "==", this.id)
+            .orderBy("timestamp", "desc")
+            .limit(1)
+        );
 
         await this.$bind(
           "queue",
@@ -359,6 +384,10 @@ export default {
 #market {
   margin: 0 12px;
   padding-bottom: 12px;
+}
+#market-header {
+  display: flex;
+  flex-direction: column;
 }
 .primary-interaction {
   margin: 30px 0;

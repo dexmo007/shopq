@@ -29,6 +29,7 @@ export async function getPlacesService() {
 export const PLACE_RESULT_FIELDS = [
   'place_id',
   'name',
+  'vicinity',
   'formatted_address',
   'geometry.location',
   'business_status',

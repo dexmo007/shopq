@@ -20,14 +20,18 @@
         :market="market"
       >
         <div
+          class="suggestion-realtime-empty"
+          v-if="!market.shopQ"
+        />
+        <div
           class="suggestion-realtime q-free"
-          v-if="!market.shopQ.queueCounter"
+          v-else-if="!market.shopQ.queueCounter"
         >
           <div class="suggestion-q-text">Keine<br />Schlange!</div>
         </div>
         <div
           class="suggestion-realtime"
-          v-else-if="null"
+          v-else
         >
           <div class="suggestion-q-counter">
             {{market.shopQ.queueCounter}}
@@ -241,5 +245,38 @@ export default {
 }
 .suggestion {
   width: 100%;
+}
+
+/* this is needed, to get all 4 corners smooth */
+.suggestion-realtime-empty {
+  border-radius: 0 4px 4px 0;
+  width: 4px;
+  background: white;
+  z-index: 2;
+}
+.suggestion-realtime {
+  border: 1px solid rgba(33, 33, 33, 0.4);
+  display: flex;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.suggestion-realtime.q-free {
+  background-color: rgb(100, 199, 166);
+}
+
+.suggestion-q-counter {
+  font-size: 2em;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: #2b3e50;
+  color: white;
+  margin: -1px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 </style>
