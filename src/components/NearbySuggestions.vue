@@ -15,19 +15,19 @@
     >
       <market-preview
         class="suggestion"
-        v-for="(market, index) in suggestions"
+        v-for="market in suggestions"
         :key="market.id"
         :market="market"
       >
         <div
-                class="suggestion-realtime q-free"
-                v-if="!market.shopQ.queueCounter"
+          class="suggestion-realtime q-free"
+          v-if="!market.shopQ.queueCounter"
         >
           <div class="suggestion-q-text">Keine<br />Schlange!</div>
         </div>
         <div
-                class="suggestion-realtime"
-                v-else-if="null"
+          class="suggestion-realtime"
+          v-else-if="null"
         >
           <div class="suggestion-q-counter">
             {{market.shopQ.queueCounter}}

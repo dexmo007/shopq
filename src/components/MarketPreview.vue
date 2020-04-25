@@ -10,9 +10,7 @@
       <span class="suggestion-addr">{{market.vicinity}}</span>
     </div>
     <slot>
-      <div
-              class="suggestion-realtime-empty"
-      />
+      <div class="suggestion-realtime-empty" />
     </slot>
   </router-link>
 </template>
