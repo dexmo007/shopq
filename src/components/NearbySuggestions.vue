@@ -119,6 +119,7 @@ export default {
     },
     async fetchNearbySuggestions({ lat, lng }) {
       this.suggestionResults = await nearbySearch({ lat, lng });
+
       const ids = this.suggestionResults.map(p => p.place_id);
       await this.$bind(
         "realtimeInfos1",

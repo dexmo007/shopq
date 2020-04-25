@@ -8,16 +8,32 @@ export async function getGoogleApi() {
   return gmapApi();
 }
 
-export async function getPlacesService() {
-  if (cache.places) {
-    return cache.places;
+async function getService(name, factory) {
+  if (cache[name]) {
+    return cache[name];
   }
   const google = await getGoogleApi();
-  cache.places = new google.maps.places.PlacesService(
-    document.createElement('div')
-  );
-  return cache.places;
+  const service = factory(google);
+  cache[name] = service;
+  return service;
 }
+
+export async function getPlacesService() {
+  return getService(
+    'places',
+    (google) =>
+      new google.maps.places.PlacesService(document.createElement('div'))
+  );
+}
+
+export const PLACE_RESULT_FIELDS = [
+  'place_id',
+  'name',
+  'formatted_address',
+  'geometry.location',
+  'business_status',
+  'photos',
+];
 
 export async function getPlaceDetails(placeId) {
   const service = await getPlacesService();
@@ -25,6 +41,7 @@ export async function getPlaceDetails(placeId) {
     service.getDetails(
       {
         placeId,
+        fields: PLACE_RESULT_FIELDS,
       },
       (placeDetails, error) => {
         if (error && error !== 'OK') {
@@ -63,12 +80,7 @@ export async function nearbySearch({ lat, lng }) {
 }
 
 async function getGeocoder() {
-  if (cache.geocoder) {
-    return cache.geocoder;
-  }
-  const google = await getGoogleApi();
-  cache.geocoder = new google.maps.Geocoder();
-  return cache.geocoder;
+  return getService('geocoder', (google) => new google.maps.Geocoder());
 }
 
 export async function geocode(req) {
