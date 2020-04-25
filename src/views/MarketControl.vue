@@ -54,8 +54,8 @@
 
 <script>
 import firebase from "firebase/app";
-import deepEqual from "deepequal";
-import { getPlaceDetails } from "@/api/google-maps";
+import { changed } from "@/util/object";
+import { deleteIfAbsent } from "@/util/firestore";
 
 const db = firebase.firestore();
 
@@ -71,63 +71,42 @@ export default {
     };
   },
   async mounted() {
-    this.defaultShopParams = await this.$bind(
-      "shop",
+    const shop = await this.$bind("shop", this.shopRef);
+    if (!shop) {
+      this.$router.push("/markt/" + this.id);
+      return;
+    }
+    this.form = {
+      capacity: this.shop.capacity,
+      maxShoppingTime: this.shop.maxShoppingTime || null,
+      additionalInfo: this.shop.additionalInfo || null
+    };
+    await this.$bind(
+      "defaultShopParams",
       db.collection("shops").doc("default")
     );
-    const shop = await this.initShop();
-    this.form = JSON.parse(JSON.stringify(shop || {}));
   },
   computed: {
     shopRef() {
       return db.collection("shops").doc(this.id);
     },
     formChanged() {
-      return !deepEqual(this.form, this.shop);
+      return (
+        this.form.capacity !== this.shop.capacity ||
+        changed(this.form.maxShoppingTime, this.shop.maxShoppingTime) ||
+        changed(this.form.additionalInfo, this.shop.additionalInfo)
+      );
     }
   },
   methods: {
-    async initShop() {
-      let shop = await this.$bind("shop", this.shopRef);
-      if (!shop) {
-        shop = {};
-      }
-      if (!shop.placeDetails) {
-        const details = await getPlaceDetails(this.id);
-
-        shop.placeDetails = {
-          ...details,
-          geometry: {
-            location: {
-              lat: details.geometry.location.lat(),
-              lng: details.geometry.location.lng()
-            }
-          },
-          opening_hours: !details.opening_hours
-            ? null
-            : {
-                periods: details.opening_hours.periods,
-                weekday_text: details.opening_hours.weekday_text
-              },
-          photos: !details.photos
-            ? null
-            : details.photos.map(p => ({
-                height: p.height,
-                width: p.width,
-                html_attributions: p.html_attributions,
-                url: p.getUrl()
-              }))
-        };
-        db.collection("shops")
-          .doc(this.id)
-          .set(shop, { merge: true });
-      }
-      return shop;
-    },
     async saveForm() {
       try {
         this.saving = true;
-        await this.shopRef.update(this.form);
+        await this.shopRef.update({
+          capacity: this.form.capacity,
+          maxShoppingTime: deleteIfAbsent(this.form.maxShoppingTime),
+          additionalInfo: deleteIfAbsent(this.form.additionalInfo)
+        });
       } finally {
         this.saving = false;
       }

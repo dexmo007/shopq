@@ -55,6 +55,32 @@ export async function getPlaceDetails(placeId) {
   });
 }
 
+export function transformPlaceDetailsToJson(details) {
+  return {
+    ...details,
+    geometry: {
+      location: {
+        lat: details.geometry.location.lat(),
+        lng: details.geometry.location.lng(),
+      },
+    },
+    opening_hours: !details.opening_hours
+      ? null
+      : {
+          periods: details.opening_hours.periods,
+          weekday_text: details.opening_hours.weekday_text,
+        },
+    photos: !details.photos
+      ? null
+      : details.photos.map((p) => ({
+          height: p.height,
+          width: p.width,
+          html_attributions: p.html_attributions,
+          url: p.getUrl(),
+        })),
+  };
+}
+
 export async function nearbySearch({ lat, lng }) {
   const google = await getGoogleApi();
   const service = await getPlacesService();

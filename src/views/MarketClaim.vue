@@ -44,7 +44,10 @@
 
 <script>
 import firebase from "firebase/app";
-import { getPlaceDetails } from "@/api/google-maps";
+import {
+  getPlaceDetails,
+  transformPlaceDetailsToJson
+} from "@/api/google-maps";
 
 export default {
   props: ["id"],
@@ -71,7 +74,6 @@ export default {
         .collection("shopControl")
         .doc(this.id)
         .set({
-          ...this.form,
           admins: [firebase.auth().currentUser.uid]
         });
       await firebase
@@ -80,7 +82,12 @@ export default {
         .doc(this.id)
         .set(
           {
-            ...this.form
+            ...this.form,
+            placeDetails: transformPlaceDetailsToJson(this.placeDetails),
+            location: new firebase.firestore.GeoPoint(
+              this.placeDetails.geometry.location.lat(),
+              this.placeDetails.geometry.location.lng()
+            )
           },
           { merge: true }
         );
