@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Frontend
 on:
   push:
     branches:
@@ -11,6 +11,7 @@ on:
       - 'jest.rules.config.js'
       - 'data/**'
       - '.dependabot/**'
+      - README.md
 jobs:
   test-build-deploy:
     name: Test, build and deploy
