@@ -24,7 +24,7 @@ jobs:
           java-package: jre
       - run: yarn
       - run: java -version
-      - run: yarn global add firebase-tools
+      - run: npm i -g firebase-tools
       - name: Setup Firestore emulator
         run: firebase setup:emulators:firestore
       - name: Run tests on Firestore emulator

@@ -9,6 +9,7 @@ on:
       - 'firestore.indexes.json'
       - 'firestore.rules'
       - 'jest.rules.config.js'
+      - .github/workflows/rules.yml
       - 'data/**'
       - '.dependabot/**'
       - README.md
