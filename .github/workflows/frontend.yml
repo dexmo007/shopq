@@ -1,0 +1,31 @@
+name: Frontend CI
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'functions/**'
+      - 'tests/rules/**'
+      - 'firestore.indexes.json'
+      - 'firestore.rules'
+      - 'jest.rules.config.js'
+      - 'data/**'
+      - '.dependabot/**'
+jobs:
+  test-build-deploy:
+    name: Test, build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 14
+      - run: yarn
+      - run: yarn test:unit
+      - run: yarn build --mode staging
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --project staging --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

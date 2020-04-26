@@ -12,5 +12,5 @@ export function keepOnly(obj, props) {
 }
 
 export function changed(left, right) {
-  return left !== right && (left || right);
+  return left !== right && (!!left || !!right);
 }

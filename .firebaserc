@@ -1,6 +1,7 @@
 {
   "projects": {
     "production": "shopq-271815",
-    "default": "shopq-dev"
+    "default": "shopq-dev",
+    "staging": "shopq-dev"
   }
 }
