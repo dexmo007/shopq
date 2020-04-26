@@ -1,0 +1,35 @@
+name: Rules
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - tests/rules/**
+      - firestore.indexes.json
+      - firestore.rules
+      - jest.rules.config.js
+      - .github/workflows/rules.yml
+jobs:
+  test-deploy-rules:
+    name: Test and deploy rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 14
+      - uses: actions/setup-java@master
+        with:
+          java-version: 11
+          java-package: jre
+      - run: yarn
+      - run: java -version
+      - run: yarn global add firebase-tools
+      - name: Setup Firestore emulator
+        run: firebase setup:emulators:firestore
+      - name: Run tests on Firestore emulator
+        run: firebase emulators:exec --only firestore 'yarn test:rules'
+      - name: Deploy to Firebase
+        run: firebase deploy --project staging --only firestore
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
