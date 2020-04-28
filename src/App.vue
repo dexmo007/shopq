@@ -116,7 +116,7 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  background: #353535;
+  background: #373737;
 }
 #nav-account-area {
   color: white;
@@ -182,8 +182,8 @@ body {
   border-radius: 0 0 8px 8px;
   background: white;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
-  margin-top: 160px;
-  padding-top: 20px;
+  margin-top: 100px;
+  padding-top: 80px;
 }
 
 input:not(.blank),
@@ -232,6 +232,9 @@ button.success {
 button.danger {
   border: 1px solid rgba(136, 32, 34, 0.75);
   background-color: #fb6b6f;
+}
+button.info {
+  background-color: #f8ac59;
 }
 button:hover {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);

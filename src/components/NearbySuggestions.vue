@@ -36,7 +36,7 @@
           <div class="suggestion-q-counter">
             {{market.shopQ.queueCounter}}
           </div>
-          <div class="suggestion-q-text">Personen in<br /> der Schlange</div>
+          <div class="suggestion-q-text">{{market.shopQ.queueCounter === 1 ? 'Person' : 'Personen'}} in<br /> der Schlange</div>
         </div>
       </market-preview>
     </div>
@@ -262,6 +262,7 @@ export default {
   margin-top: -1px;
   margin-bottom: -1px;
   margin-right: -1px;
+  color: black;
 }
 .suggestion-realtime.q-free {
   background-color: rgb(100, 199, 166);
@@ -278,5 +279,11 @@ export default {
   color: white;
   margin: -1px;
   border: 1px solid rgba(0, 0, 0, 0.4);
+}
+.suggestion-q-text {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

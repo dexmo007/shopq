@@ -99,11 +99,27 @@ export default {
   background: white;
   z-index: 2;
 }
-
-.suggestion-q-text {
-  padding: 10px;
+.suggestion-info + *{
+  border-radius: 0 4px 4px 0;
+  background: white;
+}
+.suggestion-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.suggestion-addr {
+  font-size: 1em;
+}
+.suggestion-realtime {
+  border: 1px solid rgba(33, 33, 33, 0.4);
   display: flex;
   justify-content: center;
-  align-items: center;
+  border-radius: 0 4px 4px 0;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.suggestion-realtime.q-free {
+  background-color: rgb(100, 199, 166);
 }
 </style>
