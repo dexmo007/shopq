@@ -7,13 +7,32 @@
         Wollen Sie überwachen, wie viele Leute gleichzeitig im Laden sind und wann Sie neue Kunden in ihr Geschäft lassen können?<br>
         Kein Problem!<br> Über diese App können sich Kunden schon bequem von zu Hause aus für ihr Geschäft anstellen.
         Vermeiden sie Warteschlangen und dadurch zusätzliche Begegnungen mit anderen Menschen.</p>
+        <h1>Wollen Sie shopQ ausprobieren?</h1>
+        <progress-bar :threshold="maxPeopleInStore" :count="peopleInStore"/>
+        <span>(#1) Anzeige</span>
+        <p>#1 zeigt an, wie viele Leute im (hier fiktiven) Geschäft sind. Zur Zeit halten sich 2 Kunden in den Räumlichkeiten auf.</p>
+        <div>
+            <button class="success" @click="peopleInStore++">Kunde kommt</button>
+            <button class="danger" @click="peopleInStore--">Kunde geht</button>
+        </div>
+        <div v-if="peopleInStore > maxPeopleInStore">
+            <button class="info">Kunde zur Warteschlange hinzufügen</button>
+        </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name: "About.vue"
+import ProgressBar from "@/components/ProgressBar";
+export default {
+    name: "About.vue",
+    components: {ProgressBar},
+    data() {
+        return {
+            maxPeopleInStore: 5,
+            peopleInStore: 2
+        }
     }
+}
 </script>
 
 <style scoped>
