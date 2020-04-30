@@ -202,7 +202,7 @@ textarea:focus:not(.blank) {
   border-color: #64c7a6;
 }
 button {
-  display: block;
+  display: inline-block;
   font-weight: 400;
   text-align: center;
   vertical-align: middle;

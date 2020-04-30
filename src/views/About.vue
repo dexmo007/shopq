@@ -8,15 +8,33 @@
         Kein Problem!<br> Über diese App können sich Kunden schon bequem von zu Hause aus für ihr Geschäft anstellen.
         Vermeiden sie Warteschlangen und dadurch zusätzliche Begegnungen mit anderen Menschen.</p>
         <h1>Wollen Sie shopQ ausprobieren?</h1>
+        <p>Sie suchen ihren Supermarkt um die Ecke auf shopQ und finden diese Übersicht:</p>
+        <div v-if="capacityReached">
+            <button
+                    class="success"
+                    id="joinQ-btn"
+                    @click="addToQ()"
+            >virtuell anstellen</button>
+            <span v-if="q.length === 0">Sei der erste in der Schlange!</span>
+            <span v-else><b>{{q.length}}</b> Personen in der Schlange</span>
+        </div>
+        <div v-else>
+            <h2>Es gibt keine Schlange!</h2>
+            <span>Sie können zur Zeit ohne anzustehen einkaufen gehen,</span><br>
+            <span>es {{freeSlots === 1 ? 'ist ein Platz' : `sind ${freeSlots} Plätze`}} frei!</span>
+        </div>
+
+        <hr>
+
         <progress-bar :threshold="maxPeopleInStore" :count="peopleInStore"/>
         <span>(#1) Anzeige</span>
-        <p>#1 zeigt an, wie viele Leute im (hier fiktiven) Geschäft sind. Zur Zeit halten sich 2 Kunden in den Räumlichkeiten auf.</p>
-        <div>
+        <p>#1 zeigt an, wie viele Leute im Geschäft sind. Zur Zeit halten sich {{peopleInStore}} Kunden in den Räumlichkeiten auf.</p>
+        <div id="marketAdmittance-interaction">
             <button class="success" @click="peopleInStore++">Kunde kommt</button>
             <button class="danger" @click="peopleInStore--">Kunde geht</button>
         </div>
-        <div v-if="peopleInStore > maxPeopleInStore">
-            <button class="info">Kunde zur Warteschlange hinzufügen</button>
+        <div v-if="capacityReached">
+            <button class="info" @click="addToQ()">Kunde zur Warteschlange hinzufügen</button>
         </div>
     </div>
 </template>
@@ -29,7 +47,21 @@ export default {
     data() {
         return {
             maxPeopleInStore: 5,
-            peopleInStore: 2
+            peopleInStore: 2,
+            q: []
+        }
+    },
+    computed: {
+        capacityReached(){
+          return this.peopleInStore >= this.maxPeopleInStore;
+        },
+        freeSlots(){
+          return this.maxPeopleInStore - this.peopleInStore;
+        }
+    },
+    methods: {
+        addToQ(){
+
         }
     }
 }
@@ -61,5 +93,15 @@ export default {
     text-align: justify;
     margin: 18px;
     padding-bottom: 24px;
+}
+#progress{
+    margin: 18px;
+    width: auto;
+}
+#marketAdmittance-interaction{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 18px;
 }
 </style>

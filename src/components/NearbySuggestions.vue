@@ -7,7 +7,29 @@
       id="searching"
     >
       Wir suchen nach Geschäften, die du brauchen könntest<span class="dots"><span>.</span><span>.</span><span>.</span></span><br />
-      <span class="emoji">&#129299;</span>
+      <div id="lookin-for-markets">
+        <market-preview
+                class="suggestion"
+                :market="{name: loading.randomName, vicinity: loading.randomVicinity}"
+        >
+          <div
+                  class="suggestion-realtime q-free"
+                  v-if="loading.randomRealTimeInfo === 1"
+          >
+            <div class="suggestion-q-text">Keine<br />Schlange!</div>
+          </div>
+          <div
+                  class="suggestion-realtime"
+                  v-else-if="loading.randomRealTimeInfo === 2"
+          >
+            <div class="suggestion-q-counter">
+              2
+            </div>
+            <div class="suggestion-q-text">Personen in<br /> der Schlange</div>
+          </div>
+        </market-preview>
+        <span class="emoji">&#128269;</span>
+      </div>
     </div>
     <div
       id="suggestions-wrapper"
@@ -79,6 +101,11 @@ export default {
   components: { MarketPreview },
   data() {
     return {
+      loading: {
+        randomName: "",
+        randomVicinity: "",
+        randomRealTimeInfo: 0
+      },
       suggestionResults: null,
       status: "searching",
       mode: "USER_LOCATION",
@@ -104,6 +131,13 @@ export default {
     }
   },
   methods: {
+    changeRandomText(){
+      const randomNameTexts = ["Trödelladen", "Dein Supermarkt", "Museum", "Super duper Supermarkt"];
+      const randomVicinityTexts = ["52° 30' 52.310\" N 13° 21' 0.302\" E ", "nebenan", "um die Ecke", "in der Nachbarschaft"];
+      this.loading.randomName = randomNameTexts[Math.floor(Math.random() * randomNameTexts.length)];
+      this.loading.randomVicinity = randomVicinityTexts[Math.floor(Math.random() * randomVicinityTexts.length)];
+      this.loading.randomRealTimeInfo = (Math.random() * 4 ) << 0; //random int between 0 and 3
+    },
     async submitPostalCode() {
       if (!this.postalCode.trim()) {
         return;
@@ -155,6 +189,12 @@ export default {
     }
   },
   mounted() {
+    this.changeRandomText();
+    this.$nextTick(function () {
+      window.setInterval(() => {
+        this.changeRandomText();
+      },6300);
+    });
     navigator.geolocation.getCurrentPosition(
       async position => {
         this.fetchNearbySuggestions({
@@ -182,43 +222,51 @@ export default {
   font-size: 1.4em;
   font-weight: bold;
   padding: 32px;
-  max-width: 320px;
+  max-width: 480px;
   margin: auto;
 }
-#searching > .emoji {
+#lookin-for-markets {
+   position: relative;
+ }
+#lookin-for-markets > .emoji {
   font-weight: normal;
   font-size: 4em;
   padding: 6px;
+  position: absolute;
+  z-index: 2;
+  top: -42px;
+  left: 0;
+  animation: moveMag infinite 3s;
 }
-
-@keyframes color {
+@keyframes moveMag {
   from {
-    color: initial;
+    top: -42px;
+    left: 0;
+  }
+  20%{
+    top: -2px;
+    left: 20%;
+  }
+  30%{
+    top: 4%;
+    left: 15%;
+  }
+  50%{
+    top: -2px;
+    left: 24%;
   }
 
-  50% {
-    color: rgb(100, 199, 166);
-    text-shadow: 0 0 2px rgb(100, 199, 166);
+  50%{
+    top: -20px;
+    left: 64%;
   }
-
   to {
-    color: initial;
+    top: -42px;
+    left: 0;
   }
+
 }
 
-.dots span {
-  animation-name: color;
-  animation-duration: 0.9s;
-  animation-iteration-count: infinite;
-}
-
-.dots span:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-.dots span:nth-child(3) {
-  animation-delay: 0.6s;
-}
 
 #geo-error {
   font-size: 1.4em;
@@ -238,13 +286,10 @@ export default {
 
 #suggestions-wrapper {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: space-evenly;
   max-width: 480px;
   margin: 0 auto;
-}
-.suggestion {
-  width: 100%;
 }
 
 /* this is needed, to get all 4 corners smooth */

@@ -41,6 +41,8 @@ export default {
   justify-content: space-between;
   cursor: pointer;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+  font-weight: normal;
 }
 
 .suggestion-info,
@@ -56,11 +58,11 @@ export default {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 }
 
-.q-free .suggestion-q-text {
+.q-free {
   border-radius: 0 3px 3px 0;
   box-shadow: 0 0 5px rgba(100, 199, 166, 0.8);
 }
-.suggestion:hover .q-free .suggestion-q-text {
+.suggestion:hover .q-free {
   box-shadow: 0 0 12px rgba(100, 199, 166, 1);
 }
 
