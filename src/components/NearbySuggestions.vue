@@ -231,10 +231,9 @@ export default {
 #lookin-for-markets > .emoji {
   font-weight: normal;
   font-size: 4em;
-  padding: 6px;
   position: absolute;
   z-index: 2;
-  top: -42px;
+  top: 2px;
   left: 40%;
   animation-name: moveMag;
   animation-duration: 3s;
