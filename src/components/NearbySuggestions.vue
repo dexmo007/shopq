@@ -6,7 +6,7 @@
       v-if="status === 'searching'"
       id="searching"
     >
-      Wir suchen nach Geschäften, die du brauchen könntest<span class="dots"><span>.</span><span>.</span><span>.</span></span><br />
+      Suche nach Vorschlägen<br />
       <div id="lookin-for-markets">
         <market-preview
                 class="suggestion"
@@ -67,9 +67,8 @@
       v-if="status === 'location-failed'"
       id="geo-error"
     >
-      <span class="emoji">&#127755;</span><br />
       <p>
-        <span style="color: #dd363a;">Chaos pur!</span> Wir konnten keine Geschäfte für dich finden,
+        &#127755;<span style="color: #dd363a;">Chaos pur!</span> Wir konnten keine Geschäfte für dich finden,
         aber mit etwas Glück hilft dir diese Suche:
       </p>
     </div>
@@ -132,7 +131,7 @@ export default {
   },
   methods: {
     changeRandomText(){
-      const randomNameTexts = ["Trödelladen", "Dein Supermarkt", "Museum", "Super duper Supermarkt"];
+      const randomNameTexts = ["Trödelladen", "Dein Supermarkt", "Museum"];
       const randomVicinityTexts = ["52° 30' 52.310\" N 13° 21' 0.302\" E ", "nebenan", "um die Ecke", "in der Nachbarschaft"];
       this.loading.randomName = randomNameTexts[Math.floor(Math.random() * randomNameTexts.length)];
       this.loading.randomVicinity = randomVicinityTexts[Math.floor(Math.random() * randomVicinityTexts.length)];
@@ -203,12 +202,13 @@ export default {
         });
       },
       GeolocationPositionError => {
-        if (GeolocationPositionError.code === 2) {
+        if (GeolocationPositionError.code === 1) {
+          this.status = "location-disabled";
+        } else {
+          // wait a random time before showing the failed screen to indicate "working" server
           setTimeout(() => {
             this.status = "location-failed";
           }, Math.floor(Math.random() * (3400 - 1600 + 1)) + 1600);
-        } else {
-          this.status = "location-disabled";
         }
       }
     );
@@ -235,10 +235,17 @@ export default {
   position: absolute;
   z-index: 2;
   top: -42px;
-  left: 0;
-  animation: moveMag infinite 3s;
+  left: 40%;
+  animation-name: moveMag;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.43, 0, 0.37, 0.94);
 }
 @keyframes moveMag {
+  from { transform: rotate(0deg) translateX(18px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(18px) rotate(-360deg); }
+}
+ /* @keyframes moveMag {
   from {
     top: -42px;
     left: 0;
@@ -265,7 +272,7 @@ export default {
     left: 0;
   }
 
-}
+} */
 
 
 #geo-error {
@@ -273,11 +280,6 @@ export default {
   font-weight: bold;
   max-width: 320px;
   margin: -40px auto 0;
-}
-#geo-error > .emoji {
-  font-weight: normal;
-  font-size: 4em;
-  padding: 6px;
 }
 #geo-error > p {
   margin: -10px 12px 5px;
