@@ -9,9 +9,26 @@
       <span class="suggestion-name">{{market.name}}</span>
       <span class="suggestion-addr">{{market.vicinity}}</span>
     </div>
-    <slot>
+    <slot
+            v-if="!market.shopQ"
+    >
       <div class="suggestion-realtime-empty" />
     </slot>
+    <div
+            class="suggestion-realtime q-free"
+            v-else-if="!market.shopQ.queueCounter"
+    >
+      <div class="suggestion-q-text">Keine<br />Schlange!</div>
+    </div>
+    <div
+            class="suggestion-realtime"
+            v-else
+    >
+      <div class="suggestion-q-counter">
+        {{market.shopQ.queueCounter}}
+      </div>
+      <div class="suggestion-q-text">{{market.shopQ.queueCounter === 1 ? 'Person' : 'Personen'}} in<br /> der Schlange</div>
+    </div>
   </router-link>
 </template>
 
@@ -123,5 +140,37 @@ export default {
 }
 .suggestion-realtime.q-free {
   background-color: rgb(100, 199, 166);
+}
+.suggestion-realtime {
+  border: 1px solid rgba(33, 33, 33, 0.4);
+  display: flex;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  margin-right: -1px;
+  color: black;
+}
+.suggestion-realtime.q-free {
+  background-color: rgb(100, 199, 166);
+}
+
+.suggestion-q-counter {
+  font-size: 2em;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: #2b3e50;
+  color: white;
+  margin: -1px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+.suggestion-q-text {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
