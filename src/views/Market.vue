@@ -175,10 +175,10 @@ export default {
       );
     },
     freeSlots() {
-      if (![this.shopParams, this.admittance].every(v => !!v)) {
+      if (this.loading) {
         return null;
       }
-      return this.shopParams.capacity - this.admittance.count;
+      return this.shopParams.capacity - ((this.admittance || {}).count || 0);
     },
     isUserAnonymous() {
       return firebase.auth().currentUser.isAnonymous;
@@ -266,6 +266,10 @@ export default {
   methods: {
     async initialize() {
       try {
+        await this.$bind(
+          "admittance",
+          db.collection("admittances").doc(this.id)
+        );
         await this.$bind("shop", db.collection("shops").doc(this.id));
         if (this.shop && this.shop.placeDetails) {
           this.placeDetails = this.shop.placeDetails;
@@ -295,10 +299,7 @@ export default {
           "queue",
           this.queueRef.collection("users").orderBy("joinedAt", "asc")
         );
-        await this.$bind(
-          "admittance",
-          db.collection("admittances").doc(this.id)
-        );
+
         await this.$bind(
           "ticketAdmission",
           db
