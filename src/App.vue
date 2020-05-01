@@ -130,10 +130,10 @@ body {
 }
 #nav {
   width: calc(100%);
-  max-width: 752px; /* 720px + 32px */
+  max-width: 720px;
   position: relative;
   z-index: 1;
-  padding: 12px 0 18px;
+  padding: 12px 16px 18px;
   margin: 20px auto 0;
   background: var(--accent-color);
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));

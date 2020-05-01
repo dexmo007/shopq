@@ -86,9 +86,18 @@ export default new Router({
       name: 'MarketAdmittance',
       props: true,
       component: () =>
-        import(
-          /* webpackChunkName: "market-admittance" */ './views/MarketAdmittance.vue'
-        ),
+          import(
+              /* webpackChunkName: "market-admittance" */ './views/MarketAdmittance.vue'
+              ),
+    },
+    {
+      path: '/markt/:id/bildschirm',
+      name: 'MarketScreen',
+      props: true,
+      component: () =>
+          import(
+              /* webpackChunkName: "market-screen" */ './views/MarketScreen.vue'
+              ),
     },
   ],
 });
