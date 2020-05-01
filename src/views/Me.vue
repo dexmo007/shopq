@@ -5,24 +5,23 @@
     <form>
       <label>E-Mail Adresse:
         <input
-              type="text"
-              v-model="user.email"
-              placeholder="email"
-      /><span class="default-value">XXX</span></label>
+          type="text"
+          v-model="user.email"
+          placeholder="email"
+        /><span class="default-value">XXX</span></label>
 
       <label>Passwort ändern:
         <input
-                type="text"
-                v-model="user.password"
-                placeholder="neues Passwort"
+          type="text"
+          v-model="user.password"
+          placeholder="neues Passwort"
         /><span class="default-value">XXX</span></label>
-
 
       <label>Änderungen mit altem Passwort bestätigen:
         <input
-                type="password"
-                v-model="user.password"
-                placeholder="altes Passwort"
+          type="password"
+          v-model="user.password"
+          placeholder="altes Passwort"
         /><span class="default-value">XXX</span></label>
       <button type="submit">Änderungen speichern</button>
     </form>
@@ -37,7 +36,10 @@
         <font-awesome-icon icon="edit" />
       </button>
     </div>
-    <div id="user-markets" v-if="userMarkets">
+    <div
+      id="user-markets"
+      v-if="userMarkets"
+    >
       <div
         class="market"
         v-for="market in userMarkets"
@@ -46,15 +48,15 @@
         <market-preview :market="market.placeDetails">
           <div class="market-interaction">
             <router-link
-                    v-if="administeredShops.includes(market)"
-                    :to="`/markt/${market.id}/control`"
-                    tag="button"
-                    class="success"
+              v-if="market.admin"
+              :to="`/markt/${market.id}/control`"
+              tag="button"
+              class="success"
             >Admin</router-link>
             <router-link
-                    :to="`/markt/${market.id}/einlass`"
-                    tag="button"
-                    class="info"
+              :to="`/markt/${market.id}/einlass`"
+              tag="button"
+              class="info"
             >Einlass</router-link>
           </div>
         </market-preview>
@@ -76,48 +78,55 @@ export default {
     return {
       user: null,
       isInEditMode: false,
-      administeredShops: null,
-      admittanceShops: null,
-      shopsLoading: false
+      userInfo: null,
+      shopsLoading: false,
+      shops: null
     };
   },
   computed: {
     userMarkets() {
-      if (![this.administeredShops, this.admittanceShops].every(s => !!s)) {
+      if (![this.userInfo, this.shops].every(s => !!s)) {
         return;
       }
-      return [...this.administeredShops, ...this.admittanceShops];
+      return this.shops.map(shop => ({
+        ...shop,
+        admin: (this.userInfo.administeredShops || []).includes(shop.id)
+      }));
+    }
+  },
+  watch: {
+    async userInfo(userInfo) {
+      const shopIds = [
+        ...new Set([
+          ...(userInfo.administeredShops || []),
+          ...(userInfo.admittance || [])
+        ])
+      ];
+      if (shopIds.length === 0) {
+        this.$unbind("shops");
+      } else {
+        // todo batches for more than 10 shops
+        await this.$bind(
+          "shops",
+          firebase
+            .firestore()
+            .collection("shops")
+            .where(firebase.firestore.FieldPath.documentId(), "in", shopIds)
+        );
+      }
     }
   },
   async mounted() {
     this.user = firebase.auth().currentUser;
     this.shopsLoading = true;
     try {
-      const shopControl = firebase.firestore().collection("shopControl");
-      const administeredShops = await shopControl
-        .where("admins", "array-contains", this.user.uid)
-        .get()
-        .then(s => s.docs.map(d => d.id));
-      const admittanceShops = await shopControl
-        .where("admittance", "array-contains", this.user.uid)
-        .get()
-        .then(s => s.docs.map(d => d.id));
-      // TODO batches of 10 to be safe
-      const shops = await firebase
-        .firestore()
-        .collection("shops")
-        .where(firebase.firestore.FieldPath.documentId(), "in", [
-          ...administeredShops,
-          ...admittanceShops
-        ])
-        .get()
-        .then(s => s.docs);
-      this.administeredShops = shops
-        .filter(d => administeredShops.includes(d.id))
-        .map(d => ({ id: d.id, ...d.data() }));
-      this.admittanceShops = shops
-        .filter(d => admittanceShops.includes(d.id))
-        .map(d => ({ id: d.id, ...d.data() }));
+      await this.$bind(
+        "userInfo",
+        firebase
+          .firestore()
+          .collection("userInfos")
+          .doc(this.user.uid)
+      );
     } finally {
       this.shopsLoading = false;
     }
@@ -138,13 +147,13 @@ export default {
 #user-markets {
   padding-bottom: 6px;
 }
-.market-interaction{
+.market-interaction {
   display: flex;
   background: #ffffff;
   border-left: 1px solid rgba(33, 33, 33, 0.4);
   border-radius: 0 4px 4px 0;
 }
-.market-interaction > button{
-  margin: 6px
+.market-interaction > button {
+  margin: 6px;
 }
 </style>
