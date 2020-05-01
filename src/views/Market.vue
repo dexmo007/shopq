@@ -371,17 +371,6 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-#isOpenDot {
-  width: 0.85em;
-  height: 0.85em;
-  display: inline-block;
-  border-radius: 50%;
-  background-color: #dd363a;
-  transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
-}
-#isOpenDot.open {
-  background-color: #64c7a6;
-}
 #market {
   margin: 0 12px;
   padding-bottom: 12px;
@@ -403,7 +392,7 @@ export default {
 }
 
 #ticket {
-  border: 1px solid rgba(33, 33, 33, 0.3);
+  border: 1px solid var(--border-color);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -425,14 +414,14 @@ export default {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
   }
   to {
-    box-shadow: 0 0 12px #64c7a6;
-    border-color: #64c7a6;
+    box-shadow: 0 0 12px var(--success-color);
+    border-color: var(--success-color);
   }
 }
 #quitQ-btn {
   background-color: transparent;
-  color: #dd363a;
-  border-color: #dd363a;
+  color: var(--danger-color);
+  border-color: var(--danger-color);
 }
 
 #you-made-it {
@@ -441,7 +430,7 @@ export default {
   font-weight: bold;
 }
 #you-made-it > #store {
-  background-color: #64c7a6;
+  background-color: var(--success-color);
   padding: 4px 6px;
   margin: 4px;
   border-radius: 4px;
@@ -450,7 +439,7 @@ export default {
   padding: 4px 6px;
   margin: 4px;
   margin-top: 10px;
-  border: 1px solid #d3d3d3;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
 }
 #shopq-info h5 {

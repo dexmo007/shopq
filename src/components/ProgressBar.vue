@@ -87,12 +87,12 @@ export default {
   display: flex;
 }
 #under-limit {
-  background-color: #64c7a6;
+  background-color: var(--success-color);
   height: 30px;
   line-height: 30px;
 }
 #over-limit {
-  background-color: #fb6b6f;
+  background-color: var(--danger-color);
   height: 30px;
   line-height: 30px;
 }

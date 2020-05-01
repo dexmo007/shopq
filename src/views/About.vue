@@ -24,7 +24,7 @@
             <span>es {{freeSlots === 1 ? 'ist ein Platz' : `sind ${freeSlots} Plätze`}} frei!</span>
         </div>
 
-        <hr>
+       <div><!-- #todo add hr line, but not <hr>--></div>
 
         <progress-bar :threshold="maxPeopleInStore" :count="peopleInStore"/>
         <span>(#1) Anzeige</span>
@@ -81,7 +81,7 @@ export default {
     box-shadow: 0 0 12px rgb(0, 0, 0);
 }
 #img > span{
-    color: #ffffff;
+    color: var(--text-bright-color);
     font-weight: bold;
     font-size: 1.4em;
     padding: 18px;

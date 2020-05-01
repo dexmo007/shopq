@@ -307,12 +307,12 @@ section {
 }
 
 #addToQ-btn {
-  background-color: #f8ac59;
+  background-color: var(--warning-color);
   max-width: 480px;
   margin: 4px auto;
 }
 #next-admittance {
-  border: 1px solid #f8ac59;
+  border: 1px solid var(--warning-color);
   border-radius: 3px;
   padding: 0.6em 1em;
 }
@@ -320,8 +320,8 @@ section {
   margin-top: 16px;
 }
 #lastWord > b {
-  background: #373737;
-  color: #f8ac59;
+  background: var(--background-color);
+  color: var(--warning-color);
   padding: 0.4em 0.8em;
   border-radius: 0.2em;
   display: inline-block;

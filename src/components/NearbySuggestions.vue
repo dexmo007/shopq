@@ -34,7 +34,7 @@
                 id="geo-error"
         >
             <p>
-                &#127755; <span style="color: #dd363a;">Chaos pur!</span> Wir konnten keine Geschäfte für dich finden,
+                &#127755; <span style="color: var(--danger-color)">Chaos pur!</span> Wir konnten keine Geschäfte für dich finden,
                 aber mit etwas Glück hilft dir diese Suche:
             </p>
         </div>
@@ -238,11 +238,4 @@
         margin: 0 auto;
     }
 
-    /* this is needed, to get all 4 corners smooth */
-    .suggestion-realtime-empty {
-        border-radius: 0 4px 4px 0;
-        width: 4px;
-        background: white;
-        z-index: 2;
-    }
 </style>
