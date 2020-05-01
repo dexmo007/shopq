@@ -27,7 +27,7 @@
             to="/"
             tag="span"
             id="home-link"
-          >shop<span style="color: #64c7a6;">Q</span></router-link>
+          >shop<span style="color: var(--primary-color);">Q</span></router-link>
           <router-link
             to="/about"
             tag="span"
@@ -90,6 +90,7 @@ export default {
 </script>
 
 <style>
+  @import 'variables.css';
 body {
   width: 100%;
   margin: 0;
@@ -97,8 +98,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background: #373737;
-  color: #2c3e50;
+  background: var(--background-color);
+  color: var(--text-color);
   overflow-x: hidden;
 }
 #fixed > #nav-account-area,
@@ -116,10 +117,10 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  background: #373737;
+  background: var(--background-color);
 }
 #nav-account-area {
-  color: white;
+  color: var(--text-bright-color);
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -134,7 +135,7 @@ body {
   z-index: 1;
   padding: 12px 0 18px;
   margin: 20px auto 0;
-  background: #2c3e50;
+  background: var(--accent-color);
   filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.42));
 }
 #nav::before {
@@ -142,7 +143,7 @@ body {
   position: absolute;
   width: 100%;
   height: calc(100% + 56px);
-  background: #2c3e50;
+  background: var(--accent-color);
   z-index: -1;
   top: -28px;
   left: 0;
@@ -155,12 +156,12 @@ body {
   border-bottom: 16px;
   float: none;
   border-radius: 8px;
-  color: white;
+  color: var(--text-bright-color);
   text-shadow: 0 0 4px rgb(0, 0, 0);
 }
 #about-link {
   display: inline-flex;
-  color: #2c3e50;
+  color: var(--text-color);
   font-size: 0.6em;
   padding: 0.5em 0.6em;
   vertical-align: top;
@@ -169,18 +170,18 @@ body {
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  background: white;
+  background: var(--text-bright-color);
   cursor: pointer;
-  border: 1px solid #373737;
+  border: 1px solid var(--border-color);
   transition: box-shadow 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
 #about-link:hover {
-  box-shadow: 0 0 3px white;
+  box-shadow: 0 0 3px var(--text-bright-color);
 }
 
 #scrollable {
   border-radius: 0 0 8px 8px;
-  background: white;
+  background: var(--background-contrast);
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
   margin-top: 100px;
   padding-top: 80px;
@@ -190,6 +191,7 @@ input:not(.blank),
 textarea:not(.blank) {
   margin: 4px 0;
   border: 1px solid #2c3e50;
+  background: var(--input-background);
   border-radius: 4px;
   padding: 0.375rem 0.75rem;
   transition: all 200ms cubic-bezier(0.43, 0, 0.37, 0.94);
@@ -199,7 +201,7 @@ textarea:not(.blank) {
 input:focus:not(.blank),
 textarea:focus:not(.blank) {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
-  border-color: #64c7a6;
+  border-color: var(--primary-color);
 }
 button {
   display: inline-block;
@@ -215,7 +217,8 @@ button {
   border-radius: 0.25rem;
   transition: box-shadow 280ms cubic-bezier(0.43, 0, 0.37, 0.94),
     background-color 140ms cubic-bezier(0.43, 0, 0.37, 0.94);
-  color: #2c3e50;
+  color: var(--text-color);
+  background: var(--light-background);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   /* prevents double-tap to zoom action */
   touch-action: manipulation;
@@ -226,15 +229,15 @@ button[disabled] {
 }
 button[type="submit"],
 button.success {
-  border: 1px solid rgba(33, 33, 33, 0.4);
-  background-color: #64c7a6;
+  border: 1px solid var(--border-color);
+  background-color: var(--success-color);
 }
 button.danger {
   border: 1px solid rgba(136, 32, 34, 0.75);
-  background-color: #fb6b6f;
+  background-color: var(--danger-color);
 }
 button.info {
-  background-color: #f8ac59;
+  background-color: var(--warning-color);
 }
 button:hover {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
@@ -276,7 +279,7 @@ form label .default-value::after {
 #impressum-link {
   display: inline-block;
   cursor: pointer;
-  color: white;
+  color: var(--text-bright-color);
   margin: 18px;
 }
 #impressum-link:hover {

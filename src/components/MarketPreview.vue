@@ -52,7 +52,7 @@ export default {
 <style scoped>
 .suggestion {
   margin: 14px;
-  border: 1px solid rgba(33, 33, 33, 0.4);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   display: flex;
   justify-content: space-between;
@@ -98,7 +98,7 @@ export default {
   align-items: flex-start;
   padding: 10px;
   text-align: initial;
-  background: white;
+  background: var(--background-contrast);
   z-index: 1;
   flex: 1;
   border-radius: 4px 0 0 4px;
@@ -115,12 +115,12 @@ export default {
 .suggestion-realtime-empty {
   border-radius: 0 4px 4px 0;
   width: 4px;
-  background: white;
+  background: var(--background-contrast);
   z-index: 2;
 }
 .suggestion-info + *{
   border-radius: 0 4px 4px 0;
-  background: white;
+  background: var(--background-contrast);
 }
 .suggestion-name {
   font-size: 1.2em;
@@ -129,20 +129,11 @@ export default {
 .suggestion-addr {
   font-size: 1em;
 }
-.suggestion-realtime {
-  border: 1px solid rgba(33, 33, 33, 0.4);
-  display: flex;
-  justify-content: center;
-  border-radius: 0 4px 4px 0;
-  margin-top: -1px;
-  margin-bottom: -1px;
-  margin-right: -1px;
-}
 .suggestion-realtime.q-free {
   background-color: rgb(100, 199, 166);
 }
 .suggestion-realtime {
-  border: 1px solid rgba(33, 33, 33, 0.4);
+  border: 1px solid var(--border-color);
   display: flex;
   justify-content: center;
   border-radius: 0 4px 4px 0;
@@ -152,7 +143,7 @@ export default {
   color: black;
 }
 .suggestion-realtime.q-free {
-  background-color: rgb(100, 199, 166);
+  background-color: var(--success-color);
 }
 
 .suggestion-q-counter {
@@ -162,8 +153,8 @@ export default {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  background: #2b3e50;
-  color: white;
+  background: var(--accent-color);
+  color: var(--text-bright-color);
   margin: -1px;
   border: 1px solid rgba(0, 0, 0, 0.4);
 }

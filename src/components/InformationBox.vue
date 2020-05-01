@@ -48,10 +48,10 @@
     height: auto;
 }
 #information.visible{
-    border: 5px solid #f8ac59;
+    border: 5px solid var(--warning-color);
 }
 #information > #title{
-    background: #f8ac59;
+    background: var(--warning-color);
     padding: 0.2em 0.6em;
     border-radius: 5px;
     text-align: center;
