@@ -22,9 +22,9 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: 14
-      - run: yarn
-      - run: yarn test:unit
-      - run: yarn build --mode staging
+      - run: npm ci
+      - run: npm run test:unit
+      - run: npm run build -- --mode staging
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:

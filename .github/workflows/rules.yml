@@ -22,13 +22,13 @@ jobs:
         with:
           java-version: 11
           java-package: jre
-      - run: yarn
+      - run: npm ci
       - run: java -version
       - run: npm i -g firebase-tools
       - name: Setup Firestore emulator
         run: firebase setup:emulators:firestore
       - name: Run tests on Firestore emulator
-        run: firebase emulators:exec --only firestore 'yarn test:rules'
+        run: firebase emulators:exec --only firestore 'npm run test:rules'
       - name: Deploy to Firebase
         run: firebase deploy --project staging --only firestore
         env:
