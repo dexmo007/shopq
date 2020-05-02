@@ -1,0 +1,30 @@
+name: Functions
+on:
+  push:
+    paths:
+      - functions/**
+      - .github/workflows/functions.yml
+  pull_request:
+    paths:
+      - functions/**
+      - .github/workflows/functions.yml
+defaults:
+  run:
+    working-directory: functions
+jobs:
+  test-deploy-functions:
+    name: Test and deploy functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 10
+      - run: npm ci
+      - run: npm run lint
+      - run: npm i -g firebase-tools
+      - name: Deploy to Firebase
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+        run: firebase deploy --project staging --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
