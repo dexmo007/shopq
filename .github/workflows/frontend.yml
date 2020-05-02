@@ -1,8 +1,17 @@
 name: Frontend
 on:
   push:
-    branches:
-      - master
+    paths-ignore:
+      - 'functions/**'
+      - 'tests/rules/**'
+      - 'firestore.indexes.json'
+      - 'firestore.rules'
+      - 'jest.rules.config.js'
+      - .github/workflows/rules.yml
+      - 'data/**'
+      - '.dependabot/**'
+      - README.md
+  pull_request:
     paths-ignore:
       - 'functions/**'
       - 'tests/rules/**'
@@ -26,6 +35,7 @@ jobs:
       - run: npm run test:unit
       - run: npm run build -- --mode staging
       - name: Deploy to Firebase
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
         uses: w9jds/firebase-action@master
         with:
           args: deploy --project staging --only hosting
