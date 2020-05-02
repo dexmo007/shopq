@@ -32,14 +32,14 @@
             </div>
         </div>
         <div id="info">
-            <div>
-                Rewe
-                Alte Straße 2
+            <div id="info-market">
+                <span id="info-market-name">{{"Rewe"}}</span>
+                <span id="info-market-addr">{{"Alte Straße 2"}}</span>
             </div>
-            <div>
+            <div id="info-market-text">
                 Nur mit Einkaufswagen
             </div>
-            <div>
+            <div id="info-general">
                 Bitte halten Sie sich an die Hygiene-Richtlinien :)
             </div>
         </div>
@@ -48,7 +48,10 @@
 
 <script>
     export default {
-        name: "MarketScreen.vue"
+        name: "MarketScreen.vue",
+        props: {
+            id: String
+        },
     }
 </script>
 
@@ -68,9 +71,10 @@
 }
 #screen {
     display: flex;
+    flex-wrap: wrap;
 }
 #q{
-    flex: 1;
+    flex: 1 1 61.8%;
 }
 #next-word-wrapper{
     background: var(--warning-color);
@@ -119,9 +123,28 @@
     background: var(--light-background);
     border: 5px solid var(--text-color);
 }
-#info > *{
+#info{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px; /* to match same bottom height with q */
+}
+#info-market{
+    margin: 12px;
+    padding: 12px;
+    height: 120px;
+    font-size: 2.8em;
+    display: flex;
+    flex-direction: column;
+}
+#info-market-name{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#info-general, #info-market-text{
     border: 5px solid var(--border-color);
     padding: 12px;
     margin: 12px;
+    flex: 1;
+    min-height: 180px;
 }
 </style>
