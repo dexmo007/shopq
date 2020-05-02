@@ -1,8 +1,13 @@
 name: Rules
 on:
   push:
-    branches:
-      - master
+    paths:
+      - tests/rules/**
+      - firestore.indexes.json
+      - firestore.rules
+      - jest.rules.config.js
+      - .github/workflows/rules.yml
+  pull_request:
     paths:
       - tests/rules/**
       - firestore.indexes.json
@@ -22,14 +27,14 @@ jobs:
         with:
           java-version: 11
           java-package: jre
-      - run: yarn
-      - run: java -version
+      - run: npm ci
       - run: npm i -g firebase-tools
       - name: Setup Firestore emulator
         run: firebase setup:emulators:firestore
       - name: Run tests on Firestore emulator
-        run: firebase emulators:exec --only firestore 'yarn test:rules'
+        run: firebase emulators:exec --only firestore 'npm run test:rules'
       - name: Deploy to Firebase
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
         run: firebase deploy --project staging --only firestore
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

@@ -25,8 +25,6 @@ exports.updateUserRoles = functions.firestore
   .onWrite(async (change, context) => {
     const changes = [];
     function pushChanges(field, uids, changeFieldValue) {
-      console.log(field, changeFieldValue === add ? 'added' : 'removed', uids);
-
       const theseChanges = (uids || []).map((uid) =>
         admin
           .firestore()
