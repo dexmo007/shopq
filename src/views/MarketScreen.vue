@@ -126,6 +126,7 @@
 #info{
     display: flex;
     flex-direction: column;
+    flex: 1 1 38.2%;
     margin-bottom: 12px; /* to match same bottom height with q */
 }
 #info-market{
