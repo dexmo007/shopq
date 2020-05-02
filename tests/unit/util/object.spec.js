@@ -16,6 +16,6 @@ describe('util/object/changed', () => {
     [undefined, ''],
     [null, ''],
   ])('should be false for changed(%s, %s)', (left, right) => {
-    expect(changed(left, right)).toBe(true);
+    expect(changed(left, right)).toBe(false);
   });
 });
