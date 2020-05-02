@@ -1,5 +1,6 @@
 ![Frontend](https://github.com/dexmo007/shopq/workflows/Frontend/badge.svg)
 ![Rules](https://github.com/dexmo007/shopq/workflows/Rules/badge.svg)
+![Functions](https://github.com/dexmo007/shopq/workflows/Functions/badge.svg)
 
 # shopQ
 
