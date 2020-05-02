@@ -8,6 +8,7 @@ on:
       - 'firestore.rules'
       - 'jest.rules.config.js'
       - .github/workflows/rules.yml
+      - .github/workflows/functions.yml
       - 'data/**'
       - '.dependabot/**'
       - README.md
@@ -19,6 +20,7 @@ on:
       - 'firestore.rules'
       - 'jest.rules.config.js'
       - .github/workflows/rules.yml
+      - .github/workflows/functions.yml
       - 'data/**'
       - '.dependabot/**'
       - README.md
