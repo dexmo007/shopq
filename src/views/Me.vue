@@ -90,6 +90,7 @@ export default {
       }
       return this.shops.map(shop => ({
         ...shop,
+        id: shop.id,
         admin: (this.userInfo.administeredShops || []).includes(shop.id)
       }));
     }
