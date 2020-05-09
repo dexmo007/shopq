@@ -26,7 +26,7 @@
         <font-awesome-icon icon="map-marked-alt" />
         {{!placeDetails ? 'Addresse lädt...' : placeDetails.vicinity}}
       </span>
-      <span v-if="latestActivity">Letzte Aktivität: {{latestActivity}}</span>
+      <span v-if="latestActivity">Letzte Aktivität: <human-readable-time :time="latestActivity"/></span>
     </div>
     <div id="market-body">
       <div v-if="stage === 'no-support'">
@@ -131,13 +131,13 @@
 </template>
 <script>
 import firebase from "firebase/app";
-import { selectUnit } from "@formatjs/intl-utils";
 import CountDown from "@/components/CountDown";
 import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
 import { getPlaceDetails } from "@/api/google-maps";
 import { getRandomDocument } from "@/util/firebase-rng";
 import Queue from "@/components/Queue";
+import HumanReadableTime from "@/components/HumanReadableTime";
 
 const db = firebase.firestore();
 
@@ -148,7 +148,7 @@ export default {
   props: {
     id: String
   },
-  components: { Queue, QRCode, CountDown, InformationBox },
+  components: {HumanReadableTime, Queue, QRCode, CountDown, InformationBox },
   computed: {
     queueRef() {
       return db.collection("queues").doc(this.id);
@@ -205,9 +205,7 @@ export default {
         return null;
       }
       const [event] = this.latestAdmittanceEvent;
-      const ts = new Date(event.timestamp.toDate());
-      const diff = selectUnit(ts);
-      return this.rtf.format(diff.value, diff.unit);
+      return new Date(event.timestamp.toDate());
     }
   },
   beforeDestroy() {

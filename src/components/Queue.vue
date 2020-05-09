@@ -2,7 +2,7 @@
     <div id="q">
         <div id="next-word-wrapper" v-if="lastEntry">
             <div id="next-word">{{lastEntry.word}}</div>
-            <span>{{lastEntry.ts}}</span>
+            <human-readable-time :time="lastEntry.ts"/>
         </div>
         <div id="preview">
             <div v-if="fadeStart">
@@ -23,8 +23,10 @@
 </template>
 
 <script>
+    import HumanReadableTime from "@/components/HumanReadableTime";
     export default {
         name: "Queue",
+        components: {HumanReadableTime},
         props: {
             qList: {
                 type: Array,
@@ -63,9 +65,7 @@
                     item.realIndex = i;
                 });
 
-                if(qLength < 5){
-                    return list;
-                }
+
                 if(!this.highlightWord) {
                     return list.slice(0,5);
                 }else{
@@ -116,21 +116,21 @@
     #preview > * {
         display: flex;
         align-items: center;
-        padding: 12px;
-        margin: 7px;
+        padding: 8px;
+        margin: 4px;
         border: 5px solid transparent;
     }
     #preview > * > span{
-        font-size: 4em;
+        font-size: 3em;
         margin-right: 12px;
     }
     .preview-anon, .preview-app, #preview-fade{
-        height: 80px;
+        height: 76px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 4em;
+        font-size: 3.4em;
         flex: 1;
     }
 
