@@ -15,7 +15,9 @@ export default {
   name: "QRCode",
   props: ["text"],
   mounted() {
-    QRCode.toCanvas(this.$refs.canvas, this.text, function(error) {
+    QRCode.toCanvas(this.$refs.canvas, this.text, { width: 260 }, function(
+      error
+    ) {
       if (error) console.error(error);
     });
   }
