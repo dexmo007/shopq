@@ -34,10 +34,11 @@ service cloud.firestore {
     }
 
     match /ticketAdmission/{taid} {
-    	allow read: if resource.data.uid == request.auth.uid;
+    	allow read: if resource.data.uid == request.auth.uid
+                  || isAdmission(resource.data.shopId);
       allow create: if isAdmission(request.resource.data.shopId);
       allow update: if request.auth.uid == resource.data.uid
-      							&& resource.data.keys() == ['inactive'];
+      							&& request.resource.data.keys() == ['inactive'];
     }
 
     match /admittances/{shopId} {
