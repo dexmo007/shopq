@@ -98,14 +98,19 @@
           :class="{active: positionInQ === 0}"
           v-if="queueSlot"
         >
-          <b>Dein Ticket:</b>
+          <span id="ticket-header">Dein Ticket:</span>
           <QRCode
             height="420px"
             width="420px"
+            id="ticket-code"
             :text="queueSlot.ticketCode"
           />
-          <span>{{queueSlot.ticketCode}}</span>
+          <div id="ticket-word">{{queueSlot.ticketCode}}</div>
         </div>
+        <Queue
+            :q-list="this.queue"
+            :highlight-word="{word: queueSlot.ticketCode, ts: 'vor 4 Sekunden'}"
+        />
         <button
           id="quitQ-btn"
           @click="quitQ()"
@@ -132,6 +137,7 @@ import InformationBox from "@/components/InformationBox";
 import QRCode from "@/components/QRCode.vue";
 import { getPlaceDetails } from "@/api/google-maps";
 import { getRandomDocument } from "@/util/firebase-rng";
+import Queue from "@/components/Queue";
 
 const db = firebase.firestore();
 
@@ -142,7 +148,7 @@ export default {
   props: {
     id: String
   },
-  components: { QRCode, CountDown, InformationBox },
+  components: {Queue, QRCode, CountDown, InformationBox },
   computed: {
     queueRef() {
       return db.collection("queues").doc(this.id);
@@ -398,24 +404,38 @@ export default {
   flex-direction: column;
   max-width: 480px;
   margin: 15px auto;
-  padding: 18px;
   border-radius: 4px;
+  transition: border 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
+}
+#ticket-header{
+  padding: 12px 16px;
+}
+#ticket-code{
+  width: 80%;
+}
+#ticket-word {
+  border-top: 1px solid var(--border-color);
+  padding: 12px 16px;
+  font-weight: bold;
+  transition: background-color 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
 #ticket.active {
+  border-color: var(--warning-color);
   animation-name: pulse;
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
   animation-timing-function: cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-
+#ticket.active > #ticket-word{
+  background-color: var(--warning-color);
+}
 @keyframes pulse {
   from {
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 6px rgba(--warning-color);
   }
   to {
-    box-shadow: 0 0 12px var(--success-color);
-    border-color: var(--success-color);
+    box-shadow: 0 0 12px var(--warning-color);
   }
 }
 #quitQ-btn {

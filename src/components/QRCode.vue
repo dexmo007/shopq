@@ -1,7 +1,6 @@
 <template>
   <canvas
-          height="420px"
-          width="420px"
+    style="width: 280px; height: 280px;"
     v-bind="$attrs"
     v-on="$listeners"
     ref="canvas"
