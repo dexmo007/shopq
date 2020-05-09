@@ -24,7 +24,7 @@
         Kunde verlässt Laden
       </button>
     </section>
-    <section v-if="capacityLimitReached">
+    <section v-if="capacityLimitReached || peopleInQueue > 0">
       <h3>Warteschlange</h3>
       <div>
         <span>{{peopleInQueue}} Personen in der Warteschlange</span>

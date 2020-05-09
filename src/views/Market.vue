@@ -108,8 +108,8 @@
           <div id="ticket-word">{{queueSlot.ticketCode}}</div>
         </div>
         <Queue
-            :q-list="this.queue"
-            :highlight-word="{word: queueSlot.ticketCode, ts: 'vor 4 Sekunden'}"
+          :q-list="this.queue"
+          :highlight-word="{word: queueSlot.ticketCode, ts: 'vor 4 Sekunden'}"
         />
         <button
           id="quitQ-btn"
@@ -148,7 +148,7 @@ export default {
   props: {
     id: String
   },
-  components: {Queue, QRCode, CountDown, InformationBox },
+  components: { Queue, QRCode, CountDown, InformationBox },
   computed: {
     queueRef() {
       return db.collection("queues").doc(this.id);
@@ -361,6 +361,8 @@ export default {
       this.stage = "default";
     },
     async setAdmissionInactive() {
+      console.log(this.ticketAdmission[0].id);
+
       db.collection("ticketAdmission")
         .doc(this.ticketAdmission[0].id)
         .update({
@@ -407,10 +409,10 @@ export default {
   border-radius: 4px;
   transition: border 280ms cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-#ticket-header{
+#ticket-header {
   padding: 12px 16px;
 }
-#ticket-code{
+#ticket-code {
   width: 80%;
 }
 #ticket-word {
@@ -427,7 +429,7 @@ export default {
   animation-direction: alternate;
   animation-timing-function: cubic-bezier(0.43, 0, 0.37, 0.94);
 }
-#ticket.active > #ticket-word{
+#ticket.active > #ticket-word {
   background-color: var(--warning-color);
 }
 @keyframes pulse {
