@@ -1,7 +1,6 @@
 import * as firebase from '@firebase/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import importRandomWords from '../../data/import-random-words';
 
 export default function rulesTests({ projectId, users }) {
   const adminApp = firebase.initializeAdminApp({
@@ -18,7 +17,32 @@ export default function rulesTests({ projectId, users }) {
   }
 
   async function setup() {
-    await importRandomWords(adminApp, { supressLogs: true });
+    await Promise.all(
+      ['Mais', 'Reis'].map((grocery) =>
+        adminApp
+          .firestore()
+          .collection('randomWords')
+          .doc('de')
+          .collection('groceries')
+          .add({
+            word: grocery,
+            rng: Math.random(),
+          })
+      )
+    );
+    await Promise.all(
+      ['Apfel', 'Banane'].map((grocery) =>
+        adminApp
+          .firestore()
+          .collection('randomWords')
+          .doc('de')
+          .collection('vegetables')
+          .add({
+            word: grocery,
+            rng: Math.random(),
+          })
+      )
+    );
 
     await adminApp
       .firestore()
