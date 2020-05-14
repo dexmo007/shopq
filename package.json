@@ -19,7 +19,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "core-js": "^3.6.5",
     "deepequal": "^0.0.1",
-    "firebase": "^7.14.2",
+    "firebase": "^7.14.4",
     "firebaseui": "^4.5.0",
     "qrcode": "^1.4.4",
     "vue": "^2.6.10",
