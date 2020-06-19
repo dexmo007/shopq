@@ -30,7 +30,7 @@
     "vuefire": "^2.2.2"
   },
   "devDependencies": {
-    "@firebase/testing": "^0.19.1",
+    "@firebase/testing": "^0.20.2",
     "@vue/cli-plugin-babel": "^4.3.1",
     "@vue/cli-plugin-eslint": "^4.3.1",
     "@vue/cli-plugin-unit-jest": "~4.3.0",
