@@ -23,7 +23,7 @@
     "firebaseui": "^4.5.0",
     "qrcode": "^1.4.4",
     "vue": "^2.6.10",
-    "vue-qrcode-reader": "^2.1.1",
+    "vue-qrcode-reader": "^2.3.6",
     "vue-router": "^3.0.3",
     "vue-toasted": "^1.1.28",
     "vue2-google-maps": "^0.10.7",
