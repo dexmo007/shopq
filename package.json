@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@firebase/testing": "^0.19.1",
-    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-babel": "^4.5.12",
     "@vue/cli-plugin-eslint": "^4.3.1",
     "@vue/cli-plugin-unit-jest": "~4.3.0",
     "@vue/cli-service": "^4.3.1",
